@@ -1,0 +1,312 @@
+{
+  "kansen": [
+    {
+      "startK": 1,
+      "endK": 3,
+      "fare": 160,
+      "icFare": 155
+    },
+    {
+      "startK": 4,
+      "endK": 6,
+      "fare": 200,
+      "icFare": 199
+    },
+    {
+      "startK": 7,
+      "endK": 10,
+      "fare": 210,
+      "icFare": 209
+    },
+    {
+      "startK": 11,
+      "endK": 15,
+      "fare": 260,
+      "icFare": 253
+    },
+    {
+      "startK": 16,
+      "endK": 20,
+      "fare": 350,
+      "icFare": 341
+    },
+    {
+      "startK": 21,
+      "endK": 25,
+      "fare": 440,
+      "icFare": 440
+    },
+    {
+      "startK": 26,
+      "endK": 30,
+      "fare": 530,
+      "icFare": 528
+    },
+    {
+      "startK": 31,
+      "endK": 35,
+      "fare": 620,
+      "icFare": 616
+    },
+    {
+      "startK": 36,
+      "endK": 40,
+      "fare": 720,
+      "icFare": 715
+    },
+    {
+      "startK": 41,
+      "endK": 45,
+      "fare": 810,
+      "icFare": 803
+    },
+    {
+      "startK": 46,
+      "endK": 50,
+      "fare": 910,
+      "icFare": 902
+    },
+    {
+      "startK": 51,
+      "endK": 60,
+      "fare": 1040,
+      "icFare": 1034
+    },
+    {
+      "startK": 61,
+      "endK": 70,
+      "fare": 1230,
+      "icFare": 1221
+    },
+    {
+      "startK": 71,
+      "endK": 80,
+      "fare": 1410,
+      "icFare": 1408
+    },
+    {
+      "startK": 81,
+      "endK": 90,
+      "fare": 1600,
+      "icFare": 1595
+    },
+    {
+      "startK": 91,
+      "endK": 100,
+      "fare": 1790,
+      "icFare": 1782
+    },
+    {
+      "startK": 101,
+      "endK": 120,
+      "fare": 2090,
+      "icFare": 2090
+    },
+    {
+      "startK": 121,
+      "endK": 140,
+      "fare": 2420,
+      "icFare": 2420
+    },
+    {
+      "startK": 141,
+      "endK": 160,
+      "fare": 2750,
+      "icFare": 2750
+    },
+    {
+      "startK": 161,
+      "endK": 180,
+      "fare": 3190,
+      "icFare": 3190
+    },
+    {
+      "startK": 181,
+      "endK": 200,
+      "fare": 3520,
+      "icFare": 3520
+    },
+    {
+      "startK": 201,
+      "endK": 220,
+      "fare": 3850,
+      "icFare": 3850
+    },
+    {
+      "startK": 221,
+      "endK": 240,
+      "fare": 4180,
+      "icFare": 4180
+    },
+    {
+      "startK": 241,
+      "endK": 260,
+      "fare": 4620,
+      "icFare": 4620
+    },
+    {
+      "startK": 261,
+      "endK": 280,
+      "fare": 5060,
+      "icFare": 5060
+    },
+    {
+      "startK": 281,
+      "endK": 300,
+      "fare": 5390,
+      "icFare": 5390
+    },
+    {
+      "startK": 301,
+      "endK": 320,
+      "fare": 5720,
+      "icFare": 5720
+    },
+    {
+      "startK": 321,
+      "endK": 340,
+      "fare": 5940,
+      "icFare": 5940
+    },
+    {
+      "startK": 341,
+      "endK": 360,
+      "fare": 6270,
+      "icFare": 6270
+    },
+    {
+      "startK": 361,
+      "endK": 380,
+      "fare": 6600,
+      "icFare": 6600
+    },
+    {
+      "startK": 381,
+      "endK": 400,
+      "fare": 6930,
+      "icFare": 6930
+    },
+    {
+      "startK": 401,
+      "endK": 420,
+      "fare": 7260,
+      "icFare": 7260
+    },
+    {
+      "startK": 421,
+      "endK": 440,
+      "fare": 7480,
+      "icFare": 7480
+    },
+    {
+      "startK": 441,
+      "endK": 460,
+      "fare": 7810,
+      "icFare": 7810
+    },
+    {
+      "startK": 461,
+      "endK": 480,
+      "fare": 8030,
+      "icFare": 8030
+    },
+    {
+      "startK": 481,
+      "endK": 500,
+      "fare": 8360,
+      "icFare": 8360
+    },
+    {
+      "startK": 501,
+      "endK": 520,
+      "fare": 8690,
+      "icFare": 8690
+    },
+    {
+      "startK": 521,
+      "endK": 540,
+      "fare": 9020,
+      "icFare": 9020
+    },
+    {
+      "startK": 541,
+      "endK": 560,
+      "fare": 9350,
+      "icFare": 9350
+    },
+    {
+      "startK": 561,
+      "endK": 580,
+      "fare": 9570,
+      "icFare": 9570
+    },
+    {
+      "startK": 581,
+      "endK": 600,
+      "fare": 9900,
+      "icFare": 9900
+    },
+    {
+      "startK": 601,
+      "endK": 640,
+      "fare": 10230,
+      "icFare": 10230
+    },
+    {
+      "startK": 641,
+      "endK": 680,
+      "fare": 10450,
+      "icFare": 10450
+    },
+    {
+      "startK": 681,
+      "endK": 720,
+      "fare": 10780,
+      "icFare": 10780
+    },
+    {
+      "startK": 721,
+      "endK": 760,
+      "fare": 11110,
+      "icFare": 11110
+    },
+    {
+      "startK": 761,
+      "endK": 800,
+      "fare": 11440,
+      "icFare": 11440
+    },
+    {
+      "startK": 801,
+      "endK": 840,
+      "fare": 11770,
+      "icFare": 11770
+    },
+    {
+      "startK": 841,
+      "endK": 880,
+      "fare": 11990,
+      "icFare": 11990
+    },
+    {
+      "startK": 881,
+      "endK": 920,
+      "fare": 12320,
+      "icFare": 12320
+    },
+    {
+      "startK": 921,
+      "endK": 960,
+      "fare": 12650,
+      "icFare": 12650
+    },
+    {
+      "startK": 961,
+      "endK": 1000,
+      "fare": 12980,
+      "icFare": 12980
+    }
+  ],
+  "chihou": [],
+  "kasan": []
+}
