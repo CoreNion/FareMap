@@ -1,0 +1,112 @@
+{
+  "lines": [
+    {
+      "id": "saikyo",
+      "stations": [
+        {
+          "name": "池袋",
+          "id": "ikebukuro",
+          "km": 0,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "板橋",
+          "id": "itabashi",
+          "km": 18,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "十条",
+          "id": "jujo",
+          "km": 35,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "赤羽",
+          "id": "akabane",
+          "km": 55,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "北赤羽",
+          "id": "kitaakabane",
+          "km": 70,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "浮間舟渡",
+          "id": "ukimahunato",
+          "km": 86,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "戸田公園",
+          "id": "todakouen",
+          "km": 110,
+          "sp": []
+        },
+        {
+          "name": "戸田",
+          "id": "toda-saikyo",
+          "km": 123,
+          "sp": []
+        },
+        {
+          "name": "北戸田",
+          "id": "kitatoda",
+          "km": 137,
+          "sp": []
+        },
+        {
+          "name": "武蔵浦和",
+          "id": "musashiurawa",
+          "km": 161,
+          "sp": []
+        },
+        {
+          "name": "中浦和",
+          "id": "nakaurawa",
+          "km": 173,
+          "sp": []
+        },
+        {
+          "name": "南与野",
+          "id": "minamiyono",
+          "km": 190,
+          "sp": []
+        },
+        {
+          "name": "与野本町",
+          "id": "yonohonmachi",
+          "km": 204,
+          "sp": []
+        },
+        {
+          "name": "北与野",
+          "id": "kitayono",
+          "km": 217,
+          "sp": []
+        },
+        {
+          "name": "大宮",
+          "id": "omiya",
+          "km": 235,
+          "sp": []
+        }
+      ]
+    }
+  ]
+}

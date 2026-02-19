@@ -1,0 +1,84 @@
+{
+  "lines": [
+    {
+      "name": "山手線 (品川～代々木)",
+      "id": "yamanote1",
+      "children": null
+    },
+    {
+      "name": "山手線 (新宿～田端)",
+      "id": "yamanote2",
+      "children": null
+    },
+    {
+      "name": "東海道本線",
+      "id": "tokaido",
+      "children":[
+        {
+          "name": "品鶴線・東海道貨物線 (横須賀線・相鉄JR直通線)",
+          "id": "hinkaku-freight"
+        }
+      ]
+    },
+    {
+      "name": "東北本線",
+      "id": "tohoku",
+      "children": [
+        {
+          "name": "尾久支線 (上野/日暮里～尾久～赤羽)",
+          "id": "oku-branch"
+        }
+      ]
+    },
+    {
+      "name": "埼京線",
+      "id": "saikyo",
+      "children": []
+    },
+    {
+      "name": "常磐線",
+      "id": "joban",
+      "children": []
+    },
+    {
+      "name": "中央本線",
+      "id": "chuo",
+      "children": []
+    },
+    {
+      "name": "総武本線",
+      "id": "sobu",
+      "children": [
+        {
+          "name": "総武本線 (錦糸町～お茶ノ水)",
+          "id": "sobu-old"
+        }
+      ]
+    },
+    {
+      "name": "京葉線",
+      "id": "keiyo",
+      "children": []
+    },
+    {
+      "name": "武蔵野線",
+      "id": "musashino",
+      "children": []
+    },
+    {
+      "name": "南武線",
+      "id": "nanbu",
+      "children": [
+        {
+          "name": "南武支線 (尻手～浜川崎)",
+          "id": "nanbu-branch"
+        }
+      ]
+    },
+    {
+      "name": "根岸線",
+      "id": "negishi",
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "lines": [
+    {
+      "id": "tohoku",
+      "stations": [
+        {
+          "name": "東京",
+          "id": "tokyo",
+          "km": 0,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "神田",
+          "id": "kanda",
+          "km": 13,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "秋葉原",
+          "id": "akihabara",
+          "km": 28,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "御徒町",
+          "id": "okachimachi",
+          "km": 30,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "上野",
+          "id": "ueno",
+          "km": 36,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "鶯谷",
+          "id": "uguisudani",
+          "km": 47,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "日暮里",
+          "id": "nippori",
+          "km": 58,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "西日暮里",
+          "id": "nishinippori",
+          "km": 63,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "田端",
+          "id": "tabata",
+          "km": 71,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "上中里",
+          "id": "kaminakazato",
+          "km": 88,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "王子",
+          "id": "oji",
+          "km": 99,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "東十条",
+          "id": "higashijujo",
+          "km": 114,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "赤羽",
+          "id": "akabane",
+          "km": 132,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "川口",
+          "id": "kawaguchi",
+          "km": 158,
+          "sp": []
+        },
+        {
+          "name": "西川口",
+          "id": "nishikawaguchi",
+          "km": 178,
+          "sp": []
+        },
+        {
+          "name": "蕨",
+          "id": "warabi",
+          "km": 197,
+          "sp": []
+        },
+        {
+          "name": "南浦和",
+          "id": "minamiurawa",
+          "km": 225,
+          "sp": []
+        },
+        {
+          "name": "浦和",
+          "id": "urawa",
+          "km": 242,
+          "sp": []
+        },
+        {
+          "name": "北浦和",
+          "id": "kitaurawa",
+          "km": 260,
+          "sp": []
+        },
+        {
+          "name": "与野",
+          "id": "yono",
+          "km": 276,
+          "sp": []
+        },
+        {
+          "name": "さいたま新都心",
+          "id": "saitamashintoshin",
+          "km": 287,
+          "sp": []
+        },
+        {
+          "name": "大宮",
+          "id": "omiya",
+          "km": 303,
+          "sp": []
+        }
+      ]
+    },
+    {
+      "id": "oku-branch",
+      "stations": [
+        {
+          "name": "日暮里",
+          "id": "nippori",
+          "km": 0,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "尾久",
+          "id": "oku",
+          "km": 26,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "赤羽",
+          "id": "akabane",
+          "km": 76,
+          "sp": [
+            "tokunai"
+          ]
+        }
+      ]
+    }
+  ]
+}

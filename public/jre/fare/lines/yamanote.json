@@ -1,0 +1,167 @@
+{
+  "lines": [
+    {
+      "id": "yamanote1",
+      "stations": [
+        {
+          "name": "品川",
+          "id": "shinagawa",
+          "km": 0,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "大崎",
+          "id": "osaki",
+          "km": 20,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "五反田",
+          "id": "gotanda",
+          "km": 29,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "目黒",
+          "id": "meguro",
+          "km": 41,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "恵比寿",
+          "id": "ebisu",
+          "km": 56,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "渋谷",
+          "id": "shibuya",
+          "km": 71,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "原宿",
+          "id": "harajuku",
+          "km": 84,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "代々木",
+          "id": "yoyogi",
+          "km": 99,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yamanote2",
+      "stations": [
+        {
+          "name": "新宿",
+          "id": "shinjuku",
+          "km": 106,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "新大久保",
+          "id": "shinoookubo",
+          "km": 119,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "高田馬場",
+          "id": "takadanobaba",
+          "km": 133,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "目白",
+          "id": "mejiro",
+          "km": 142,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "池袋",
+          "id": "ikebukuro",
+          "km": 154,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "大塚",
+          "id": "otsuka",
+          "km": 172,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "巣鴨",
+          "id": "sugamo",
+          "km": 183,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "駒込",
+          "id": "komagome",
+          "km": 190,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "田端",
+          "id": "tabata",
+          "km": 206,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        }
+      ]
+    }
+  ]
+}
