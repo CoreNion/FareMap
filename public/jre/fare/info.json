@@ -76,6 +76,11 @@
       ]
     },
     {
+      "name": "横浜線",
+      "id": "yokohama",
+      "children": []
+    },
+    {
       "name": "根岸線",
       "id": "negishi",
       "children": []

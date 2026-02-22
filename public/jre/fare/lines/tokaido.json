@@ -129,6 +129,36 @@
           "sp": [
             "yokohama"
           ]
+        },
+        {
+          "name": "保土ヶ谷",
+          "id": "hodohaya",
+          "km": 318,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "東戸塚",
+          "id": "higashitotsuka",
+          "km": 367,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "戸塚",
+          "id": "totsuka",
+          "km": 409,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "大船",
+          "id": "ofuna",
+          "km": 465,
+          "sp": []
         }
       ]
     },

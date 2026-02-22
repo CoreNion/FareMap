@@ -1,0 +1,210 @@
+{
+  "lines": [
+    {
+      "id": "nanbu",
+      "stations": [
+        {
+          "name": "川崎",
+          "id": "kawasaki",
+          "km": 0,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "尻手",
+          "id": "shitte",
+          "km": 17,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "矢向",
+          "id": "shitte",
+          "km": 26,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "鹿島田",
+          "id": "kashimada",
+          "km": 41,
+          "sp": []
+        },
+        {
+          "name": "平間",
+          "id": "hirama",
+          "km": 53,
+          "sp": []
+        },
+        {
+          "name": "向河原",
+          "id": "mukaigawara",
+          "km": 66,
+          "sp": []
+        },
+        {
+          "name": "武蔵小杉",
+          "id": "musashikosugi",
+          "km": 75,
+          "sp": []
+        },
+        {
+          "name": "武蔵中原",
+          "id": "musashinakahara",
+          "km": 92,
+          "sp": []
+        },
+        {
+          "name": "武蔵新城",
+          "id": "musashishinjo",
+          "km": 105,
+          "sp": []
+        },
+        {
+          "name": "武蔵溝ノ口",
+          "id": "musashimizonokuchi",
+          "km": 127,
+          "sp": []
+        },
+        {
+          "name": "久地",
+          "id": "kuji",
+          "km": 149,
+          "sp": []
+        },
+        {
+          "name": "宿河原",
+          "id": "kuji",
+          "km": 162,
+          "sp": []
+        },
+        {
+          "name": "登戸",
+          "id": "noborito",
+          "km": 173,
+          "sp": []
+        },
+        {
+          "name": "中野島",
+          "id": "noborito",
+          "km": 195,
+          "sp": []
+        },
+        {
+          "name": "稲田堤",
+          "id": "inadazutsumi",
+          "km": 208,
+          "sp": []
+        },
+        {
+          "name": "矢野口",
+          "id": "yanokuchi",
+          "km": 224,
+          "sp": []
+        },
+        {
+          "name": "稲城長沼",
+          "id": "inaginaganuma",
+          "km": 241,
+          "sp": []
+        },
+        {
+          "name": "南多摩",
+          "id": "minamitama",
+          "km": 255,
+          "sp": []
+        },
+        {
+          "name": "府中本町",
+          "id": "fuchuhonmachi",
+          "km": 279,
+          "sp": []
+        },
+        {
+          "name": "分倍河原",
+          "id": "bubaigawara",
+          "km": 288,
+          "sp": []
+        },
+        {
+          "name": "西府",
+          "id": "nishifu",
+          "km": 300,
+          "sp": []
+        },
+        {
+          "name": "谷保",
+          "id": "yaho",
+          "km": 316,
+          "sp": []
+        },
+        {
+          "name": "矢川",
+          "id": "yagawa",
+          "km": 330,
+          "sp": []
+        },
+        {
+          "name": "西国立",
+          "id": "nishikunitachi",
+          "km": 343,
+          "sp": []
+        },
+        {
+          "name": "立川",
+          "id": "tachikawa",
+          "km": 355,
+          "sp": []
+        }
+      ]
+    },
+    {
+      "id": "nanbu-branch",
+      "stations": [
+        {
+          "name": "尻手",
+          "id": "shitte",
+          "km": 0,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "八丁畷",
+          "id": "hachonawate",
+          "km": 11,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "川崎新町",
+          "id": "kawasakishinmachi",
+          "km": 20,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "小田栄",
+          "id": "odasakae",
+          "km": 27,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "浜川崎",
+          "id": "hamakawasaki",
+          "km": 41,
+          "sp": [
+            "yokohama"
+          ]
+        }
+      ]
+    }
+  ]
+}

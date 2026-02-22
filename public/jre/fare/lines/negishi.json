@@ -1,0 +1,103 @@
+{
+  "lines": [
+    {
+      "id": "negishi",
+      "stations": [
+        {
+          "name": "横浜",
+          "id": "yokohama",
+          "km": 0,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "桜木町",
+          "id": "sakuragicho",
+          "km": 20,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "関内",
+          "id": "kannai",
+          "km": 30,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "石川町",
+          "id": "ishikawacho",
+          "km": 38,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "山手",
+          "id": "yamate",
+          "km": 50,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "根岸",
+          "id": "negishi-negishi",
+          "km": 71,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "磯子",
+          "id": "isogo",
+          "km": 95,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "新杉田",
+          "id": "shinsugita",
+          "km": 111,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "洋光台",
+          "id": "yokodai",
+          "km": 141,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "港南台",
+          "id": "konandai",
+          "km": 160,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "本郷台",
+          "id": "hongodai",
+          "km": 185,
+          "sp": [
+            "yokohama"
+          ]
+        },
+        {
+          "name": "大船",
+          "id": "ofuna",
+          "km": 221,
+          "sp": []
+        }
+      ]
+    }
+  ]
+}
