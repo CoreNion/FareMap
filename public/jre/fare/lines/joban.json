@@ -1,0 +1,162 @@
+{
+  "lines": [
+    {
+      "id": "joban",
+      "stations": [
+        {
+          "name": "日暮里",
+          "id": "nippori",
+          "km": 0,
+          "sp": [
+            "yamanote",
+            "tokunai"
+          ]
+        },
+        {
+          "name": "三河島",
+          "id": "mikawashima",
+          "km": 12,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "南千住",
+          "id": "minamisenju",
+          "km": 34,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "北千住",
+          "id": "kitasenju",
+          "km": 52,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "綾瀬",
+          "id": "ayase",
+          "km": 77,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "亀有",
+          "id": "kamearo",
+          "km": 99,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "金町",
+          "id": "kanamachi",
+          "km": 118,
+          "sp": [
+            "tokunai"
+          ]
+        },
+        {
+          "name": "松戸",
+          "id": "matsudo",
+          "km": 157,
+          "sp": []
+        },
+        {
+          "name": "北松戸",
+          "id": "kitamatsudo",
+          "km": 178,
+          "sp": []
+        },
+        {
+          "name": "馬橋",
+          "id": "mabashi",
+          "km": 191,
+          "sp": []
+        },
+        {
+          "name": "新松戸",
+          "id": "shinmatsudo",
+          "km": 207,
+          "sp": []
+        },
+        {
+          "name": "北小金",
+          "id": "kitakogane",
+          "km": 220,
+          "sp": []
+        },
+        {
+          "name": "南柏",
+          "id": "minamikashiwa",
+          "km": 269,
+          "sp": []
+        },
+        {
+          "name": "北柏",
+          "id": "kitakashiwa",
+          "km": 292,
+          "sp": []
+        },
+        {
+          "name": "我孫子",
+          "id": "abiko",
+          "km": 313,
+          "sp": []
+        },
+        {
+          "name": "天王台",
+          "id": "tennoudai",
+          "km": 340,
+          "sp": []
+        },
+        {
+          "name": "取手",
+          "id": "toride",
+          "km": 374,
+          "sp": []
+        },
+        {
+          "name": "藤代",
+          "id": "fujishiro",
+          "km": 434,
+          "sp": []
+        },
+        {
+          "name": "龍ヶ崎市",
+          "id": "ryugasakishi",
+          "km": 455,
+          "sp": []
+        },
+        {
+          "name": "牛久",
+          "id": "ushiku",
+          "km": 506,
+          "sp": []
+        },
+        {
+          "name": "ひたち野うしく",
+          "id": "hitachinoushiku",
+          "km": 545,
+          "sp": []
+        },
+        {
+          "name": "荒川沖",
+          "id": "arakawaoki",
+          "km": 572,
+          "sp": []
+        },
+        {
+          "name": "土浦",
+          "id": "tsuchiura",
+          "km": 638,
+          "sp": []
+        }
+      ]
+    }
+  ]
+}

@@ -261,7 +261,8 @@
       "km": 315,
       "sp": [],
       "lines": [
-        "chuo"
+        "chuo",
+        "musashino"
       ]
     },
     "kunitachi": {
@@ -327,6 +328,451 @@
       "sp": [],
       "lines": [
         "chuo"
+      ]
+    },
+    "nippori": {
+      "id": "nippori",
+      "name": "日暮里",
+      "km": 0,
+      "sp": [
+        "yamanote",
+        "tokunai"
+      ],
+      "lines": [
+        "joban",
+        "tohoku",
+        "oku-branch"
+      ]
+    },
+    "mikawashima": {
+      "id": "mikawashima",
+      "name": "三河島",
+      "km": 12,
+      "sp": [
+        "tokunai"
+      ],
+      "lines": [
+        "joban"
+      ]
+    },
+    "minamisenju": {
+      "id": "minamisenju",
+      "name": "南千住",
+      "km": 34,
+      "sp": [
+        "tokunai"
+      ],
+      "lines": [
+        "joban"
+      ]
+    },
+    "kitasenju": {
+      "id": "kitasenju",
+      "name": "北千住",
+      "km": 52,
+      "sp": [
+        "tokunai"
+      ],
+      "lines": [
+        "joban"
+      ]
+    },
+    "ayase": {
+      "id": "ayase",
+      "name": "綾瀬",
+      "km": 77,
+      "sp": [
+        "tokunai"
+      ],
+      "lines": [
+        "joban"
+      ]
+    },
+    "kamearo": {
+      "id": "kamearo",
+      "name": "亀有",
+      "km": 99,
+      "sp": [
+        "tokunai"
+      ],
+      "lines": [
+        "joban"
+      ]
+    },
+    "kanamachi": {
+      "id": "kanamachi",
+      "name": "金町",
+      "km": 118,
+      "sp": [
+        "tokunai"
+      ],
+      "lines": [
+        "joban"
+      ]
+    },
+    "matsudo": {
+      "id": "matsudo",
+      "name": "松戸",
+      "km": 157,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "kitamatsudo": {
+      "id": "kitamatsudo",
+      "name": "北松戸",
+      "km": 178,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "mabashi": {
+      "id": "mabashi",
+      "name": "馬橋",
+      "km": 191,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "shinmatsudo": {
+      "id": "shinmatsudo",
+      "name": "新松戸",
+      "km": 207,
+      "sp": [],
+      "lines": [
+        "joban",
+        "musashino"
+      ]
+    },
+    "kitakogane": {
+      "id": "kitakogane",
+      "name": "北小金",
+      "km": 220,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "minamikashiwa": {
+      "id": "minamikashiwa",
+      "name": "南柏",
+      "km": 269,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "kitakashiwa": {
+      "id": "kitakashiwa",
+      "name": "北柏",
+      "km": 292,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "abiko": {
+      "id": "abiko",
+      "name": "我孫子",
+      "km": 313,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "tennoudai": {
+      "id": "tennoudai",
+      "name": "天王台",
+      "km": 340,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "toride": {
+      "id": "toride",
+      "name": "取手",
+      "km": 374,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "fujishiro": {
+      "id": "fujishiro",
+      "name": "藤代",
+      "km": 434,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "ryugasakishi": {
+      "id": "ryugasakishi",
+      "name": "龍ヶ崎市",
+      "km": 455,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "ushiku": {
+      "id": "ushiku",
+      "name": "牛久",
+      "km": 506,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "hitachinoushiku": {
+      "id": "hitachinoushiku",
+      "name": "ひたち野うしく",
+      "km": 545,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "arakawaoki": {
+      "id": "arakawaoki",
+      "name": "荒川沖",
+      "km": 572,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "tsuchiura": {
+      "id": "tsuchiura",
+      "name": "土浦",
+      "km": 638,
+      "sp": [],
+      "lines": [
+        "joban"
+      ]
+    },
+    "fuchuhonmachi": {
+      "id": "fuchuhonmachi",
+      "name": "府中本町",
+      "km": 0,
+      "sp": [],
+      "lines": [
+        "musashino",
+        "nanbu"
+      ]
+    },
+    "kitafuchu": {
+      "id": "kitafuchu",
+      "name": "北府中",
+      "km": 17,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "shinkodaira": {
+      "id": "shinkodaira",
+      "name": "新小平",
+      "km": 74,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "shinakitsu": {
+      "id": "shinakitsu",
+      "name": "新秋津",
+      "km": 130,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "higashitokorozawa": {
+      "id": "higashitokorozawa",
+      "name": "東所沢",
+      "km": 157,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "niza": {
+      "id": "niza",
+      "name": "新座",
+      "km": 197,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "kitaasaka": {
+      "id": "kitaasaka",
+      "name": "北朝霞",
+      "km": 228,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "nishiurawa": {
+      "id": "nishiurawa",
+      "name": "西浦和",
+      "km": 278,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "musashiurawa": {
+      "id": "musashiurawa",
+      "name": "武蔵浦和",
+      "km": 298,
+      "sp": [],
+      "lines": [
+        "musashino",
+        "saikyo"
+      ]
+    },
+    "minamiurawa": {
+      "id": "minamiurawa",
+      "name": "南浦和",
+      "km": 317,
+      "sp": [],
+      "lines": [
+        "musashino",
+        "tohoku"
+      ]
+    },
+    "higashiurawa": {
+      "id": "higashiurawa",
+      "name": "東浦和",
+      "km": 354,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "higashikawagucho": {
+      "id": "higashikawagucho",
+      "name": "東川口",
+      "km": 392,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "minamikoshigaya": {
+      "id": "minamikoshigaya",
+      "name": "南越谷",
+      "km": 435,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "koshigayalaketown": {
+      "id": "koshigayalaketown",
+      "name": "越谷レイクタウン",
+      "km": 463,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "yoshikawa": {
+      "id": "yoshikawa",
+      "name": "吉川",
+      "km": 482,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "yoshikawaminami": {
+      "id": "yoshikawaminami",
+      "name": "吉川美南",
+      "km": 498,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "shinmisato": {
+      "id": "shinmisato",
+      "name": "新三郷",
+      "km": 513,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "misato-musashino": {
+      "id": "misato-musashino",
+      "name": "三郷",
+      "km": 534,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "minaminagareyama": {
+      "id": "minaminagareyama",
+      "name": "南流山",
+      "km": 554,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "shinyahashira": {
+      "id": "shinyahashira",
+      "name": "新八柱",
+      "km": 616,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "higashimatsudo": {
+      "id": "higashimatsudo",
+      "name": "東松戸",
+      "km": 640,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "ichikawaono": {
+      "id": "ichikawaono",
+      "name": "市川大野",
+      "km": 659,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "funabashihoden": {
+      "id": "funabashihoden",
+      "name": "船橋法典",
+      "km": 689,
+      "sp": [],
+      "lines": [
+        "musashino"
+      ]
+    },
+    "nishifunabashi": {
+      "id": "nishifunabashi",
+      "name": "西船橋",
+      "km": 718,
+      "sp": [],
+      "lines": [
+        "musashino",
+        "sobu"
       ]
     },
     "kawasaki": {
@@ -466,15 +912,6 @@
       "id": "minamitama",
       "name": "南多摩",
       "km": 255,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
-    },
-    "fuchuhonmachi": {
-      "id": "fuchuhonmachi",
-      "name": "府中本町",
-      "km": 279,
       "sp": [],
       "lines": [
         "nanbu"
@@ -798,15 +1235,6 @@
         "saikyo"
       ]
     },
-    "musashiurawa": {
-      "id": "musashiurawa",
-      "name": "武蔵浦和",
-      "km": 161,
-      "sp": [],
-      "lines": [
-        "saikyo"
-      ]
-    },
     "nakaurawa": {
       "id": "nakaurawa",
       "name": "中浦和",
@@ -972,15 +1400,6 @@
         "sobu"
       ]
     },
-    "nishifunabashi": {
-      "id": "nishifunabashi",
-      "name": "西船橋",
-      "km": 216,
-      "sp": [],
-      "lines": [
-        "sobu"
-      ]
-    },
     "funabashi": {
       "id": "funabashi",
       "name": "船橋",
@@ -1133,19 +1552,6 @@
         "tohoku"
       ]
     },
-    "nippori": {
-      "id": "nippori",
-      "name": "日暮里",
-      "km": 58,
-      "sp": [
-        "yamanote",
-        "tokunai"
-      ],
-      "lines": [
-        "tohoku",
-        "oku-branch"
-      ]
-    },
     "nishinippori": {
       "id": "nishinippori",
       "name": "西日暮里",
@@ -1226,15 +1632,6 @@
       "id": "warabi",
       "name": "蕨",
       "km": 197,
-      "sp": [],
-      "lines": [
-        "tohoku"
-      ]
-    },
-    "minamiurawa": {
-      "id": "minamiurawa",
-      "name": "南浦和",
-      "km": 225,
       "sp": [],
       "lines": [
         "tohoku"
@@ -2123,6 +2520,16 @@
         "to": "kunitachi",
         "weight": 17,
         "type": "line"
+      },
+      {
+        "to": "kitafuchu",
+        "weight": 22,
+        "type": "line"
+      },
+      {
+        "to": "shinkodaira",
+        "weight": 35,
+        "type": "line"
       }
     ],
     "kunitachi": [
@@ -2211,6 +2618,615 @@
       {
         "to": "nishihachioji",
         "weight": 33,
+        "type": "line"
+      }
+    ],
+    "mikawashima": [
+      {
+        "to": "nippori",
+        "weight": 12,
+        "type": "line"
+      },
+      {
+        "to": "minamisenju",
+        "weight": 22,
+        "type": "line"
+      }
+    ],
+    "nippori": [
+      {
+        "to": "mikawashima",
+        "weight": 12,
+        "type": "line"
+      },
+      {
+        "to": "uguisudani",
+        "weight": 11,
+        "type": "line"
+      },
+      {
+        "to": "nishinippori",
+        "weight": 5,
+        "type": "line"
+      },
+      {
+        "to": "oku",
+        "weight": 26,
+        "type": "line"
+      }
+    ],
+    "minamisenju": [
+      {
+        "to": "mikawashima",
+        "weight": 22,
+        "type": "line"
+      },
+      {
+        "to": "kitasenju",
+        "weight": 18,
+        "type": "line"
+      }
+    ],
+    "kitasenju": [
+      {
+        "to": "minamisenju",
+        "weight": 18,
+        "type": "line"
+      },
+      {
+        "to": "ayase",
+        "weight": 25,
+        "type": "line"
+      }
+    ],
+    "ayase": [
+      {
+        "to": "kitasenju",
+        "weight": 25,
+        "type": "line"
+      },
+      {
+        "to": "kamearo",
+        "weight": 22,
+        "type": "line"
+      }
+    ],
+    "kamearo": [
+      {
+        "to": "ayase",
+        "weight": 22,
+        "type": "line"
+      },
+      {
+        "to": "kanamachi",
+        "weight": 19,
+        "type": "line"
+      }
+    ],
+    "kanamachi": [
+      {
+        "to": "kamearo",
+        "weight": 19,
+        "type": "line"
+      },
+      {
+        "to": "matsudo",
+        "weight": 39,
+        "type": "line"
+      }
+    ],
+    "matsudo": [
+      {
+        "to": "kanamachi",
+        "weight": 39,
+        "type": "line"
+      },
+      {
+        "to": "kitamatsudo",
+        "weight": 21,
+        "type": "line"
+      }
+    ],
+    "kitamatsudo": [
+      {
+        "to": "matsudo",
+        "weight": 21,
+        "type": "line"
+      },
+      {
+        "to": "mabashi",
+        "weight": 13,
+        "type": "line"
+      }
+    ],
+    "mabashi": [
+      {
+        "to": "kitamatsudo",
+        "weight": 13,
+        "type": "line"
+      },
+      {
+        "to": "shinmatsudo",
+        "weight": 16,
+        "type": "line"
+      }
+    ],
+    "shinmatsudo": [
+      {
+        "to": "mabashi",
+        "weight": 16,
+        "type": "line"
+      },
+      {
+        "to": "kitakogane",
+        "weight": 13,
+        "type": "line"
+      },
+      {
+        "to": "minaminagareyama",
+        "weight": 21,
+        "type": "line"
+      },
+      {
+        "to": "shinyahashira",
+        "weight": 41,
+        "type": "line"
+      }
+    ],
+    "kitakogane": [
+      {
+        "to": "shinmatsudo",
+        "weight": 13,
+        "type": "line"
+      },
+      {
+        "to": "minamikashiwa",
+        "weight": 49,
+        "type": "line"
+      }
+    ],
+    "minamikashiwa": [
+      {
+        "to": "kitakogane",
+        "weight": 49,
+        "type": "line"
+      },
+      {
+        "to": "kitakashiwa",
+        "weight": 23,
+        "type": "line"
+      }
+    ],
+    "kitakashiwa": [
+      {
+        "to": "minamikashiwa",
+        "weight": 23,
+        "type": "line"
+      },
+      {
+        "to": "abiko",
+        "weight": 21,
+        "type": "line"
+      }
+    ],
+    "abiko": [
+      {
+        "to": "kitakashiwa",
+        "weight": 21,
+        "type": "line"
+      },
+      {
+        "to": "tennoudai",
+        "weight": 27,
+        "type": "line"
+      }
+    ],
+    "tennoudai": [
+      {
+        "to": "abiko",
+        "weight": 27,
+        "type": "line"
+      },
+      {
+        "to": "toride",
+        "weight": 34,
+        "type": "line"
+      }
+    ],
+    "toride": [
+      {
+        "to": "tennoudai",
+        "weight": 34,
+        "type": "line"
+      },
+      {
+        "to": "fujishiro",
+        "weight": 60,
+        "type": "line"
+      }
+    ],
+    "fujishiro": [
+      {
+        "to": "toride",
+        "weight": 60,
+        "type": "line"
+      },
+      {
+        "to": "ryugasakishi",
+        "weight": 21,
+        "type": "line"
+      }
+    ],
+    "ryugasakishi": [
+      {
+        "to": "fujishiro",
+        "weight": 21,
+        "type": "line"
+      },
+      {
+        "to": "ushiku",
+        "weight": 51,
+        "type": "line"
+      }
+    ],
+    "ushiku": [
+      {
+        "to": "ryugasakishi",
+        "weight": 51,
+        "type": "line"
+      },
+      {
+        "to": "hitachinoushiku",
+        "weight": 39,
+        "type": "line"
+      }
+    ],
+    "hitachinoushiku": [
+      {
+        "to": "ushiku",
+        "weight": 39,
+        "type": "line"
+      },
+      {
+        "to": "arakawaoki",
+        "weight": 27,
+        "type": "line"
+      }
+    ],
+    "arakawaoki": [
+      {
+        "to": "hitachinoushiku",
+        "weight": 27,
+        "type": "line"
+      },
+      {
+        "to": "tsuchiura",
+        "weight": 66,
+        "type": "line"
+      }
+    ],
+    "tsuchiura": [
+      {
+        "to": "arakawaoki",
+        "weight": 66,
+        "type": "line"
+      }
+    ],
+    "kitafuchu": [
+      {
+        "to": "fuchuhonmachi",
+        "weight": 17,
+        "type": "line"
+      },
+      {
+        "to": "nishikokubunji",
+        "weight": 22,
+        "type": "line"
+      }
+    ],
+    "fuchuhonmachi": [
+      {
+        "to": "kitafuchu",
+        "weight": 17,
+        "type": "line"
+      },
+      {
+        "to": "minamitama",
+        "weight": 24,
+        "type": "line"
+      },
+      {
+        "to": "bubaigawara",
+        "weight": 9,
+        "type": "line"
+      }
+    ],
+    "shinkodaira": [
+      {
+        "to": "nishikokubunji",
+        "weight": 35,
+        "type": "line"
+      },
+      {
+        "to": "shinakitsu",
+        "weight": 56,
+        "type": "line"
+      }
+    ],
+    "shinakitsu": [
+      {
+        "to": "shinkodaira",
+        "weight": 56,
+        "type": "line"
+      },
+      {
+        "to": "higashitokorozawa",
+        "weight": 27,
+        "type": "line"
+      }
+    ],
+    "higashitokorozawa": [
+      {
+        "to": "shinakitsu",
+        "weight": 27,
+        "type": "line"
+      },
+      {
+        "to": "niza",
+        "weight": 40,
+        "type": "line"
+      }
+    ],
+    "niza": [
+      {
+        "to": "higashitokorozawa",
+        "weight": 40,
+        "type": "line"
+      },
+      {
+        "to": "kitaasaka",
+        "weight": 31,
+        "type": "line"
+      }
+    ],
+    "kitaasaka": [
+      {
+        "to": "niza",
+        "weight": 31,
+        "type": "line"
+      },
+      {
+        "to": "nishiurawa",
+        "weight": 50,
+        "type": "line"
+      }
+    ],
+    "nishiurawa": [
+      {
+        "to": "kitaasaka",
+        "weight": 50,
+        "type": "line"
+      },
+      {
+        "to": "musashiurawa",
+        "weight": 20,
+        "type": "line"
+      }
+    ],
+    "musashiurawa": [
+      {
+        "to": "nishiurawa",
+        "weight": 20,
+        "type": "line"
+      },
+      {
+        "to": "minamiurawa",
+        "weight": 19,
+        "type": "line"
+      },
+      {
+        "to": "kitatoda",
+        "weight": 24,
+        "type": "line"
+      },
+      {
+        "to": "nakaurawa",
+        "weight": 12,
+        "type": "line"
+      }
+    ],
+    "minamiurawa": [
+      {
+        "to": "musashiurawa",
+        "weight": 19,
+        "type": "line"
+      },
+      {
+        "to": "higashiurawa",
+        "weight": 37,
+        "type": "line"
+      },
+      {
+        "to": "warabi",
+        "weight": 28,
+        "type": "line"
+      },
+      {
+        "to": "urawa",
+        "weight": 17,
+        "type": "line"
+      }
+    ],
+    "higashiurawa": [
+      {
+        "to": "minamiurawa",
+        "weight": 37,
+        "type": "line"
+      },
+      {
+        "to": "higashikawagucho",
+        "weight": 38,
+        "type": "line"
+      }
+    ],
+    "higashikawagucho": [
+      {
+        "to": "higashiurawa",
+        "weight": 38,
+        "type": "line"
+      },
+      {
+        "to": "minamikoshigaya",
+        "weight": 43,
+        "type": "line"
+      }
+    ],
+    "minamikoshigaya": [
+      {
+        "to": "higashikawagucho",
+        "weight": 43,
+        "type": "line"
+      },
+      {
+        "to": "koshigayalaketown",
+        "weight": 28,
+        "type": "line"
+      }
+    ],
+    "koshigayalaketown": [
+      {
+        "to": "minamikoshigaya",
+        "weight": 28,
+        "type": "line"
+      },
+      {
+        "to": "yoshikawa",
+        "weight": 19,
+        "type": "line"
+      }
+    ],
+    "yoshikawa": [
+      {
+        "to": "koshigayalaketown",
+        "weight": 19,
+        "type": "line"
+      },
+      {
+        "to": "yoshikawaminami",
+        "weight": 16,
+        "type": "line"
+      }
+    ],
+    "yoshikawaminami": [
+      {
+        "to": "yoshikawa",
+        "weight": 16,
+        "type": "line"
+      },
+      {
+        "to": "shinmisato",
+        "weight": 15,
+        "type": "line"
+      }
+    ],
+    "shinmisato": [
+      {
+        "to": "yoshikawaminami",
+        "weight": 15,
+        "type": "line"
+      },
+      {
+        "to": "misato-musashino",
+        "weight": 21,
+        "type": "line"
+      }
+    ],
+    "misato-musashino": [
+      {
+        "to": "shinmisato",
+        "weight": 21,
+        "type": "line"
+      },
+      {
+        "to": "minaminagareyama",
+        "weight": 20,
+        "type": "line"
+      }
+    ],
+    "minaminagareyama": [
+      {
+        "to": "misato-musashino",
+        "weight": 20,
+        "type": "line"
+      },
+      {
+        "to": "shinmatsudo",
+        "weight": 21,
+        "type": "line"
+      }
+    ],
+    "shinyahashira": [
+      {
+        "to": "shinmatsudo",
+        "weight": 41,
+        "type": "line"
+      },
+      {
+        "to": "higashimatsudo",
+        "weight": 24,
+        "type": "line"
+      }
+    ],
+    "higashimatsudo": [
+      {
+        "to": "shinyahashira",
+        "weight": 24,
+        "type": "line"
+      },
+      {
+        "to": "ichikawaono",
+        "weight": 19,
+        "type": "line"
+      }
+    ],
+    "ichikawaono": [
+      {
+        "to": "higashimatsudo",
+        "weight": 19,
+        "type": "line"
+      },
+      {
+        "to": "funabashihoden",
+        "weight": 30,
+        "type": "line"
+      }
+    ],
+    "funabashihoden": [
+      {
+        "to": "ichikawaono",
+        "weight": 30,
+        "type": "line"
+      },
+      {
+        "to": "nishifunabashi",
+        "weight": 29,
+        "type": "line"
+      }
+    ],
+    "nishifunabashi": [
+      {
+        "to": "funabashihoden",
+        "weight": 29,
+        "type": "line"
+      },
+      {
+        "to": "shimosonanakayama",
+        "weight": 26,
+        "type": "line"
+      },
+      {
+        "to": "funabashi",
+        "weight": 16,
         "type": "line"
       }
     ],
@@ -2426,18 +3442,6 @@
       {
         "to": "fuchuhonmachi",
         "weight": 24,
-        "type": "line"
-      }
-    ],
-    "fuchuhonmachi": [
-      {
-        "to": "minamitama",
-        "weight": 24,
-        "type": "line"
-      },
-      {
-        "to": "bubaigawara",
-        "weight": 9,
         "type": "line"
       }
     ],
@@ -2821,18 +3825,6 @@
         "type": "line"
       }
     ],
-    "musashiurawa": [
-      {
-        "to": "kitatoda",
-        "weight": 24,
-        "type": "line"
-      },
-      {
-        "to": "nakaurawa",
-        "weight": 12,
-        "type": "line"
-      }
-    ],
     "nakaurawa": [
       {
         "to": "musashiurawa",
@@ -3035,18 +4027,6 @@
         "type": "line"
       }
     ],
-    "nishifunabashi": [
-      {
-        "to": "shimosonanakayama",
-        "weight": 26,
-        "type": "line"
-      },
-      {
-        "to": "funabashi",
-        "weight": 16,
-        "type": "line"
-      }
-    ],
     "funabashi": [
       {
         "to": "nishifunabashi",
@@ -3232,23 +4212,6 @@
         "type": "line"
       }
     ],
-    "nippori": [
-      {
-        "to": "uguisudani",
-        "weight": 11,
-        "type": "line"
-      },
-      {
-        "to": "nishinippori",
-        "weight": 5,
-        "type": "line"
-      },
-      {
-        "to": "oku",
-        "weight": 26,
-        "type": "line"
-      }
-    ],
     "nishinippori": [
       {
         "to": "nippori",
@@ -3347,18 +4310,6 @@
       {
         "to": "minamiurawa",
         "weight": 28,
-        "type": "line"
-      }
-    ],
-    "minamiurawa": [
-      {
-        "to": "warabi",
-        "weight": 28,
-        "type": "line"
-      },
-      {
-        "to": "urawa",
-        "weight": 17,
         "type": "line"
       }
     ],

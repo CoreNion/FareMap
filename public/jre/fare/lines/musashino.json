@@ -1,0 +1,165 @@
+{
+  "lines": [
+    {
+      "id": "musashino",
+      "stations": [
+        {
+          "name": "府中本町",
+          "id": "fuchuhonmachi",
+          "km": 0,
+          "sp": []
+        },
+        {
+          "name": "北府中",
+          "id": "kitafuchu",
+          "km": 17,
+          "sp": []
+        },
+        {
+          "name": "西国分寺",
+          "id": "nishikokubunji",
+          "km": 39,
+          "sp": []
+        },
+        {
+          "name": "新小平",
+          "id": "shinkodaira",
+          "km": 74,
+          "sp": []
+        },
+        {
+          "name": "新秋津",
+          "id": "shinakitsu",
+          "km": 130,
+          "sp": []
+        },
+        {
+          "name": "東所沢",
+          "id": "higashitokorozawa",
+          "km": 157,
+          "sp": []
+        },
+        {
+          "name": "新座",
+          "id": "niza",
+          "km": 197,
+          "sp": []
+        },
+        {
+          "name": "北朝霞",
+          "id": "kitaasaka",
+          "km": 228,
+          "sp": []
+        },
+        {
+          "name": "西浦和",
+          "id": "nishiurawa",
+          "km": 278,
+          "sp": []
+        },
+        {
+          "name": "武蔵浦和",
+          "id": "musashiurawa",
+          "km": 298,
+          "sp": []
+        },
+        {
+          "name": "南浦和",
+          "id": "minamiurawa",
+          "km": 317,
+          "sp": []
+        },
+        {
+          "name": "東浦和",
+          "id": "higashiurawa",
+          "km": 354,
+          "sp": []
+        },
+        {
+          "name": "東川口",
+          "id": "higashikawagucho",
+          "km": 392,
+          "sp": []
+        },
+        {
+          "name": "南越谷",
+          "id": "minamikoshigaya",
+          "km": 435,
+          "sp": []
+        },
+        {
+          "name": "越谷レイクタウン",
+          "id": "koshigayalaketown",
+          "km": 463,
+          "sp": []
+        },
+        {
+          "name": "吉川",
+          "id": "yoshikawa",
+          "km": 482,
+          "sp": []
+        },
+        {
+          "name": "吉川美南",
+          "id": "yoshikawaminami",
+          "km": 498,
+          "sp": []
+        },
+        {
+          "name": "新三郷",
+          "id": "shinmisato",
+          "km": 513,
+          "sp": []
+        },
+        {
+          "name": "三郷",
+          "id": "misato-musashino",
+          "km": 534,
+          "sp": []
+        },
+        {
+          "name": "南流山",
+          "id": "minaminagareyama",
+          "km": 554,
+          "sp": []
+        },
+        {
+          "name": "新松戸",
+          "id": "shinmatsudo",
+          "km": 575,
+          "sp": []
+        },
+        {
+          "name": "新八柱",
+          "id": "shinyahashira",
+          "km": 616,
+          "sp": []
+        },
+        {
+          "name": "東松戸",
+          "id": "higashimatsudo",
+          "km": 640,
+          "sp": []
+        },
+        {
+          "name": "市川大野",
+          "id": "ichikawaono",
+          "km": 659,
+          "sp": []
+        },
+        {
+          "name": "船橋法典",
+          "id": "funabashihoden",
+          "km": 689,
+          "sp": []
+        },
+        {
+          "name": "西船橋",
+          "id": "nishifunabashi",
+          "km": 718,
+          "sp": []
+        }
+      ]
+    }
+  ]
+}
