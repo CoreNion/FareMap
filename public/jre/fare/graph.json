@@ -7,10 +7,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "chuo",
-        "tohoku"
       ]
     },
     "ochanomizu": {
@@ -20,10 +16,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "chuo",
-        "sobu-old"
       ]
     },
     "suidobashi": {
@@ -33,9 +25,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "iidabashi": {
@@ -45,9 +34,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "ichigaya": {
@@ -57,9 +43,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "yotsuya": {
@@ -69,9 +52,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "shinanomachi": {
@@ -81,9 +61,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "sendagaya": {
@@ -93,9 +70,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "yoyogi": {
@@ -105,10 +79,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "chuo",
-        "yamanote1"
       ]
     },
     "shinjuku": {
@@ -118,10 +88,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "chuo",
-        "yamanote2"
       ]
     },
     "okubo-chuo": {
@@ -130,9 +96,6 @@
       "km": 104,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "higashinakano": {
@@ -141,9 +104,6 @@
       "km": 112,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "nakano": {
@@ -152,9 +112,6 @@
       "km": 134,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "koenji": {
@@ -163,9 +120,6 @@
       "km": 148,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "asagaya": {
@@ -174,9 +128,6 @@
       "km": 160,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "ogikubo": {
@@ -185,9 +136,6 @@
       "km": 174,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "nishiogikubo": {
@@ -196,139 +144,91 @@
       "km": 193,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "chuo"
       ]
     },
     "kichijoji": {
       "id": "kichijoji",
       "name": "吉祥寺",
       "km": 212,
-      "sp": [],
-      "lines": [
-        "chuo"
-      ]
+      "sp": []
     },
     "mitaka": {
       "id": "mitaka",
       "name": "三鷹",
       "km": 228,
-      "sp": [],
-      "lines": [
-        "chuo"
-      ]
+      "sp": []
     },
     "musashisakai": {
       "id": "musashisakai",
       "name": "武蔵境",
       "km": 244,
-      "sp": [],
-      "lines": [
-        "chuo"
-      ]
+      "sp": []
     },
     "higashikoganei": {
       "id": "higashikoganei",
       "name": "東小金井",
       "km": 261,
-      "sp": [],
-      "lines": [
-        "chuo"
-      ]
+      "sp": []
     },
     "musashikoganei": {
       "id": "musashikoganei",
       "name": "武蔵小金井",
       "km": 278,
-      "sp": [],
-      "lines": [
-        "chuo"
-      ]
+      "sp": []
     },
     "kokubunji": {
       "id": "kokubunji",
       "name": "国分寺",
       "km": 301,
-      "sp": [],
-      "lines": [
-        "chuo"
-      ]
+      "sp": []
     },
     "nishikokubunji": {
       "id": "nishikokubunji",
       "name": "西国分寺",
       "km": 315,
-      "sp": [],
-      "lines": [
-        "chuo",
-        "musashino"
-      ]
+      "sp": []
     },
     "kunitachi": {
       "id": "kunitachi",
       "name": "国立",
       "km": 332,
-      "sp": [],
-      "lines": [
-        "chuo"
-      ]
+      "sp": []
     },
     "tachikawa": {
       "id": "tachikawa",
       "name": "立川",
       "km": 362,
-      "sp": [],
-      "lines": [
-        "chuo",
-        "nanbu"
-      ]
+      "sp": []
     },
     "hino": {
       "id": "hino",
       "name": "日野",
       "km": 395,
-      "sp": [],
-      "lines": [
-        "chuo"
-      ]
+      "sp": []
     },
     "toyoda": {
       "id": "toyoda",
       "name": "豊田",
       "km": 418,
-      "sp": [],
-      "lines": [
-        "chuo"
-      ]
+      "sp": []
     },
     "hachioji": {
       "id": "hachioji",
       "name": "八王子",
       "km": 461,
-      "sp": [],
-      "lines": [
-        "chuo",
-        "yokohama"
-      ]
+      "sp": []
     },
     "nishihachioji": {
       "id": "nishihachioji",
       "name": "西八王子",
       "km": 485,
-      "sp": [],
-      "lines": [
-        "chuo"
-      ]
+      "sp": []
     },
     "takao": {
       "id": "takao",
       "name": "高尾",
       "km": 518,
-      "sp": [],
-      "lines": [
-        "chuo"
-      ]
+      "sp": []
     },
     "nippori": {
       "id": "nippori",
@@ -337,11 +237,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "joban",
-        "tohoku",
-        "oku-branch"
       ]
     },
     "mikawashima": {
@@ -350,9 +245,6 @@
       "km": 12,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "joban"
       ]
     },
     "minamisenju": {
@@ -361,9 +253,6 @@
       "km": 34,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "joban"
       ]
     },
     "kitasenju": {
@@ -372,9 +261,6 @@
       "km": 52,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "joban"
       ]
     },
     "ayase": {
@@ -383,9 +269,6 @@
       "km": 77,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "joban"
       ]
     },
     "kamearo": {
@@ -394,9 +277,6 @@
       "km": 99,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "joban"
       ]
     },
     "kanamachi": {
@@ -405,155 +285,103 @@
       "km": 118,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "joban"
       ]
     },
     "matsudo": {
       "id": "matsudo",
       "name": "松戸",
       "km": 157,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "kitamatsudo": {
       "id": "kitamatsudo",
       "name": "北松戸",
       "km": 178,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "mabashi": {
       "id": "mabashi",
       "name": "馬橋",
       "km": 191,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "shinmatsudo": {
       "id": "shinmatsudo",
       "name": "新松戸",
       "km": 207,
-      "sp": [],
-      "lines": [
-        "joban",
-        "musashino"
-      ]
+      "sp": []
     },
     "kitakogane": {
       "id": "kitakogane",
       "name": "北小金",
       "km": 220,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "minamikashiwa": {
       "id": "minamikashiwa",
       "name": "南柏",
       "km": 269,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "kitakashiwa": {
       "id": "kitakashiwa",
       "name": "北柏",
       "km": 292,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "abiko": {
       "id": "abiko",
       "name": "我孫子",
       "km": 313,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "tennoudai": {
       "id": "tennoudai",
       "name": "天王台",
       "km": 340,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "toride": {
       "id": "toride",
       "name": "取手",
       "km": 374,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "fujishiro": {
       "id": "fujishiro",
       "name": "藤代",
       "km": 434,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "ryugasakishi": {
       "id": "ryugasakishi",
       "name": "龍ヶ崎市",
       "km": 455,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "ushiku": {
       "id": "ushiku",
       "name": "牛久",
       "km": 506,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "hitachinoushiku": {
       "id": "hitachinoushiku",
       "name": "ひたち野うしく",
       "km": 545,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "arakawaoki": {
       "id": "arakawaoki",
       "name": "荒川沖",
       "km": 572,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "tsuchiura": {
       "id": "tsuchiura",
       "name": "土浦",
       "km": 638,
-      "sp": [],
-      "lines": [
-        "joban"
-      ]
+      "sp": []
     },
     "tokyo": {
       "id": "tokyo",
@@ -562,12 +390,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "keiyo",
-        "sobu",
-        "tohoku",
-        "tokaido"
       ]
     },
     "hachobori": {
@@ -576,9 +398,6 @@
       "km": 12,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "keiyo"
       ]
     },
     "echujima": {
@@ -587,9 +406,6 @@
       "km": 28,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "keiyo"
       ]
     },
     "shiomi": {
@@ -598,9 +414,6 @@
       "km": 54,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "keiyo"
       ]
     },
     "shinkiba": {
@@ -609,9 +422,6 @@
       "km": 74,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "keiyo"
       ]
     },
     "kasairinkaipark": {
@@ -620,342 +430,223 @@
       "km": 106,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "keiyo"
       ]
     },
     "maihama": {
       "id": "maihama",
       "name": "舞浜",
       "km": 127,
-      "sp": [],
-      "lines": [
-        "keiyo"
-      ]
+      "sp": []
     },
     "shinurayasu": {
       "id": "shinurayasu",
       "name": "新浦安",
       "km": 161,
-      "sp": [],
-      "lines": [
-        "keiyo"
-      ]
+      "sp": []
     },
     "ichikawashiohama": {
       "id": "ichikawashiohama",
       "name": "市川塩浜",
       "km": 182,
-      "sp": [],
-      "lines": [
-        "keiyo",
-        "keiyo-branch"
-      ]
+      "sp": []
     },
     "futamatashinmachi": {
       "id": "futamatashinmachi",
       "name": "二俣新町",
       "km": 226,
-      "sp": [],
-      "lines": [
-        "keiyo"
-      ]
+      "sp": []
     },
     "minamifunabashi": {
       "id": "minamifunabashi",
       "name": "南船橋",
       "km": 260,
-      "sp": [],
-      "lines": [
-        "keiyo",
-        "keiyo-branch"
-      ]
+      "sp": []
     },
     "shinnarashino": {
       "id": "shinnarashino",
       "name": "新習志野",
       "km": 283,
-      "sp": [],
-      "lines": [
-        "keiyo"
-      ]
+      "sp": []
     },
     "makuharitoyosuna": {
       "id": "makuharitoyosuna",
       "name": "幕張豊砂",
       "km": 300,
-      "sp": [],
-      "lines": [
-        "keiyo"
-      ]
+      "sp": []
     },
     "kaihinmakuhari": {
       "id": "kaihinmakuhari",
       "name": "海浜幕張",
       "km": 317,
-      "sp": [],
-      "lines": [
-        "keiyo"
-      ]
+      "sp": []
     },
     "kemigawahama": {
       "id": "kemigawahama",
       "name": "検見川浜",
       "km": 337,
-      "sp": [],
-      "lines": [
-        "keiyo"
-      ]
+      "sp": []
     },
     "inagekaigan": {
       "id": "inagekaigan",
       "name": "稲毛海岸",
       "km": 353,
-      "sp": [],
-      "lines": [
-        "keiyo"
-      ]
+      "sp": []
     },
     "chibaminato": {
       "id": "chibaminato",
       "name": "千葉みなと",
       "km": 390,
-      "sp": [],
-      "lines": [
-        "keiyo"
-      ]
+      "sp": []
     },
     "soga": {
       "id": "soga",
       "name": "蘇我",
       "km": 430,
-      "sp": [],
-      "lines": [
-        "keiyo",
-        "sotobo"
-      ]
+      "sp": []
     },
     "nishifunabashi": {
       "id": "nishifunabashi",
       "name": "西船橋",
       "km": 59,
-      "sp": [],
-      "lines": [
-        "keiyo-branch",
-        "musashino",
-        "sobu"
-      ]
+      "sp": []
     },
     "fuchuhonmachi": {
       "id": "fuchuhonmachi",
       "name": "府中本町",
       "km": 0,
-      "sp": [],
-      "lines": [
-        "musashino",
-        "nanbu"
-      ]
+      "sp": []
     },
     "kitafuchu": {
       "id": "kitafuchu",
       "name": "北府中",
       "km": 17,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "shinkodaira": {
       "id": "shinkodaira",
       "name": "新小平",
       "km": 74,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "shinakitsu": {
       "id": "shinakitsu",
       "name": "新秋津",
       "km": 130,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "higashitokorozawa": {
       "id": "higashitokorozawa",
       "name": "東所沢",
       "km": 157,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "niza": {
       "id": "niza",
       "name": "新座",
       "km": 197,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "kitaasaka": {
       "id": "kitaasaka",
       "name": "北朝霞",
       "km": 228,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "nishiurawa": {
       "id": "nishiurawa",
       "name": "西浦和",
       "km": 278,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "musashiurawa": {
       "id": "musashiurawa",
       "name": "武蔵浦和",
       "km": 298,
-      "sp": [],
-      "lines": [
-        "musashino",
-        "saikyo"
-      ]
+      "sp": []
     },
     "minamiurawa": {
       "id": "minamiurawa",
       "name": "南浦和",
       "km": 317,
-      "sp": [],
-      "lines": [
-        "musashino",
-        "tohoku"
-      ]
+      "sp": []
     },
     "higashiurawa": {
       "id": "higashiurawa",
       "name": "東浦和",
       "km": 354,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "higashikawagucho": {
       "id": "higashikawagucho",
       "name": "東川口",
       "km": 392,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "minamikoshigaya": {
       "id": "minamikoshigaya",
       "name": "南越谷",
       "km": 435,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "koshigayalaketown": {
       "id": "koshigayalaketown",
       "name": "越谷レイクタウン",
       "km": 463,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "yoshikawa": {
       "id": "yoshikawa",
       "name": "吉川",
       "km": 482,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "yoshikawaminami": {
       "id": "yoshikawaminami",
       "name": "吉川美南",
       "km": 498,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "shinmisato": {
       "id": "shinmisato",
       "name": "新三郷",
       "km": 513,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "misato-musashino": {
       "id": "misato-musashino",
       "name": "三郷",
       "km": 534,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "minaminagareyama": {
       "id": "minaminagareyama",
       "name": "南流山",
       "km": 554,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "shinyahashira": {
       "id": "shinyahashira",
       "name": "新八柱",
       "km": 616,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "higashimatsudo": {
       "id": "higashimatsudo",
       "name": "東松戸",
       "km": 640,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "ichikawaono": {
       "id": "ichikawaono",
       "name": "市川大野",
       "km": 659,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "funabashihoden": {
       "id": "funabashihoden",
       "name": "船橋法典",
       "km": 689,
-      "sp": [],
-      "lines": [
-        "musashino"
-      ]
+      "sp": []
     },
     "kawasaki": {
       "id": "kawasaki",
@@ -963,10 +654,6 @@
       "km": 0,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "nanbu",
-        "tokaido"
       ]
     },
     "shitte": {
@@ -975,174 +662,115 @@
       "km": 17,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "nanbu",
-        "nanbu-branch"
       ]
     },
     "kashimada": {
       "id": "kashimada",
       "name": "鹿島田",
       "km": 41,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "hirama": {
       "id": "hirama",
       "name": "平間",
       "km": 53,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "mukaigawara": {
       "id": "mukaigawara",
       "name": "向河原",
       "km": 66,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "musashikosugi": {
       "id": "musashikosugi",
       "name": "武蔵小杉",
       "km": 75,
-      "sp": [],
-      "lines": [
-        "nanbu",
-        "hinkaku-freight"
-      ]
+      "sp": []
     },
     "musashinakahara": {
       "id": "musashinakahara",
       "name": "武蔵中原",
       "km": 92,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "musashishinjo": {
       "id": "musashishinjo",
       "name": "武蔵新城",
       "km": 105,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "musashimizonokuchi": {
       "id": "musashimizonokuchi",
       "name": "武蔵溝ノ口",
       "km": 127,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "kuji": {
       "id": "kuji",
       "name": "久地",
       "km": 149,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "noborito": {
       "id": "noborito",
       "name": "登戸",
       "km": 173,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "inadazutsumi": {
       "id": "inadazutsumi",
       "name": "稲田堤",
       "km": 208,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "yanokuchi": {
       "id": "yanokuchi",
       "name": "矢野口",
       "km": 224,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "inaginaganuma": {
       "id": "inaginaganuma",
       "name": "稲城長沼",
       "km": 241,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "minamitama": {
       "id": "minamitama",
       "name": "南多摩",
       "km": 255,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "bubaigawara": {
       "id": "bubaigawara",
       "name": "分倍河原",
       "km": 288,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "nishifu": {
       "id": "nishifu",
       "name": "西府",
       "km": 300,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "yaho": {
       "id": "yaho",
       "name": "谷保",
       "km": 316,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "yagawa": {
       "id": "yagawa",
       "name": "矢川",
       "km": 330,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "nishikunitachi": {
       "id": "nishikunitachi",
       "name": "西国立",
       "km": 343,
-      "sp": [],
-      "lines": [
-        "nanbu"
-      ]
+      "sp": []
     },
     "hachonawate": {
       "id": "hachonawate",
@@ -1150,9 +778,6 @@
       "km": 11,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "nanbu-branch"
       ]
     },
     "kawasakishinmachi": {
@@ -1161,9 +786,6 @@
       "km": 20,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "nanbu-branch"
       ]
     },
     "odasakae": {
@@ -1172,9 +794,6 @@
       "km": 27,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "nanbu-branch"
       ]
     },
     "hamakawasaki": {
@@ -1183,9 +802,6 @@
       "km": 41,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "nanbu-branch"
       ]
     },
     "yokohama": {
@@ -1194,10 +810,6 @@
       "km": 0,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "negishi",
-        "tokaido"
       ]
     },
     "sakuragicho": {
@@ -1206,9 +818,6 @@
       "km": 20,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "negishi"
       ]
     },
     "kannai": {
@@ -1217,9 +826,6 @@
       "km": 30,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "negishi"
       ]
     },
     "ishikawacho": {
@@ -1228,9 +834,6 @@
       "km": 38,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "negishi"
       ]
     },
     "yamate": {
@@ -1239,9 +842,6 @@
       "km": 50,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "negishi"
       ]
     },
     "negishi-negishi": {
@@ -1250,9 +850,6 @@
       "km": 71,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "negishi"
       ]
     },
     "isogo": {
@@ -1261,9 +858,6 @@
       "km": 95,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "negishi"
       ]
     },
     "shinsugita": {
@@ -1272,9 +866,6 @@
       "km": 111,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "negishi"
       ]
     },
     "yokodai": {
@@ -1283,9 +874,6 @@
       "km": 141,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "negishi"
       ]
     },
     "konandai": {
@@ -1294,9 +882,6 @@
       "km": 160,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "negishi"
       ]
     },
     "hongodai": {
@@ -1305,20 +890,13 @@
       "km": 185,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "negishi"
       ]
     },
     "ofuna": {
       "id": "ofuna",
       "name": "大船",
       "km": 221,
-      "sp": [],
-      "lines": [
-        "negishi",
-        "tokaido"
-      ]
+      "sp": []
     },
     "ikebukuro": {
       "id": "ikebukuro",
@@ -1327,10 +905,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "saikyo",
-        "yamanote2"
       ]
     },
     "itabashi": {
@@ -1339,9 +913,6 @@
       "km": 18,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "saikyo"
       ]
     },
     "jujo": {
@@ -1350,9 +921,6 @@
       "km": 35,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "saikyo"
       ]
     },
     "akabane": {
@@ -1361,11 +929,6 @@
       "km": 55,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "saikyo",
-        "tohoku",
-        "oku-branch"
       ]
     },
     "kitaakabane": {
@@ -1374,9 +937,6 @@
       "km": 70,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "saikyo"
       ]
     },
     "ukimahunato": {
@@ -1385,83 +945,55 @@
       "km": 86,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "saikyo"
       ]
     },
     "todakouen": {
       "id": "todakouen",
       "name": "戸田公園",
       "km": 110,
-      "sp": [],
-      "lines": [
-        "saikyo"
-      ]
+      "sp": []
     },
     "toda-saikyo": {
       "id": "toda-saikyo",
       "name": "戸田",
       "km": 123,
-      "sp": [],
-      "lines": [
-        "saikyo"
-      ]
+      "sp": []
     },
     "kitatoda": {
       "id": "kitatoda",
       "name": "北戸田",
       "km": 137,
-      "sp": [],
-      "lines": [
-        "saikyo"
-      ]
+      "sp": []
     },
     "nakaurawa": {
       "id": "nakaurawa",
       "name": "中浦和",
       "km": 173,
-      "sp": [],
-      "lines": [
-        "saikyo"
-      ]
+      "sp": []
     },
     "minamiyono": {
       "id": "minamiyono",
       "name": "南与野",
       "km": 190,
-      "sp": [],
-      "lines": [
-        "saikyo"
-      ]
+      "sp": []
     },
     "yonohonmachi": {
       "id": "yonohonmachi",
       "name": "与野本町",
       "km": 204,
-      "sp": [],
-      "lines": [
-        "saikyo"
-      ]
+      "sp": []
     },
     "kitayono": {
       "id": "kitayono",
       "name": "北与野",
       "km": 217,
-      "sp": [],
-      "lines": [
-        "saikyo"
-      ]
+      "sp": []
     },
     "omiya": {
       "id": "omiya",
       "name": "大宮",
       "km": 235,
-      "sp": [],
-      "lines": [
-        "saikyo",
-        "tohoku"
-      ]
+      "sp": []
     },
     "shinnihombashi": {
       "id": "shinnihombashi",
@@ -1469,9 +1001,6 @@
       "km": 12,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "sobu"
       ]
     },
     "bakurocho": {
@@ -1480,9 +1009,6 @@
       "km": 23,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "sobu"
       ]
     },
     "kinshicho": {
@@ -1491,10 +1017,6 @@
       "km": 48,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "sobu",
-        "sobu-old"
       ]
     },
     "kameido": {
@@ -1503,9 +1025,6 @@
       "km": 63,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "sobu"
       ]
     },
     "hirai": {
@@ -1514,9 +1033,6 @@
       "km": 82,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "sobu"
       ]
     },
     "shinkoiwa": {
@@ -1525,9 +1041,6 @@
       "km": 100,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "sobu"
       ]
     },
     "koiwa": {
@@ -1536,119 +1049,79 @@
       "km": 128,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "sobu"
       ]
     },
     "ichikawa": {
       "id": "ichikawa",
       "name": "市川",
       "km": 154,
-      "sp": [],
-      "lines": [
-        "sobu"
-      ]
+      "sp": []
     },
     "motoyawata": {
       "id": "motoyawata",
       "name": "本八幡",
       "km": 174,
-      "sp": [],
-      "lines": [
-        "sobu"
-      ]
+      "sp": []
     },
     "shimosonanakayama": {
       "id": "shimosonanakayama",
       "name": "下総中山",
       "km": 190,
-      "sp": [],
-      "lines": [
-        "sobu"
-      ]
+      "sp": []
     },
     "funabashi": {
       "id": "funabashi",
       "name": "船橋",
       "km": 232,
-      "sp": [],
-      "lines": [
-        "sobu"
-      ]
+      "sp": []
     },
     "higashifunabashi": {
       "id": "higashifunabashi",
       "name": "東船橋",
       "km": 250,
-      "sp": [],
-      "lines": [
-        "sobu"
-      ]
+      "sp": []
     },
     "tsudanuma": {
       "id": "tsudanuma",
       "name": "津田沼",
       "km": 267,
-      "sp": [],
-      "lines": [
-        "sobu"
-      ]
+      "sp": []
     },
     "makuharihongo": {
       "id": "makuharihongo",
       "name": "幕張本郷",
       "km": 296,
-      "sp": [],
-      "lines": [
-        "sobu"
-      ]
+      "sp": []
     },
     "makuhari": {
       "id": "makuhari",
       "name": "幕張",
       "km": 316,
-      "sp": [],
-      "lines": [
-        "sobu"
-      ]
+      "sp": []
     },
     "shinkemigawa": {
       "id": "shinkemigawa",
       "name": "新検見川",
       "km": 332,
-      "sp": [],
-      "lines": [
-        "sobu"
-      ]
+      "sp": []
     },
     "inage": {
       "id": "inage",
       "name": "稲毛",
       "km": 359,
-      "sp": [],
-      "lines": [
-        "sobu"
-      ]
+      "sp": []
     },
     "nishichiba": {
       "id": "nishichiba",
       "name": "西千葉",
       "km": 378,
-      "sp": [],
-      "lines": [
-        "sobu"
-      ]
+      "sp": []
     },
     "chiba": {
       "id": "chiba",
       "name": "千葉",
       "km": 392,
-      "sp": [],
-      "lines": [
-        "sobu",
-        "sotobo"
-      ]
+      "sp": []
     },
     "akihabara": {
       "id": "akihabara",
@@ -1657,10 +1130,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "sobu-old",
-        "tohoku"
       ]
     },
     "asakusabashi": {
@@ -1669,9 +1138,6 @@
       "km": 20,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "sobu-old"
       ]
     },
     "ryogoku": {
@@ -1680,19 +1146,13 @@
       "km": 28,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "sobu-old"
       ]
     },
     "honchiba": {
       "id": "honchiba",
       "name": "本千葉",
       "km": 14,
-      "sp": [],
-      "lines": [
-        "sotobo"
-      ]
+      "sp": []
     },
     "okachimachi": {
       "id": "okachimachi",
@@ -1701,9 +1161,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "tohoku"
       ]
     },
     "ueno": {
@@ -1713,9 +1170,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "tohoku"
       ]
     },
     "uguisudani": {
@@ -1725,9 +1179,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "tohoku"
       ]
     },
     "nishinippori": {
@@ -1737,9 +1188,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "tohoku"
       ]
     },
     "tabata": {
@@ -1749,10 +1197,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "tohoku",
-        "yamanote2"
       ]
     },
     "kaminakazato": {
@@ -1761,9 +1205,6 @@
       "km": 88,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "tohoku"
       ]
     },
     "oji": {
@@ -1772,9 +1213,6 @@
       "km": 99,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "tohoku"
       ]
     },
     "higashijujo": {
@@ -1783,73 +1221,49 @@
       "km": 114,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "tohoku"
       ]
     },
     "kawaguchi": {
       "id": "kawaguchi",
       "name": "川口",
       "km": 158,
-      "sp": [],
-      "lines": [
-        "tohoku"
-      ]
+      "sp": []
     },
     "nishikawaguchi": {
       "id": "nishikawaguchi",
       "name": "西川口",
       "km": 178,
-      "sp": [],
-      "lines": [
-        "tohoku"
-      ]
+      "sp": []
     },
     "warabi": {
       "id": "warabi",
       "name": "蕨",
       "km": 197,
-      "sp": [],
-      "lines": [
-        "tohoku"
-      ]
+      "sp": []
     },
     "urawa": {
       "id": "urawa",
       "name": "浦和",
       "km": 242,
-      "sp": [],
-      "lines": [
-        "tohoku"
-      ]
+      "sp": []
     },
     "kitaurawa": {
       "id": "kitaurawa",
       "name": "北浦和",
       "km": 260,
-      "sp": [],
-      "lines": [
-        "tohoku"
-      ]
+      "sp": []
     },
     "yono": {
       "id": "yono",
       "name": "与野",
       "km": 276,
-      "sp": [],
-      "lines": [
-        "tohoku"
-      ]
+      "sp": []
     },
     "saitamashintoshin": {
       "id": "saitamashintoshin",
       "name": "さいたま新都心",
       "km": 287,
-      "sp": [],
-      "lines": [
-        "tohoku"
-      ]
+      "sp": []
     },
     "oku": {
       "id": "oku",
@@ -1857,9 +1271,6 @@
       "km": 26,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "oku-branch"
       ]
     },
     "yurakucho": {
@@ -1869,9 +1280,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "tokaido"
       ]
     },
     "shimbashi": {
@@ -1881,9 +1289,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "tokaido"
       ]
     },
     "hamamatsucho": {
@@ -1893,9 +1298,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "tokaido"
       ]
     },
     "tamachi": {
@@ -1905,9 +1307,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "tokaido"
       ]
     },
     "takanawagateway": {
@@ -1917,9 +1316,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "tokaido"
       ]
     },
     "shinagawa": {
@@ -1929,11 +1325,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "tokaido",
-        "hinkaku-freight",
-        "yamanote1"
       ]
     },
     "oimachi": {
@@ -1942,9 +1333,6 @@
       "km": 92,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "tokaido"
       ]
     },
     "omori": {
@@ -1953,9 +1341,6 @@
       "km": 114,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "tokaido"
       ]
     },
     "kamata": {
@@ -1964,9 +1349,6 @@
       "km": 144,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "tokaido"
       ]
     },
     "tsurumi": {
@@ -1975,10 +1357,6 @@
       "km": 217,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "tokaido",
-        "hinkaku-freight"
       ]
     },
     "shinkoyasu": {
@@ -1987,9 +1365,6 @@
       "km": 248,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "tokaido"
       ]
     },
     "higashikanagawa": {
@@ -1997,10 +1372,6 @@
       "name": "東神奈川",
       "km": 270,
       "sp": [
-        "yokohama"
-      ],
-      "lines": [
-        "tokaido",
         "yokohama"
       ]
     },
@@ -2010,9 +1381,6 @@
       "km": 318,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "tokaido"
       ]
     },
     "higashitotsuka": {
@@ -2021,9 +1389,6 @@
       "km": 367,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "tokaido"
       ]
     },
     "totsuka": {
@@ -2032,9 +1397,6 @@
       "km": 409,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "tokaido"
       ]
     },
     "nishioi": {
@@ -2043,19 +1405,13 @@
       "km": 36,
       "sp": [
         "tokunai"
-      ],
-      "lines": [
-        "hinkaku-freight"
       ]
     },
     "shinkawasaki": {
       "id": "shinkawasaki",
       "name": "新川崎",
       "km": 127,
-      "sp": [],
-      "lines": [
-        "hinkaku-freight"
-      ]
+      "sp": []
     },
     "hazawayokohamakokudai": {
       "id": "hazawayokohamakokudai",
@@ -2063,9 +1419,6 @@
       "km": 266,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "hinkaku-freight"
       ]
     },
     "osaki": {
@@ -2075,9 +1428,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "yamanote1"
       ]
     },
     "gotanda": {
@@ -2087,9 +1437,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "yamanote1"
       ]
     },
     "meguro": {
@@ -2099,9 +1446,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "yamanote1"
       ]
     },
     "ebisu": {
@@ -2111,9 +1455,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "yamanote1"
       ]
     },
     "shibuya": {
@@ -2123,9 +1464,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "yamanote1"
       ]
     },
     "harajuku": {
@@ -2135,9 +1473,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "yamanote1"
       ]
     },
     "shinoookubo": {
@@ -2147,9 +1482,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "yamanote2"
       ]
     },
     "takadanobaba": {
@@ -2159,9 +1491,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "yamanote2"
       ]
     },
     "mejiro": {
@@ -2171,9 +1500,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "yamanote2"
       ]
     },
     "otsuka": {
@@ -2183,9 +1509,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "yamanote2"
       ]
     },
     "sugamo": {
@@ -2195,9 +1518,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "yamanote2"
       ]
     },
     "komagome": {
@@ -2207,9 +1527,6 @@
       "sp": [
         "yamanote",
         "tokunai"
-      ],
-      "lines": [
-        "yamanote2"
       ]
     },
     "oguchi": {
@@ -2217,9 +1534,6 @@
       "name": "大口",
       "km": 22,
       "sp": [
-        "yokohama"
-      ],
-      "lines": [
         "yokohama"
       ]
     },
@@ -2229,9 +1543,6 @@
       "km": 48,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "yokohama"
       ]
     },
     "shinyokohama": {
@@ -2239,9 +1550,6 @@
       "name": "新横浜",
       "km": 61,
       "sp": [
-        "yokohama"
-      ],
-      "lines": [
         "yokohama"
       ]
     },
@@ -2251,9 +1559,6 @@
       "km": 78,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "yokohama"
       ]
     },
     "kamoi": {
@@ -2261,9 +1566,6 @@
       "name": "鴨居",
       "km": 109,
       "sp": [
-        "yokohama"
-      ],
-      "lines": [
         "yokohama"
       ]
     },
@@ -2273,9 +1575,6 @@
       "km": 135,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "yokohama"
       ]
     },
     "tokaichiba": {
@@ -2283,9 +1582,6 @@
       "name": "十日市場",
       "km": 159,
       "sp": [
-        "yokohama"
-      ],
-      "lines": [
         "yokohama"
       ]
     },
@@ -2295,100 +1591,67 @@
       "km": 179,
       "sp": [
         "yokohama"
-      ],
-      "lines": [
-        "yokohama"
       ]
     },
     "naruse": {
       "id": "naruse",
       "name": "成瀬",
       "km": 202,
-      "sp": [],
-      "lines": [
-        "yokohama"
-      ]
+      "sp": []
     },
     "machida": {
       "id": "machida",
       "name": "町田",
       "km": 229,
-      "sp": [],
-      "lines": [
-        "yokohama"
-      ]
+      "sp": []
     },
     "kobuchi": {
       "id": "kobuchi",
       "name": "古淵",
       "km": 257,
-      "sp": [],
-      "lines": [
-        "yokohama"
-      ]
+      "sp": []
     },
     "fuchinobe": {
       "id": "fuchinobe",
       "name": "淵野辺",
       "km": 284,
-      "sp": [],
-      "lines": [
-        "yokohama"
-      ]
+      "sp": []
     },
     "yabe": {
       "id": "yabe",
       "name": "矢部",
       "km": 292,
-      "sp": [],
-      "lines": [
-        "yokohama"
-      ]
+      "sp": []
     },
     "sagamihara": {
       "id": "sagamihara",
       "name": "相模原",
       "km": 310,
-      "sp": [],
-      "lines": [
-        "yokohama"
-      ]
+      "sp": []
     },
     "hashimoto-yokohama": {
       "id": "hashimoto-yokohama",
       "name": "橋本",
       "km": 338,
-      "sp": [],
-      "lines": [
-        "yokohama"
-      ]
+      "sp": []
     },
     "aihara": {
       "id": "aihara",
       "name": "相原",
       "km": 357,
-      "sp": [],
-      "lines": [
-        "yokohama"
-      ]
+      "sp": []
     },
     "hachiojiminamino": {
       "id": "hachiojiminamino",
       "name": "八王子みなみ野",
       "km": 386,
-      "sp": [],
-      "lines": [
-        "yokohama"
-      ]
+      "sp": []
     },
     "katakura": {
       "id": "katakura",
       "name": "片倉",
       "km": 400,
-      "sp": [],
-      "lines": [
-        "yokohama"
-      ]
+      "sp": []
     }
   },
   "adj": {

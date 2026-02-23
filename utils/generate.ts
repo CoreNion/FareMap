@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 
 import { FareLine, FareStation } from '../types/fare';
-import { Graph, StationNode, Edge } from '../types/calc';
+import { Graph, Edge } from '../types/calc';
 
 /**
  * 複数の路線データ(各路線の駅一覧)から、全駅辞書と隣接駅リストを含んだグラフ構造を構築する関数
@@ -11,7 +11,7 @@ import { Graph, StationNode, Edge } from '../types/calc';
  * @returns 
  */
 export function buildGraphFromLines(lines: FareLine['lines']): Graph {
-  const stations = new Map<string, StationNode>();
+  const stations = new Map<string, FareStation>();
   const adj = new Map<string, Edge[]>();
 
   /**
@@ -19,23 +19,21 @@ export function buildGraphFromLines(lines: FareLine['lines']): Graph {
    * - 既存ノードがあれば `sp` と `lines` をマージする
    * - 無ければ新規ノードを作成して登録する
    */
-  function ensureNode(s: FareStation, lineId: string) {
+  function ensureNode(s: FareStation) {
     const existing = stations.get(s.id);
     if (existing) {
       // merge sp and lines
       const spSet = new Set([...(existing.sp || []), ...(s.sp || [])]);
       existing.sp = Array.from(spSet);
       existing.km = existing.km ?? s.km;
-      existing.lines = Array.from(new Set([...(existing.lines || []), lineId]));
       return existing;
     }
 
-    const node: StationNode = {
+    const node: FareStation = {
       id: s.id,
       name: s.name,
       km: s.km,
       sp: s.sp || [],
-      lines: [lineId],
     };
     stations.set(s.id, node);
     return node;
@@ -66,7 +64,7 @@ export function buildGraphFromLines(lines: FareLine['lines']): Graph {
     const sts = line.stations;
     for (let i = 0; i < sts.length; i++) {
       const s = sts[i];
-      ensureNode(s, line.id);
+      ensureNode(s);
       if (i > 0) {
         const prev = sts[i - 1];
         const w = (typeof s.km === 'number' && typeof prev.km === 'number') ? Math.abs(s.km - prev.km) : 1;

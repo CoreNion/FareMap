@@ -15,22 +15,11 @@ export type Edge = { to: string; weight: number; type?: 'line' | 'transfer' };
 export type Adj = Record<string, Edge[]>;
 
 /**
- * ノード（駅）情報の拡張型
- * - 元の `FareStation` を引き継ぎつつ、ID・表示名・所属路線一覧を含める
- * - `sp` 等のフィールドはそのまま保持されるため乗換判定などに使える
- */
-export type StationNode = FareStation & {
-  id: string;
-  name: string;
-  lines?: string[];
-};
-
-/**
  * グラフ全体の型
- * - `stations`: 駅辞書（id -> StationNode）
+ * - `stations`: 駅辞書（id -> FareStation）
  * - `adj`: 隣接リスト（id -> Edge[]）
  */
 export type Graph = {
-  stations: Record<string, StationNode>;
+  stations: Record<string, FareStation>;
   adj: Adj;
 };
