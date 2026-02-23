@@ -3,12 +3,12 @@
     {
       "name": "山手線 (品川～代々木)",
       "id": "yamanote1",
-      "children": null
+      "children": []
     },
     {
       "name": "山手線 (新宿～田端)",
       "id": "yamanote2",
-      "children": null
+      "children": []
     },
     {
       "name": "東海道本線",
@@ -58,11 +58,21 @@
     {
       "name": "京葉線",
       "id": "keiyo",
-      "children": []
+      "children": [
+        {
+          "name": "京葉線 (市川塩浜～西船橋～南船橋)",
+          "id": "keiyo-branch"
+        }
+      ]
     },
     {
       "name": "武蔵野線",
       "id": "musashino",
+      "children": []
+    },
+    {
+      "name": "外房線",
+      "id": "sotobo",
       "children": []
     },
     {

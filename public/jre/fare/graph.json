@@ -555,6 +555,198 @@
         "joban"
       ]
     },
+    "tokyo": {
+      "id": "tokyo",
+      "name": "東京",
+      "km": 0,
+      "sp": [
+        "yamanote",
+        "tokunai"
+      ],
+      "lines": [
+        "keiyo",
+        "sobu",
+        "tohoku",
+        "tokaido"
+      ]
+    },
+    "hachobori": {
+      "id": "hachobori",
+      "name": "八丁堀",
+      "km": 12,
+      "sp": [
+        "tokunai"
+      ],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "echujima": {
+      "id": "echujima",
+      "name": "越中島",
+      "km": 28,
+      "sp": [
+        "tokunai"
+      ],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "shiomi": {
+      "id": "shiomi",
+      "name": "塩見",
+      "km": 54,
+      "sp": [
+        "tokunai"
+      ],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "shinkiba": {
+      "id": "shinkiba",
+      "name": "新木場",
+      "km": 74,
+      "sp": [
+        "tokunai"
+      ],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "kasairinkaipark": {
+      "id": "kasairinkaipark",
+      "name": "葛西臨海公園",
+      "km": 106,
+      "sp": [
+        "tokunai"
+      ],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "maihama": {
+      "id": "maihama",
+      "name": "舞浜",
+      "km": 127,
+      "sp": [],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "shinurayasu": {
+      "id": "shinurayasu",
+      "name": "新浦安",
+      "km": 161,
+      "sp": [],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "ichikawashiohama": {
+      "id": "ichikawashiohama",
+      "name": "市川塩浜",
+      "km": 182,
+      "sp": [],
+      "lines": [
+        "keiyo",
+        "keiyo-branch"
+      ]
+    },
+    "futamatashinmachi": {
+      "id": "futamatashinmachi",
+      "name": "二俣新町",
+      "km": 226,
+      "sp": [],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "minamifunabashi": {
+      "id": "minamifunabashi",
+      "name": "南船橋",
+      "km": 260,
+      "sp": [],
+      "lines": [
+        "keiyo",
+        "keiyo-branch"
+      ]
+    },
+    "shinnarashino": {
+      "id": "shinnarashino",
+      "name": "新習志野",
+      "km": 283,
+      "sp": [],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "makuharitoyosuna": {
+      "id": "makuharitoyosuna",
+      "name": "幕張豊砂",
+      "km": 300,
+      "sp": [],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "kaihinmakuhari": {
+      "id": "kaihinmakuhari",
+      "name": "海浜幕張",
+      "km": 317,
+      "sp": [],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "kemigawahama": {
+      "id": "kemigawahama",
+      "name": "検見川浜",
+      "km": 337,
+      "sp": [],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "inagekaigan": {
+      "id": "inagekaigan",
+      "name": "稲毛海岸",
+      "km": 353,
+      "sp": [],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "chibaminato": {
+      "id": "chibaminato",
+      "name": "千葉みなと",
+      "km": 390,
+      "sp": [],
+      "lines": [
+        "keiyo"
+      ]
+    },
+    "soga": {
+      "id": "soga",
+      "name": "蘇我",
+      "km": 430,
+      "sp": [],
+      "lines": [
+        "keiyo",
+        "sotobo"
+      ]
+    },
+    "nishifunabashi": {
+      "id": "nishifunabashi",
+      "name": "西船橋",
+      "km": 59,
+      "sp": [],
+      "lines": [
+        "keiyo-branch",
+        "musashino",
+        "sobu"
+      ]
+    },
     "fuchuhonmachi": {
       "id": "fuchuhonmachi",
       "name": "府中本町",
@@ -763,16 +955,6 @@
       "sp": [],
       "lines": [
         "musashino"
-      ]
-    },
-    "nishifunabashi": {
-      "id": "nishifunabashi",
-      "name": "西船橋",
-      "km": 718,
-      "sp": [],
-      "lines": [
-        "musashino",
-        "sobu"
       ]
     },
     "kawasaki": {
@@ -1281,20 +1463,6 @@
         "tohoku"
       ]
     },
-    "tokyo": {
-      "id": "tokyo",
-      "name": "東京",
-      "km": 0,
-      "sp": [
-        "yamanote",
-        "tokunai"
-      ],
-      "lines": [
-        "sobu",
-        "tohoku",
-        "tokaido"
-      ]
-    },
     "shinnihombashi": {
       "id": "shinnihombashi",
       "name": "新日本橋",
@@ -1478,7 +1646,8 @@
       "km": 392,
       "sp": [],
       "lines": [
-        "sobu"
+        "sobu",
+        "sotobo"
       ]
     },
     "akihabara": {
@@ -1514,6 +1683,15 @@
       ],
       "lines": [
         "sobu-old"
+      ]
+    },
+    "honchiba": {
+      "id": "honchiba",
+      "name": "本千葉",
+      "km": 14,
+      "sp": [],
+      "lines": [
+        "sotobo"
       ]
     },
     "okachimachi": {
@@ -2912,6 +3090,269 @@
         "type": "line"
       }
     ],
+    "hachobori": [
+      {
+        "to": "tokyo",
+        "weight": 12,
+        "type": "line"
+      },
+      {
+        "to": "echujima",
+        "weight": 16,
+        "type": "line"
+      }
+    ],
+    "tokyo": [
+      {
+        "to": "hachobori",
+        "weight": 12,
+        "type": "line"
+      },
+      {
+        "to": "shinnihombashi",
+        "weight": 12,
+        "type": "line"
+      },
+      {
+        "to": "kanda",
+        "weight": 13,
+        "type": "line"
+      },
+      {
+        "to": "yurakucho",
+        "weight": 8,
+        "type": "line"
+      }
+    ],
+    "echujima": [
+      {
+        "to": "hachobori",
+        "weight": 16,
+        "type": "line"
+      },
+      {
+        "to": "shiomi",
+        "weight": 26,
+        "type": "line"
+      }
+    ],
+    "shiomi": [
+      {
+        "to": "echujima",
+        "weight": 26,
+        "type": "line"
+      },
+      {
+        "to": "shinkiba",
+        "weight": 20,
+        "type": "line"
+      }
+    ],
+    "shinkiba": [
+      {
+        "to": "shiomi",
+        "weight": 20,
+        "type": "line"
+      },
+      {
+        "to": "kasairinkaipark",
+        "weight": 32,
+        "type": "line"
+      }
+    ],
+    "kasairinkaipark": [
+      {
+        "to": "shinkiba",
+        "weight": 32,
+        "type": "line"
+      },
+      {
+        "to": "maihama",
+        "weight": 21,
+        "type": "line"
+      }
+    ],
+    "maihama": [
+      {
+        "to": "kasairinkaipark",
+        "weight": 21,
+        "type": "line"
+      },
+      {
+        "to": "shinurayasu",
+        "weight": 34,
+        "type": "line"
+      }
+    ],
+    "shinurayasu": [
+      {
+        "to": "maihama",
+        "weight": 34,
+        "type": "line"
+      },
+      {
+        "to": "ichikawashiohama",
+        "weight": 21,
+        "type": "line"
+      }
+    ],
+    "ichikawashiohama": [
+      {
+        "to": "shinurayasu",
+        "weight": 21,
+        "type": "line"
+      },
+      {
+        "to": "futamatashinmachi",
+        "weight": 44,
+        "type": "line"
+      },
+      {
+        "to": "nishifunabashi",
+        "weight": 59,
+        "type": "line"
+      }
+    ],
+    "futamatashinmachi": [
+      {
+        "to": "ichikawashiohama",
+        "weight": 44,
+        "type": "line"
+      },
+      {
+        "to": "minamifunabashi",
+        "weight": 34,
+        "type": "line"
+      }
+    ],
+    "minamifunabashi": [
+      {
+        "to": "futamatashinmachi",
+        "weight": 34,
+        "type": "line"
+      },
+      {
+        "to": "shinnarashino",
+        "weight": 23,
+        "type": "line"
+      },
+      {
+        "to": "nishifunabashi",
+        "weight": 54,
+        "type": "line"
+      }
+    ],
+    "shinnarashino": [
+      {
+        "to": "minamifunabashi",
+        "weight": 23,
+        "type": "line"
+      },
+      {
+        "to": "makuharitoyosuna",
+        "weight": 17,
+        "type": "line"
+      }
+    ],
+    "makuharitoyosuna": [
+      {
+        "to": "shinnarashino",
+        "weight": 17,
+        "type": "line"
+      },
+      {
+        "to": "kaihinmakuhari",
+        "weight": 17,
+        "type": "line"
+      }
+    ],
+    "kaihinmakuhari": [
+      {
+        "to": "makuharitoyosuna",
+        "weight": 17,
+        "type": "line"
+      },
+      {
+        "to": "kemigawahama",
+        "weight": 20,
+        "type": "line"
+      }
+    ],
+    "kemigawahama": [
+      {
+        "to": "kaihinmakuhari",
+        "weight": 20,
+        "type": "line"
+      },
+      {
+        "to": "inagekaigan",
+        "weight": 16,
+        "type": "line"
+      }
+    ],
+    "inagekaigan": [
+      {
+        "to": "kemigawahama",
+        "weight": 16,
+        "type": "line"
+      },
+      {
+        "to": "chibaminato",
+        "weight": 37,
+        "type": "line"
+      }
+    ],
+    "chibaminato": [
+      {
+        "to": "inagekaigan",
+        "weight": 37,
+        "type": "line"
+      },
+      {
+        "to": "soga",
+        "weight": 40,
+        "type": "line"
+      }
+    ],
+    "soga": [
+      {
+        "to": "chibaminato",
+        "weight": 40,
+        "type": "line"
+      },
+      {
+        "to": "honchiba",
+        "weight": 24,
+        "type": "line"
+      }
+    ],
+    "nishifunabashi": [
+      {
+        "to": "ichikawashiohama",
+        "weight": 59,
+        "type": "line"
+      },
+      {
+        "to": "minamifunabashi",
+        "weight": 54,
+        "type": "line"
+      },
+      {
+        "to": "funabashihoden",
+        "weight": 29,
+        "type": "line"
+      },
+      {
+        "to": "shimosonanakayama",
+        "weight": 26,
+        "type": "line"
+      },
+      {
+        "to": "funabashi",
+        "weight": 16,
+        "type": "line"
+      }
+    ],
     "kitafuchu": [
       {
         "to": "fuchuhonmachi",
@@ -3210,23 +3651,6 @@
       {
         "to": "nishifunabashi",
         "weight": 29,
-        "type": "line"
-      }
-    ],
-    "nishifunabashi": [
-      {
-        "to": "funabashihoden",
-        "weight": 29,
-        "type": "line"
-      },
-      {
-        "to": "shimosonanakayama",
-        "weight": 26,
-        "type": "line"
-      },
-      {
-        "to": "funabashi",
-        "weight": 16,
         "type": "line"
       }
     ],
@@ -3897,23 +4321,6 @@
         "type": "line"
       }
     ],
-    "tokyo": [
-      {
-        "to": "shinnihombashi",
-        "weight": 12,
-        "type": "line"
-      },
-      {
-        "to": "kanda",
-        "weight": 13,
-        "type": "line"
-      },
-      {
-        "to": "yurakucho",
-        "weight": 8,
-        "type": "line"
-      }
-    ],
     "bakurocho": [
       {
         "to": "shinnihombashi",
@@ -4128,6 +4535,11 @@
         "to": "nishichiba",
         "weight": 14,
         "type": "line"
+      },
+      {
+        "to": "honchiba",
+        "weight": 14,
+        "type": "line"
       }
     ],
     "akihabara": [
@@ -4173,6 +4585,18 @@
       {
         "to": "kinshicho",
         "weight": 15,
+        "type": "line"
+      }
+    ],
+    "honchiba": [
+      {
+        "to": "chiba",
+        "weight": 14,
+        "type": "line"
+      },
+      {
+        "to": "soga",
+        "weight": 24,
         "type": "line"
       }
     ],
