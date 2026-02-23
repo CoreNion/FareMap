@@ -3,6 +3,27 @@ import { SUPPORTED_RAILWAY } from "../types/railway"
 import { Graph } from "../types/calc";
 
 /**
+ * 環境に応じた形でJSONファイルを読み込む関数
+ * @param url 
+ * @returns 
+ */
+const loadJson = async <T>(url: string): Promise<T> => {
+  // ブラウザ環境ならfetchでURLから読み込む
+  if (typeof window !== 'undefined') {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`fetch failed: ${res.status} ${res.statusText}`);
+    return res.json() as Promise<T>;
+  }
+
+  // Node.js(スクリプト)ならpublic配下のファイルを読み込む
+  const { readFile } = await import('fs/promises');
+  const { join } = await import('path');
+  const diskPath = join(process.cwd(), 'public', ...url.replace(/^\/+/, '').split('/'));
+  const txt = await readFile(diskPath, 'utf-8');
+  return JSON.parse(txt) as T;
+}
+
+/**
  * 営業キロから運賃を求める関数
  * @param distance 営業キロ
  * @param railway 鉄道会社コード
@@ -12,7 +33,7 @@ const distanceToFare = async (distance: number, railway: SUPPORTED_RAILWAY): Pro
   let fareData: JrFareData;
   switch (railway) {
     case 'jre':
-      fareData = await fetch('/jre/fare/2026.json').then(res => res.json()) as JrFareData;
+      fareData = await loadJson<JrFareData>('/jre/fare/2026.json');
       break;
     default:
       throw new Error(`未定義の鉄道会社です: ${railway}`);
@@ -42,7 +63,7 @@ const distanceToFare = async (distance: number, railway: SUPPORTED_RAILWAY): Pro
  * @returns 計算された運賃
  */
 export const calculateFare = async (startSt: FareStation, endSt: FareStation): Promise<number> => {
-  const graph = await fetch('/jre/fare/graph.json').then(res => res.json()) as Graph;
+  const graph = await loadJson<Graph>('/jre/fare/graph.json');
 
   const startId = startSt.id;
   const endId = endSt.id;
