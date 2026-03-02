@@ -42,3 +42,12 @@ export interface FareLineInfo {
 export interface FareLineList {
   lines: FareLineInfo[]
 }
+
+/** 駅ごとの各駅への運賃表 */
+export interface FareTable {
+  id: string;
+  name: string;
+  fares: {
+    [destinationId: string]: number;
+  }
+}

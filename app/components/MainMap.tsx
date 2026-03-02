@@ -2,9 +2,10 @@
 
 import Map, { Layer, MapProvider, Popup, Source, useMap } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
-
 import { Feature } from "geojson";
 import { useEffect, useState } from "react";
+
+import { FareTable } from "@/types/fare";
 
 const MAP_STYLE_URL =
   "https://tile.openstreetmap.jp/styles/osm-bright-ja/style.json";
@@ -41,6 +42,8 @@ export const MainMap = () => {
 
 const MapController = () => {
   const { current: map } = useMap();
+  const [geoStations, setGeoStations] = useState<GeoJSON.GeoJSON | null>(null);
+
   const [showPopup, setShowPopup] = useState(false);
   const [popUpOptions, setPopUpOptions] = useState<{
     longitude: number;
@@ -48,14 +51,22 @@ const MapController = () => {
     feature: Feature;
   } | null>(null);
 
+  const [selectedStation, setSelectedStation] = useState<string | undefined>();
+
   useEffect(() => {
     if (!map) return undefined;
 
-    if (!map.hasImage("station")) {
-      map.loadImage("/icons/station.png").then((image) => {
-        map.addImage("station", image.data);
-      });
+    (async () => {
+      if (!map.hasImage("station")) {
+        const stIcon = await map.loadImage("/icons/station.png");
+        map.addImage("station", stIcon.data);
+      }
+
+      const response = await fetch(STATIONS_GEOJSON_URL);
+      const data = await response.json() as GeoJSON.GeoJSON;
+      setGeoStations(data);
     }
+    )();
 
     map.on("click", "stations", (e) => {
       const coordinates = e.features![0].geometry.coordinates.slice();
@@ -73,8 +84,36 @@ const MapController = () => {
     });
   }, [map]);
 
-  return (
-    <Source id="stations-source" type="geojson" data={STATIONS_GEOJSON_URL}>
+  useEffect(() => {
+    if (selectedStation) {
+      (async () => {
+        const response = await fetch(`jre/fare/table/${selectedStation}.json`);
+        const data = await response.json() as FareTable;
+
+        // 各駅の運賃をGeoJSONのプロパティに追加
+        const features = geoStations as GeoJSON.FeatureCollection;
+        const updatedFeatures = features.features.map((feature) => {
+          const fare = data.fares[feature.properties!.id];
+          return {
+            ...feature,
+            properties: {
+              ...feature.properties,
+              fare: fare ? `${fare}円` : "情報なし",
+            },
+          };
+        });
+
+        setGeoStations({
+          ...features,
+          features: updatedFeatures,
+        });
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedStation]);
+
+  return geoStations ? (
+    <Source id="stations-source" type="geojson" data={geoStations}>
       <Layer
         id="stations"
         type="symbol"
@@ -83,6 +122,15 @@ const MapController = () => {
           "icon-image": "station",
           "icon-size": 0.1,
           "icon-allow-overlap": true,
+          "text-field": selectedStation ?
+            [
+              "format",
+              ["get", "name"], { "font-scale": 0.8, "text-color": "#555" }, "\n", {},
+              ["get", "fare"],
+            ] :
+            ["get", "name"],
+          'text-anchor': 'top',
+          'text-offset': [0, 2],
         }}
       />
       {
@@ -90,9 +138,12 @@ const MapController = () => {
           <div className="popup">
             <h3>駅名: {popUpOptions!.feature.properties!.name}</h3>
             <p>ID: {popUpOptions!.feature.properties!.id}</p>
+            <button onClick={() => {
+              setSelectedStation(popUpOptions!.feature.properties!.id);
+            }}>この駅からの運賃を表示</button>
           </div>
         </Popup>
       }
     </Source>
-  );
+  ) : <></>;
 }
