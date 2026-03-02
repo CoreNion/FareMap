@@ -2812,6 +2812,7 @@ __metadata:
   resolution: "fare-map@workspace:."
   dependencies:
     "@tailwindcss/postcss": "npm:^4.1.18"
+    "@types/geojson": "npm:^7946.0.16"
     "@types/node": "npm:^20.19.27"
     "@types/react": "npm:^19.2.7"
     "@types/react-dom": "npm:^19.2.3"
