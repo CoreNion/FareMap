@@ -45,7 +45,7 @@ const distanceToFare = async (distance: number, railway: SUPPORTED_RAILWAY): Pro
   if (distance % 10 !== 0) {
     distance = distance < 10 ? 10 : Math.floor(distance / 10) * 10;
   }
-  
+
   for (const range of fareData.kansen) {
     if (distance >= (range.startK * 10) && distance <= (range.endK * 10)) {
       fare = range.fare;
@@ -57,7 +57,6 @@ const distanceToFare = async (distance: number, railway: SUPPORTED_RAILWAY): Pro
 
 /**
  * 最短経路の運賃計算を行う関数
- * Dijkstra法で経路の合計距離(重み合計)を計算し、その距離から運賃を求める。
  * @param startSt 出発駅
  * @param endSt 到着駅
  * @returns 計算された運賃
@@ -71,6 +70,95 @@ export const calculateFare = async (startSt: FareStation, endSt: FareStation): P
     throw new Error('start または end 駅がグラフに存在しません');
   }
 
+  // 特定都区市内の処理
+  const distance = calcJrFareDistance(graph, startSt, endSt)
+
+  // 営業キロを運賃に変換
+  const fare = await distanceToFare(distance, 'jre');
+  return fare;
+}
+
+/**
+ * 特定都区市内の場合に、営業キロが100kmを超える場合は中心駅を返す関数
+ */
+const calcJrFareDistance = (graph: Graph, startSt: FareStation, endSt: FareStation) => {
+  const startId = startSt.id;
+  const startSp = startSt.sp;
+  const endId = endSt.id;
+  const endSp = endSt.sp;
+
+  // 特定都区市内の対象外ならパス
+  if (startSp.length == 0 && endSp.length ==0) {
+    return calculateShortDistance(graph, startId, endId);
+  }
+
+  // 同じ特定都区市内ならパス
+  if (startSp.find((sp) => endSp.includes(sp))) {
+    return calculateShortDistance(graph, startId, endId);
+  }
+
+  // 計算すべき駅を取得する関数 (特定区間の場合は中心駅を取得)
+  const getSpCalcStId = (st: FareStation) => {
+    if (st.sp.includes("yamanote") || st.sp.includes("tokunai")) {
+      return "tokyo";
+    } else {
+      switch (st.sp[0]) {
+        case 'yamanote':
+        case 'tokunai':
+          return "tokyo";
+        case 'yokohama':
+          return "yokohama";
+        case 'sapporo':
+          return "sapporo";
+        case 'sendai':
+          return "sendai";
+        case 'nagoya':
+          return "nagoya";
+        case 'kyoto':
+          return "kyoto";
+        case 'osaka':
+          return "osaka";
+        case 'kobe':
+          return "kobe";
+        case 'hiroshima':
+          return "hiroshima";
+        case 'kitakyusyu':
+          return "kokura";
+        case 'fukuoka':
+          return "hakata";
+        default:
+          return st.id;
+      }
+    }
+  }
+
+  // 特定区間の場合は中心駅を取得
+  const startSpCalcStId = getSpCalcStId(startSt);
+  const endSpCalcStId = getSpCalcStId(endSt);
+  
+  // 特定区間の中心駅までの距離を算出し、201km以上の場合はその距離を使用する
+  // 山手線内のみ、101km～200kmの場合は中心駅(東京駅)までの営業キロを使用する
+  // 201/101km未満の場合は通常通り算出する
+  const isYamanote = startSt.sp.includes("yamanote") || endSt.sp.includes("yamanote");
+  const distance = calculateShortDistance(graph, startSpCalcStId, endSpCalcStId);
+  if ((isYamanote && (distance >= 1001 && distance <= 2000))
+    || distance >= 2001) {
+    return distance;
+  } else {
+    return calculateShortDistance(graph, startId, endId);
+  }
+}
+
+/**
+ * 最短営業キロを計算する関数
+ * 
+ * Dijkstra法で計算
+ * @param graph Dijkstraで用いるグラフ
+ * @param startSt 開始駅
+ * @param endSt 到着駅
+ * @returns 営業キロ
+ */
+const calculateShortDistance = (graph: Graph, startId: string, endId: string) => {
   // ヒープは配列で実装した最小ヒープ（優先度付きキュー）。
   // 要素は `[distance, nodeId]` のタプルで、distance が小さい順に取り出す。
   type HeapItem = [number, string];
@@ -147,8 +235,5 @@ export const calculateFare = async (startSt: FareStation, endSt: FareStation): P
 
   const totalDistance = dist[endId];
   if (!isFinite(totalDistance)) throw new Error('経路が見つかりません');
-
-  // 営業キロを運賃に変換
-  const fare = await distanceToFare(totalDistance, 'jre');
-  return fare;
+  return totalDistance;
 }
