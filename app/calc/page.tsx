@@ -20,7 +20,7 @@ export default function CalcFareDemoPage() {
 
   useEffect(() => {
     const fetchInfo = async () => {
-      const res = await fetch('/jre/fare/info.json');
+      const res = await fetch('/data/jre/fare/info.json');
       const info = (await res.json()) as FareLineList;
       const merged: Array<{name: string; id: string; source: string}> = [];
       (info.lines || []).forEach((l: FareLineInfo) => {
