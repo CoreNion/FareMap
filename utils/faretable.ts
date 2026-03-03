@@ -4,8 +4,8 @@ import path from 'path';
 import { Graph } from '../types/calc';
 import { calculateFare } from './calc';
 
-const DEFAULT_GRAPH_PATH = path.resolve(process.cwd(), 'public', 'jre', 'fare', 'graph.json');
-const DEFAULT_OUT_DIR = path.resolve(process.cwd(), 'public', 'jre', 'fare', 'table');
+const DEFAULT_GRAPH_PATH = path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'graph.json');
+const DEFAULT_OUT_DIR = path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'table');
 
 const readJson = async <T>(p: string): Promise<T> => {
   const txt = await fs.readFile(p, 'utf8');

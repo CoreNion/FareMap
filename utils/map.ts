@@ -90,9 +90,9 @@ export const processGeoJSONFiles = async (mapDir: string, graphPath: string, out
 if (require.main === module) {
   (async () => {
     try {
-      const mapDir = path.resolve(process.cwd(), 'public', 'jre', 'map');
-      const graphPath = path.resolve(process.cwd(), 'public', 'jre', 'fare', 'graph.json');
-      const outputPath = path.resolve(process.cwd(), 'public', 'jre' , 'map.geojson');
+      const mapDir = path.resolve(process.cwd(), 'public', 'data', 'jre', 'map');
+      const graphPath = path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'graph.json');
+      const outputPath = path.resolve(process.cwd(), 'public', 'data', 'jre' , 'map.geojson');
       
       console.log('変換開始...');
       await processGeoJSONFiles(mapDir, graphPath, outputPath);

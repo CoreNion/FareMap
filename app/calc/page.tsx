@@ -69,7 +69,7 @@ export default function CalcFareDemoPage() {
       try {
         const file = resolveFileForLineId(fromLineId);
         if (!file) return;
-        const res = await fetch(`/jre/fare/lines/${file}.json`);
+        const res = await fetch(`/data/jre/fare/lines/${file}.json`);
         const data = (await res.json()) as FareLine;
         const linesInFile = data.lines || [];
         const entry = linesInFile.find((ln) => ln.id === fromLineId) || linesInFile[0];
@@ -90,7 +90,7 @@ export default function CalcFareDemoPage() {
       try {
         const file = resolveFileForLineId(toLineId);
         if (!file) return;
-        const res = await fetch(`/jre/fare/lines/${file}.json`);
+        const res = await fetch(`/data/jre/fare/lines/${file}.json`);
         const data = (await res.json()) as FareLine;
         const linesInFile = data.lines || [];
         const entry = linesInFile.find((ln) => ln.id === toLineId) || linesInFile[0];

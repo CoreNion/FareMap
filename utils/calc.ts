@@ -33,7 +33,7 @@ const distanceToFare = async (distance: number, railway: SUPPORTED_RAILWAY): Pro
   let fareData: JrFareData;
   switch (railway) {
     case 'jre':
-      fareData = await loadJson<JrFareData>('/jre/fare/2026.json');
+      fareData = await loadJson<JrFareData>('/data/jre/fare/2026.json');
       break;
     default:
       throw new Error(`未定義の鉄道会社です: ${railway}`);
@@ -63,7 +63,7 @@ const distanceToFare = async (distance: number, railway: SUPPORTED_RAILWAY): Pro
  * @returns 計算された運賃
  */
 export const calculateFare = async (startSt: FareStation, endSt: FareStation): Promise<number> => {
-  const graph = await loadJson<Graph>('/jre/fare/graph.json');
+  const graph = await loadJson<Graph>('/data/jre/fare/graph.json');
 
   const startId = startSt.id;
   const endId = endSt.id;

@@ -86,7 +86,7 @@ export function buildGraphFromLines(lines: FareLine['lines']): Graph {
  * - 戻り値は `Graph` 型（`stations` と `adj`）
  */
 export async function generateGraphFromFiles(dir?: string): Promise<Graph> {
-  const base = dir ?? path.resolve(process.cwd(), 'public', 'jre', 'fare', 'lines');
+  const base = dir ?? path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'lines');
   const entries = await fs.readdir(base, { withFileTypes: true });
   const linesArr: FareLine['lines'] = [];
 
@@ -111,12 +111,12 @@ export async function generateGraphFromFiles(dir?: string): Promise<Graph> {
 /**
  * グラフを生成してファイルへ書き出すユーティリティ
  * - `options.dir` を指定するとそのディレクトリ内の路線ファイルを読み込む
- * - `options.outPath` で出力先を変更可能（デフォルトは `public/jre/fare/graph.json`）
+ * - `options.outPath` で出力先を変更可能（デフォルトは `public/data/jre/fare/graph.json`）
  * - 出力先ディレクトリが無ければ作成する
  */
 export async function generateAndWriteGraph(options?: { dir?: string; outPath?: string }) {
   const dir = options?.dir;
-  const outPath = options?.outPath ?? path.resolve(process.cwd(), 'public', 'jre', 'fare', 'graph.json');
+  const outPath = options?.outPath ?? path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'graph.json');
   const graph = await generateGraphFromFiles(dir);
   const outDir = path.dirname(outPath);
   await fs.mkdir(outDir, { recursive: true });

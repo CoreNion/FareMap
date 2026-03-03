@@ -10,7 +10,7 @@ import { FareTable } from "@/types/fare";
 const MAP_STYLE_URL =
   "https://tile.openstreetmap.jp/styles/osm-bright-ja/style.json";
 
-const STATIONS_GEOJSON_URL = "jre/map.geojson";
+const STATIONS_GEOJSON_URL = "data/jre/map.geojson";
 
 export const MainMap = () => {
   return (
@@ -87,7 +87,7 @@ const MapController = () => {
   useEffect(() => {
     if (selectedStation) {
       (async () => {
-        const response = await fetch(`jre/fare/table/${selectedStation}.json`);
+        const response = await fetch(`data/jre/fare/table/${selectedStation}.json`);
         const data = await response.json() as FareTable;
 
         // 各駅の運賃をGeoJSONのプロパティに追加
