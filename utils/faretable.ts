@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { Graph } from '../types/graph';
-import { calculateFare } from './calc';
+import type { Graph } from '../types/graph.ts';
+import { calculateFare } from './calc.ts';
 
 const DEFAULT_GRAPH_PATH = path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'graph.json');
 const DEFAULT_OUT_DIR = path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'table');

@@ -1,4 +1,4 @@
-import { FareStation } from "./fare";
+import type { FareStation } from "./fare.ts";
 
 /**
  * 駅間のエッジ（隣接情報）を表す型

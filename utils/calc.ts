@@ -1,6 +1,8 @@
-import { FareStation, JrFareData, JrFareStation } from "@/types/fare"
-import { SUPPORTED_RAILWAY } from "../types/railway"
-import { Graph, Edge } from "../types/graph";
+import type { FareStation, JrFareData, JrFareStation } from "../types/fare.ts"
+import type { SUPPORTED_RAILWAY } from "../types/railway.ts"
+import type { Graph, Edge } from "../types/graph.ts";
+
+
 
 /**
  * 環境に応じた形でJSONファイルを読み込む関数
