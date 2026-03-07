@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "generate-graph": "tsx utils/generate.ts",
+    "generate-graph": "tsx utils/graph.ts",
     "generate-faretable": "tsx utils/faretable.ts",
     "generate-geojson": "tsx utils/map.ts"
   },
