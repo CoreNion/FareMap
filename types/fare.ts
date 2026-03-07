@@ -24,10 +24,15 @@ export interface FareStation {
   km: number;
   sp: string[];
 }
+export interface JrFareStation extends FareStation {
+  fareKm: number;
+}
+
 /** 運賃計算上の路線 */
 export interface FareLine {
   lines: {
     id: string;
+    chihou: boolean;
     stations: FareStation[];
   }[];
 }

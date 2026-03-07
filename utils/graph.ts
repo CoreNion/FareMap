@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { FareLine, FareStation } from '../types/fare';
-import { Graph, Edge } from '../types/calc';
+import { FareLine, FareStation, JrFareStation } from '../types/fare';
+import { Graph, Edge } from '../types/graph';
 
 /**
  * 複数の路線データ(各路線の駅一覧)から、全駅辞書と隣接駅リストを含んだグラフ構造を構築する関数
@@ -42,20 +42,19 @@ export function buildGraphFromLines(lines: FareLine['lines']): Graph {
   /**
    * 隣接リストへ双方向エッジを追加する
    * - 重複を避けるため既存の同一エッジが無いかチェックする
-   * - `type` によって線路上の隣接か乗換エッジかを区別可能
    */
-  function addEdge(u: string, v: string, weight: number, type: 'line' | 'transfer' = 'line') {
+  function addEdge(u: string, v: string, weight: number, fareWeight: number, chihou: boolean) {
     if (!adj.has(u)) adj.set(u, []);
     if (!adj.has(v)) adj.set(v, []);
 
     const listU = adj.get(u)!;
-    if (!listU.some(e => e.to === v && Math.abs(e.weight - weight) < 1e-6 && e.type === type)) {
-      listU.push({ to: v, weight, type });
+    if (!listU.some(e => e.to === v && Math.abs(e.weight - weight) < 1e-6 && Math.abs(e.fareWeight - fareWeight) < 1e-6 && e.chihou == chihou)) {
+      listU.push({ to: v, weight, fareWeight, chihou });
     }
 
     const listV = adj.get(v)!;
-    if (!listV.some(e => e.to === u && Math.abs(e.weight - weight) < 1e-6 && e.type === type)) {
-      listV.push({ to: u, weight, type });
+    if (!listV.some(e => e.to === u && Math.abs(e.weight - weight) < 1e-6 && Math.abs(e.fareWeight - fareWeight) < 1e-6 && e.chihou == chihou)) {
+      listV.push({ to: u, weight, fareWeight, chihou });
     }
   }
 
@@ -63,12 +62,16 @@ export function buildGraphFromLines(lines: FareLine['lines']): Graph {
   for (const line of lines) {
     const sts = line.stations;
     for (let i = 0; i < sts.length; i++) {
-      const s = sts[i];
+      const s = sts[i] as JrFareStation;
       ensureNode(s);
       if (i > 0) {
-        const prev = sts[i - 1];
+        const prev = sts[i - 1] as JrFareStation;;
         const w = (typeof s.km === 'number' && typeof prev.km === 'number') ? Math.abs(s.km - prev.km) : 1;
-        addEdge(s.id, prev.id, w, 'line');
+
+        // 地方交通線かどうかの情報・換算キロを追加
+        const chihou = (typeof s.fareKm === 'number' && typeof prev.fareKm === 'number');
+        const fareW = chihou ? Math.abs(s.fareKm - prev.fareKm) : w;
+        addEdge(s.id, prev.id, w, fareW, chihou);
       }
     }
   }

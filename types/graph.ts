@@ -4,9 +4,10 @@ import { FareStation } from "./fare";
  * 駅間のエッジ（隣接情報）を表す型
  * - `to`: 隣接ノードの station id
  * - `weight`: エッジの重み（運賃計算では営業キロなど）
- * - `type`: 路線上の隣接か、乗換などの補助的なエッジかを区別
+ * - `fareWeight`: 運賃計算用のWeight
+ * - `chihou`: 地方交通線の区間かどうか
  */
-export type Edge = { to: string; weight: number; type?: 'line' | 'transfer' };
+export type Edge = { to: string; weight: number; fareWeight: number; chihou: boolean };
 
 /**
  * 隣接リスト（駅ID -> Edge の配列）
