@@ -2,7 +2,7 @@ import type { FareStation, JrFareData, JrFareStation } from "../types/fare.ts"
 import type { SUPPORTED_RAILWAY } from "../types/railway.ts"
 import type { Graph, Edge } from "../types/graph.ts";
 
-
+const jsonCache = new Map<string, unknown>();
 
 /**
  * 環境に応じた形でJSONファイルを読み込む関数
@@ -10,11 +10,17 @@ import type { Graph, Edge } from "../types/graph.ts";
  * @returns 
  */
 const loadJson = async <T>(url: string): Promise<T> => {
+  if (jsonCache.has(url)) {
+    return jsonCache.get(url) as T;
+  }
+
   // ブラウザ環境ならfetchでURLから読み込む
   if (typeof window !== 'undefined') {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`fetch failed: ${res.status} ${res.statusText}`);
-    return res.json() as Promise<T>;
+    const data = await res.json();
+    jsonCache.set(url, data);
+    return data as T;
   }
 
   // Node.js(スクリプト)ならpublic配下のファイルを読み込む
@@ -22,7 +28,9 @@ const loadJson = async <T>(url: string): Promise<T> => {
   const { join } = await import('path');
   const diskPath = join(process.cwd(), 'public', ...url.replace(/^\/+/, '').split('/'));
   const txt = await readFile(diskPath, 'utf-8');
-  return JSON.parse(txt) as T;
+  const data = JSON.parse(txt);
+  jsonCache.set(url, data);
+  return data as T;
 }
 
 /**
