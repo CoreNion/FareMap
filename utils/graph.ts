@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { FareLine, FareStation, JrFareStation } from '../types/fare';
-import { Graph, Edge } from '../types/graph';
+import type { FareLine, FareStation, JrFareStation } from '../types/fare.ts';
+import type { Graph, Edge } from '../types/graph.ts';
 
 /**
  * 複数の路線データ(各路線の駅一覧)から、全駅辞書と隣接駅リストを含んだグラフ構造を構築する関数

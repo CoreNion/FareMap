@@ -2,7 +2,7 @@
 
 import Map, { Layer, MapProvider, Popup, Source, useMap } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Feature } from "geojson";
+import { Feature, Point } from "geojson";
 import { useEffect, useState } from "react";
 
 import { FareTable } from "@/types/fare";
@@ -69,7 +69,7 @@ const MapController = () => {
     )();
 
     map.on("click", "stations", (e) => {
-      const coordinates = e.features![0].geometry.coordinates.slice();
+      const coordinates = (e.features![0].geometry as Point).coordinates.slice();
 
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;

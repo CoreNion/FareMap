@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { Graph } from '../types/calc';
+import type { Graph } from '../types/graph.ts';
 
 import type { Feature, FeatureCollection } from 'geojson';
 
