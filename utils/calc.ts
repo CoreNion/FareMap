@@ -1,4 +1,4 @@
-import type { FareStation, JrFareData, JrFareStation } from "../types/fare.ts"
+import type { FareStation, JrFareData, JrFareStation, SpecialFareTable } from "../types/fare.ts"
 import type { SUPPORTED_RAILWAY } from "../types/railway.ts"
 import type { Graph, Edge } from "../types/graph.ts";
 
@@ -76,12 +76,19 @@ const distanceToFare = async (distance: number, railway: SUPPORTED_RAILWAY, only
  */
 export const calculateFare = async (startSt: FareStation, endSt: FareStation): Promise<number> => {
   const graph = await loadJson<Graph>('/data/jre/fare/graph.json');
+  const specialFareTable = await loadJson<SpecialFareTable>('/data/jre/fare/special.json');
 
   const startId = startSt.id;
   const endId = endSt.id;
   if (!graph.stations?.[startId] || !graph.stations?.[endId]) {
     throw new Error('start または end 駅がグラフに存在しません');
   }
+
+  // 特別な運賃が適用されている場合はそれを返す
+  const specialFare = specialFareTable.specialFares.find(
+    (s) => (s.to == startId && s.from == endId) || (s.from == startId && s.to == endId)
+  );
+  if (specialFare) return specialFare.fare;
 
   // 営業キロの算出を行う
   const { fareDistance, onlyChihou } = calcJrFareDistance(graph, (startSt as JrFareStation), (endSt as JrFareStation))

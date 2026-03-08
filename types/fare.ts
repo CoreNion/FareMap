@@ -56,3 +56,16 @@ export interface FareTable {
     [destinationId: string]: number;
   }
 }
+
+/**
+ * 特定の区間の特別な運賃
+ */
+export interface SpecialFareTable {
+  specialFares: SpecialFare[]
+}
+export interface SpecialFare {
+  from: string
+  to: string,
+  fare: number,
+  icFare: number
+}
