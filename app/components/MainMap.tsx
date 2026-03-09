@@ -1,6 +1,6 @@
 "use client";
 
-import Map, { Layer, MapProvider, Popup, Source, useMap } from "react-map-gl/maplibre";
+import Map, { GeolocateControl, FullscreenControl, NavigationControl, Layer, MapProvider, Popup, Source, useMap } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Feature, Point } from "geojson";
 import { useEffect, useState } from "react";
@@ -18,9 +18,9 @@ export const MainMap = () => {
       <Map
         id="faremap"
         initialViewState={{
-          longitude: 139.463101,
-          latitude: 35.651521,
-          zoom: 12,
+          longitude: 139.7006,
+          latitude: 35.68995,
+          zoom: 14,
         }}
         style={{
           position: "fixed",
@@ -35,6 +35,9 @@ export const MainMap = () => {
         mapStyle={MAP_STYLE_URL}
       >
         <MapController />
+        <FullscreenControl />
+        <NavigationControl />
+        <GeolocateControl />
       </Map>
     </MapProvider>
   );
@@ -58,7 +61,7 @@ const MapController = () => {
 
     (async () => {
       if (!map.hasImage("station")) {
-        const stIcon = await map.loadImage("/icons/station.png");
+        const stIcon = await map.loadImage("icons/station.png");
         map.addImage("station", stIcon.data);
       }
 
@@ -121,7 +124,6 @@ const MapController = () => {
         layout={{
           "icon-image": "station",
           "icon-size": 0.1,
-          "icon-allow-overlap": true,
           "text-field": selectedStation ?
             [
               "format",
