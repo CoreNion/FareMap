@@ -5,6 +5,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { Feature, Point } from "geojson";
 import { useEffect, useState } from "react";
 
+import { useMapStation } from "@/context/StationContext";
 import { FareTable } from "@/types/fare";
 
 const MAP_STYLE_URL =
@@ -45,6 +46,7 @@ export const MainMap = () => {
 
 const MapController = () => {
   const { current: map } = useMap();
+  const { selectedStation, setSelectedStation } = useMapStation();
   const [geoStations, setGeoStations] = useState<GeoJSON.GeoJSON | null>(null);
 
   const [showPopup, setShowPopup] = useState(false);
@@ -53,8 +55,6 @@ const MapController = () => {
     latitude: number;
     feature: Feature;
   } | null>(null);
-
-  const [selectedStation, setSelectedStation] = useState<string | undefined>();
 
   useEffect(() => {
     if (!map) return undefined;
@@ -88,9 +88,9 @@ const MapController = () => {
   }, [map]);
 
   useEffect(() => {
-    if (selectedStation) {
+    if (selectedStation?.id) {
       (async () => {
-        const response = await fetch(`data/jre/fare/table/${selectedStation}.json`);
+        const response = await fetch(`data/jre/fare/table/${selectedStation.id}.json`);
         const data = await response.json() as FareTable;
 
         // 各駅の運賃をGeoJSONのプロパティに追加
@@ -113,7 +113,7 @@ const MapController = () => {
       })();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStation]);
+  }, [selectedStation?.id]);
 
   return geoStations ? (
     <Source id="stations-source" type="geojson" data={geoStations}>
@@ -141,7 +141,10 @@ const MapController = () => {
             <h3>駅名: {popUpOptions!.feature.properties!.name}</h3>
             <p>ID: {popUpOptions!.feature.properties!.id}</p>
             <button onClick={() => {
-              setSelectedStation(popUpOptions!.feature.properties!.id);
+              setSelectedStation({
+                id: popUpOptions!.feature.properties!.id,
+                name: popUpOptions!.feature.properties!.name,
+              });
             }}>この駅からの運賃を表示</button>
           </div>
         </Popup>

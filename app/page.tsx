@@ -1,10 +1,16 @@
+"use client";
+
 import { MainMap } from "./components/MainMap";
+import { TopBar } from "./components/TopBar";
+import { MapStationProvider } from "@/context/StationContext";
 
 export default function Home() {
   return (
+    <MapStationProvider>
       <main className="">
-        <h1>Fare Map</h1>
+        <TopBar />
         <MainMap />
       </main>
+    </MapStationProvider>
   );
 }
