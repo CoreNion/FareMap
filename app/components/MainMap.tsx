@@ -58,18 +58,20 @@ const MapController = () => {
 
   useEffect(() => {
     if (!map) return undefined;
+    map.on("load", () => {
+      map.setGlyphs("https://mierune.github.io/fonts/{fontstack}/{range}.pbf");
+      (async () => {
+        if (!map.hasImage("station")) {
+          const stIcon = await map.loadImage("icons/station.png");
+          map.addImage("station", stIcon.data);
+        }
 
-    (async () => {
-      if (!map.hasImage("station")) {
-        const stIcon = await map.loadImage("icons/station.png");
-        map.addImage("station", stIcon.data);
+        const response = await fetch(STATIONS_GEOJSON_URL);
+        const data = await response.json() as GeoJSON.GeoJSON;
+        setGeoStations(data);
       }
-
-      const response = await fetch(STATIONS_GEOJSON_URL);
-      const data = await response.json() as GeoJSON.GeoJSON;
-      setGeoStations(data);
-    }
-    )();
+      )();
+    });
 
     map.on("click", "stations", (e) => {
       const coordinates = (e.features![0].geometry as Point).coordinates.slice();
@@ -124,11 +126,13 @@ const MapController = () => {
         layout={{
           "icon-image": "station",
           "icon-size": 0.1,
+          "text-font": ["mplus2p-regular"],
+          "text-size": 16,
           "text-field": selectedStation ?
             [
               "format",
-              ["get", "name"], { "font-scale": 0.8, "text-color": "#555" }, "\n", {},
-              ["get", "fare"],
+              ["get", "name"], { "text-color": "#555" }, "\n", {},
+              ["get", "fare"], { "font-scale": 1.2, 'text-font': ['literal', ['mplus2p-medium']] }
             ] :
             ["get", "name"],
           'text-anchor': 'top',
