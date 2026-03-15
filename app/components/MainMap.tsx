@@ -87,6 +87,13 @@ const MapController = () => {
       });
       setShowPopup(true);
     });
+
+    map.on('mouseenter', 'stations', () => {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+    map.on('mouseleave', 'stations', () => {
+        map.getCanvas().style.cursor = '';
+    });
   }, [map]);
 
   useEffect(() => {
@@ -98,12 +105,14 @@ const MapController = () => {
         // 各駅の運賃をGeoJSONのプロパティに追加
         const features = geoStations as GeoJSON.FeatureCollection;
         const updatedFeatures = features.features.map((feature) => {
-          const fare = data.fares[feature.properties!.id];
+          const stId = feature.properties!.id;
+          const fare = data.fares[stId];
           return {
             ...feature,
             properties: {
               ...feature.properties,
-              fare: fare ? `${fare}円` : "情報なし",
+              fare: stId != selectedStation.id ?
+                (fare ? `${fare}円` : "情報なし") : "発駅",
             },
           };
         });
@@ -140,16 +149,24 @@ const MapController = () => {
         }}
       />
       {
-        showPopup && <Popup longitude={popUpOptions!.longitude} latitude={popUpOptions!.latitude} onClose={() => setShowPopup(false)}>
-          <div className="popup">
-            <h3>駅名: {popUpOptions!.feature.properties!.name}</h3>
-            <p>ID: {popUpOptions!.feature.properties!.id}</p>
-            <button onClick={() => {
-              setSelectedStation({
-                id: popUpOptions!.feature.properties!.id,
-                name: popUpOptions!.feature.properties!.name,
-              });
-            }}>この駅からの運賃を表示</button>
+        showPopup && <Popup longitude={popUpOptions!.longitude} latitude={popUpOptions!.latitude} onClose={() => setShowPopup(false)} maxWidth="none">
+          <div className="popup grid grid-cols-1 gap-1 text-base antialiased">
+            <h3 className="text-lg font-bold">{popUpOptions!.feature.properties!.name}駅</h3>
+            {popUpOptions!.feature.properties!.fare && popUpOptions!.feature.properties!.id != selectedStation!.id
+              &&
+              <span>{selectedStation!.name}駅からの運賃: <strong>{popUpOptions!.feature.properties!.fare}</strong></span>
+            }
+            {
+              popUpOptions!.feature.properties!.id != selectedStation?.id ?
+              <button className="p-1 bg-green-200 rounded-xl text-xs font-bold cursor-pointer hover:bg-green-300" onClick={() => {
+                setSelectedStation({
+                  id: popUpOptions!.feature.properties!.id,
+                  name: popUpOptions!.feature.properties!.name,
+                });
+                setShowPopup(false);
+              }}>当駅からの運賃を表示</button>
+              : <span className="text-xs">当駅からの運賃を表示中</span>
+            }
           </div>
         </Popup>
       }
