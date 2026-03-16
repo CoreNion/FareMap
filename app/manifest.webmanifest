@@ -1,0 +1,30 @@
+{
+  "name": "Fare Map",
+  "theme_color": "#f2edc0",
+  "background_color": "#ffffff",
+  "short_name": "Fare Map",
+  "display": "standalone",
+  "orientation": "any",
+  "start_url": ".",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon1.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
