@@ -21,8 +21,14 @@ export const MainMap = () => {
         initialViewState={{
           longitude: 139.7006,
           latitude: 35.68995,
-          zoom: 14,
+          zoom: 10,
         }}
+        maxBounds={
+          [
+            [137.3318, 33],
+            [141.5465, 38.3],
+          ]
+        }
         style={{
           position: "fixed",
           top: 0,
