@@ -1,6 +1,6 @@
 "use client";
 
-import Map, { GeolocateControl, Layer, MapProvider, Popup, Source, useMap } from "react-map-gl/maplibre";
+import Map, { AttributionControl, GeolocateControl, Layer, MapProvider, Popup, Source, useMap } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Feature, Point } from "geojson";
 import { useEffect, useState } from "react";
@@ -40,9 +40,11 @@ export const MainMap = () => {
           zIndex: -1,
         }}
         mapStyle={MAP_STYLE_URL}
+        attributionControl={false}
       >
         <MapController />
         <GeolocateControl position="bottom-right" />
+        <AttributionControl position="bottom-left" customAttribution={["地図上の駅・路線データ: 鉄道駅LOD(CC-BY-SA)を編集","JR線の運賃データの出典: ＭＡＲＳ for MS-DOS"]} />
       </Map>
     </MapProvider>
   );

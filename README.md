@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fare Map
+[https://fare.cnion.dev/](https://fare.cnion.dev/)
 
-## Getting Started
+駅の運賃表のように、各駅への運賃を地図上に表示するWebアプリケーション。(beta)
 
-First, run the development server:
+## 機能
+現時点ではJR東日本の首都圏の駅を対象に、選択された駅からの切符運賃を表示する機能を実装しています。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+＊現在はIC運賃には対応していません。他社線と改札を共有している駅を発着とするIC運賃などは、切符との差額が大きくなる場合があります。(例:津田沼～中野)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## データについて
+データセットは、[CoreNion/fare-data](https://github.com/CoreNion/fare-data)で管理しています。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+＊Fare Mapアプリは非営利/趣味の個人開発プロジェクトであり、情報の正確性や適切性については保証できません。このデータを活用する場合は自己責任でご利用ください。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### データ元のライセンス・出典
+＊Fare Map自体のソースコードのライセンスは[LICENSE](./LICENSE)を参照
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [鉄道駅LOD](https://uedayou.net/jrslod/) CC BY-SA 4.0
+  - 駅や路線の座標情報を使用
+- [ＭＡＲＳ for MS-DOS](https://www.swa785.net/pub/mars/index.html)
+  - 主にJR線の営業キロデータを使用
+  - 「【転載可否】　可」の記載に基づき転載していますが、問題がある場合はご連絡ください。
