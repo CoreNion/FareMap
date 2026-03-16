@@ -1,6 +1,6 @@
 "use client";
 
-import Map, { GeolocateControl, FullscreenControl, NavigationControl, Layer, MapProvider, Popup, Source, useMap } from "react-map-gl/maplibre";
+import Map, { GeolocateControl, Layer, MapProvider, Popup, Source, useMap } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Feature, Point } from "geojson";
 import { useEffect, useState } from "react";
@@ -30,15 +30,13 @@ export const MainMap = () => {
           right: 0,
           bottom: 0,
           width: "100%",
-          height: "100vh",
+          height: "100dvh",
           zIndex: -1,
         }}
         mapStyle={MAP_STYLE_URL}
       >
         <MapController />
-        <FullscreenControl />
-        <NavigationControl />
-        <GeolocateControl />
+        <GeolocateControl position="bottom-right" />
       </Map>
     </MapProvider>
   );
@@ -58,19 +56,20 @@ const MapController = () => {
 
   useEffect(() => {
     if (!map) return undefined;
+    (async () => {
+      if (!map.hasImage("station")) {
+        const stIcon = await map.loadImage("icons/station.png");
+        map.addImage("station", stIcon.data);
+      }
+
+      const response = await fetch(STATIONS_GEOJSON_URL);
+      const data = await response.json() as GeoJSON.GeoJSON;
+      setGeoStations(data);
+    }
+    )();
+
     map.on("load", () => {
       map.setGlyphs("https://mierune.github.io/fonts/{fontstack}/{range}.pbf");
-      (async () => {
-        if (!map.hasImage("station")) {
-          const stIcon = await map.loadImage("icons/station.png");
-          map.addImage("station", stIcon.data);
-        }
-
-        const response = await fetch(STATIONS_GEOJSON_URL);
-        const data = await response.json() as GeoJSON.GeoJSON;
-        setGeoStations(data);
-      }
-      )();
     });
 
     map.on("click", "stations", (e) => {
@@ -89,10 +88,10 @@ const MapController = () => {
     });
 
     map.on('mouseenter', 'stations', () => {
-        map.getCanvas().style.cursor = 'pointer';
+      map.getCanvas().style.cursor = 'pointer';
     });
     map.on('mouseleave', 'stations', () => {
-        map.getCanvas().style.cursor = '';
+      map.getCanvas().style.cursor = '';
     });
   }, [map]);
 
@@ -134,7 +133,7 @@ const MapController = () => {
         source="stations-source"
         layout={{
           "icon-image": "station",
-          "icon-size": 0.1,
+          "icon-size": 0.08,
           "text-font": ["mplus2p-regular"],
           "text-size": 16,
           "text-field": selectedStation ?
@@ -158,14 +157,24 @@ const MapController = () => {
             }
             {
               popUpOptions!.feature.properties!.id != selectedStation?.id ?
-              <button className="p-1 bg-green-200 rounded-xl text-xs font-bold cursor-pointer hover:bg-green-300" onClick={() => {
-                setSelectedStation({
-                  id: popUpOptions!.feature.properties!.id,
-                  name: popUpOptions!.feature.properties!.name,
-                });
-                setShowPopup(false);
-              }}>当駅からの運賃を表示</button>
-              : <span className="text-xs">当駅からの運賃を表示中</span>
+                <button className="p-1 bg-green-200 rounded-xl text-xs font-bold cursor-pointer hover:bg-green-300" onClick={() => {
+                  const feature = popUpOptions!.feature;
+                  const coordinates = (feature.geometry as Point).coordinates;
+                  setSelectedStation({
+                    id: feature.properties!.id,
+                    name: feature.properties!.name,
+                  });
+                  setShowPopup(false);
+                  map?.flyTo(
+                    {
+                      center: [coordinates[0], coordinates[1]],
+                      zoom: 10,
+                      speed: 2,
+                      essential: true
+                    }
+                  )
+                }}>当駅からの運賃を表示</button>
+                : <span className="text-xs">当駅からの運賃を表示中</span>
             }
           </div>
         </Popup>
