@@ -106,11 +106,13 @@ const MapController = () => {
         const updatedFeatures = features.features.map((feature) => {
           const stId = feature.properties!.id;
           const fare = data.fares[stId];
+          const isSelectedSt = stId != selectedStation.id
+
           return {
             ...feature,
             properties: {
               ...feature.properties,
-              fare: stId != selectedStation.id ?
+              fare: isSelectedSt ?
                 (fare ? `${fare}円` : "情報なし") : "発駅",
             },
           };
@@ -133,9 +135,9 @@ const MapController = () => {
         source="stations-source"
         layout={{
           "icon-image": "station",
-          "icon-size": 0.08,
+          "icon-size": 0.07,
           "text-font": ["mplus2p-regular"],
-          "text-size": 16,
+          "text-size": 17,
           "text-field": selectedStation ?
             [
               "format",
@@ -144,7 +146,8 @@ const MapController = () => {
             ] :
             ["get", "name"],
           'text-anchor': 'top',
-          'text-offset': [0, 2],
+          'text-offset': [0, 1],
+          'symbol-sort-key': ['get', 'sortKey']
         }}
       />
       {

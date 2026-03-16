@@ -4,6 +4,32 @@ import type { Graph } from '../types/graph.ts';
 
 import type { Feature, FeatureCollection } from 'geojson';
 
+// 表示優先度の高い主要駅のIDリスト
+const TOP_TERMINAL_ID = [
+  "tokyo", "shimbashi", "shinagawa", "akihabara", "ueno", "osaki","shibuya", "shinjuku", "ikebukuro",
+  "kawasaki", "yokohama", "odawara", "atami", "kamakura",
+  "tachikawa", "hachioji", "kofu",
+  "shinyokohama", "musashikosugi",
+  "omiya", "utsunomiya", "takasaki",
+  "kitasenju", "tsuchiura", "mito",
+  "narita-airport-t1", "chiba",
+  "maihama", "kaihinmakuhari"
+]
+// 表示優先度の高い駅のIDリスト
+const TERMINAL_IDs = [
+  "ofuna", "chigasaki", "kodu", "itou", "kurihama",
+  "kokubunji", "mitaka", "takao", "otsuki",
+  "haijima", "ome", "musashiitsukaichi", "okutama", "komagawa",
+  "hashimoto", "ebina", "machida", "nagatsuda", 
+  "musashimizonokuchi", "noborito", "inadazutsumi", "fuchuhonmachi",
+  "kuki", "oyama", "utsunomiya", "kumagaya", "takasaki", "maebashi",
+  "musashiurawa", "kawagoe",
+  "abiko", "kashiwa", "ushiku", "ishioka",
+  "sakura", "naruto", "kisarazu", "kazusaichinomiya",
+  "ichikawa",
+  "shinkiba", "nishifunabashi", "soga"
+]
+
 /**
  * GeoJSON(鉄道駅LOD GeoJSON)を運賃マップで使うデータに加工する
  * - geometry.typeがPoint以外のfeatureは削除し、駅データのみを残す
@@ -18,13 +44,13 @@ export const transformGeoJSON = (geojson: FeatureCollection, graph: Graph) => {
   if (!geojson || !geojson.features) return geojson;
 
   const stations = Object.values(graph.stations);
-  
+
   const transformedFeatures = geojson.features
     .filter((feature: Feature) => {
       if (feature.geometry?.type === 'Point' && feature.properties?.name) {
         // 運賃マップに存在しない駅は削除
         const station = stations.find(s => s.name === feature.properties?.name);
-        return !!station; 
+        return !!station;
       } else {
         // 駅Point以外のfeatureは削除
         return false;
@@ -37,8 +63,12 @@ export const transformGeoJSON = (geojson: FeatureCollection, graph: Graph) => {
         // 対応するstation.idを追加
         const station = stations.find(s => s.name === feature.properties!.name);
         feature.properties.id = station!.id;
+
+        // 表示優先度を追加
+        const stId = station!.id;
+        feature.properties.sortKey = TOP_TERMINAL_ID.includes(stId) ? 2 : (TERMINAL_IDs.includes(stId) ? 3 : 4);
       }
-      
+
       return feature;
     });
 
@@ -58,7 +88,7 @@ export const transformGeoJSON = (geojson: FeatureCollection, graph: Graph) => {
 export const processGeoJSONFiles = async (mapDir: string, graphPath: string, outputPath: string) => {
   const graphContent = await fs.readFile(graphPath, 'utf8');
   const graph: Graph = JSON.parse(graphContent);
-  
+
   const files = await fs.readdir(mapDir);
   const geojsonFiles = files.filter(f => f.endsWith('.geojson'));
 
@@ -68,7 +98,7 @@ export const processGeoJSONFiles = async (mapDir: string, graphPath: string, out
     const filePath = path.join(mapDir, file);
     const content = await fs.readFile(filePath, 'utf8');
     const geojson = JSON.parse(content);
-    
+
     const transformed = transformGeoJSON(geojson, graph);
     allFeatures = allFeatures.concat(transformed.features);
   }
@@ -92,8 +122,8 @@ if (require.main === module) {
     try {
       const mapDir = path.resolve(process.cwd(), 'public', 'data', 'jre', 'map');
       const graphPath = path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'graph.json');
-      const outputPath = path.resolve(process.cwd(), 'public', 'data', 'jre' , 'map.geojson');
-      
+      const outputPath = path.resolve(process.cwd(), 'public', 'data', 'jre', 'map.geojson');
+
       console.log('変換開始...');
       await processGeoJSONFiles(mapDir, graphPath, outputPath);
       console.log('変換が完了しました');
