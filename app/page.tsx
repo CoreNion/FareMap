@@ -7,8 +7,8 @@ import { MapStationProvider } from "@/context/StationContext";
 export default function Home() {
   return (
     <MapStationProvider>
-      <main className="">
-        <TopBar />
+      <TopBar />
+      <main>
         <MainMap />
       </main>
     </MapStationProvider>
