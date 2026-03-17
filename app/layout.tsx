@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: 'summary',
     site: '@CoreiNion',
     creator: '@CoreiNion',
-    images: ['https://fare.cnion.dev/icons1.png'], 
+    images: ['https://fare.cnion.dev/icon1.png'], 
   },
 };
 
