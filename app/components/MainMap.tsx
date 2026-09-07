@@ -23,12 +23,7 @@ export const MainMap = () => {
           latitude: 35.68995,
           zoom: 10,
         }}
-        maxBounds={
-          [
-            [137.3318, 33],
-            [141.5465, 38.3],
-          ]
-        }
+        maxBounds={[137.3318, 33, 141.5465, 38.3]}
         style={{
           position: "fixed",
           top: 0,
