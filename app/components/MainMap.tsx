@@ -1,6 +1,6 @@
 "use client";
 
-import Map, { AttributionControl, GeolocateControl, Layer, MapProvider, Popup, Source, useMap } from "react-map-gl/maplibre";
+import Map, { AttributionControl, GeolocateControl, Layer, MapLayerMouseEvent, MapProvider, Popup, Source, useMap } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Feature, Point } from "geojson";
 import { useEffect, useState } from "react";
@@ -59,23 +59,32 @@ const MapController = () => {
 
   useEffect(() => {
     if (!map) return undefined;
+
+    // クリーンアップ後の非同期処理の反映を防ぐためのフラグ
+    let cancelled = false;
+
     (async () => {
       if (!map.hasImage("station")) {
         const stIcon = await map.loadImage("icons/station.png");
-        map.addImage("station", stIcon.data);
+        // await中に別の実行が画像を登録している可能性があるため、追加直前に再確認する
+        if (!cancelled && !map.hasImage("station")) {
+          map.addImage("station", stIcon.data);
+        }
       }
 
       const response = await fetch(STATIONS_GEOJSON_URL);
       const data = await response.json() as GeoJSON.GeoJSON;
+      if (cancelled) return;
       setGeoStations(data);
     }
     )();
 
-    map.on("load", () => {
+    // クリーンアップで解除できるように、ハンドラを変数として保持する
+    const onLoad = () => {
       map.setGlyphs("https://mierune.github.io/fonts/{fontstack}/{range}.pbf");
-    });
+    };
 
-    map.on("click", "stations", (e) => {
+    const onStationClick = (e: MapLayerMouseEvent) => {
       const coordinates = (e.features![0].geometry as Point).coordinates.slice();
 
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
@@ -88,14 +97,27 @@ const MapController = () => {
         feature: e.features![0],
       });
       setShowPopup(true);
-    });
+    };
 
-    map.on('mouseenter', 'stations', () => {
+    const onStationMouseEnter = () => {
       map.getCanvas().style.cursor = 'pointer';
-    });
-    map.on('mouseleave', 'stations', () => {
+    };
+    const onStationMouseLeave = () => {
       map.getCanvas().style.cursor = '';
-    });
+    };
+
+    map.on("load", onLoad);
+    map.on("click", "stations", onStationClick);
+    map.on('mouseenter', 'stations', onStationMouseEnter);
+    map.on('mouseleave', 'stations', onStationMouseLeave);
+
+    return () => {
+      cancelled = true;
+      map.off("load", onLoad);
+      map.off("click", "stations", onStationClick);
+      map.off('mouseenter', 'stations', onStationMouseEnter);
+      map.off('mouseleave', 'stations', onStationMouseLeave);
+    };
   }, [map]);
 
   useEffect(() => {
