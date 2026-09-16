@@ -49,6 +49,9 @@ const MapController = () => {
   const { current: map } = useMap();
   const { selectedStation, setSelectedStation } = useMapStation();
   const [geoStations, setGeoStations] = useState<GeoJSON.GeoJSON | null>(null);
+  // 運賃をGeoJSONへ反映し終えた発駅のID
+  // ラベルの表示形式をデータの更新と同時に切り替え、再描画を1回にまとめるために使う
+  const [fareStationId, setFareStationId] = useState<string | null>(null);
 
   const [showPopup, setShowPopup] = useState(false);
   const [popUpOptions, setPopUpOptions] = useState<{
@@ -121,17 +124,26 @@ const MapController = () => {
   }, [map]);
 
   useEffect(() => {
-    if (selectedStation?.id) {
-      (async () => {
-        const response = await fetch(`data/jre/fare/table/${selectedStation.id}.json`);
-        const data = await response.json() as FareTable;
+    const stationId = selectedStation?.id;
+    if (!stationId) return undefined;
 
-        // 各駅の運賃をGeoJSONのプロパティに追加
-        const features = geoStations as GeoJSON.FeatureCollection;
+    // 駅を素早く切り替えた際に、古いリクエストの結果で上書きしないためのフラグ
+    let cancelled = false;
+
+    (async () => {
+      const response = await fetch(`data/jre/fare/table/${stationId}.json`);
+      const data = await response.json() as FareTable;
+      if (cancelled) return;
+
+      // 各駅の運賃をGeoJSONのプロパティに追加
+      // 最新のGeoJSONを基にするため、関数形式で更新する
+      setGeoStations((prev) => {
+        if (!prev) return prev;
+        const features = prev as GeoJSON.FeatureCollection;
         const updatedFeatures = features.features.map((feature) => {
           const stId = feature.properties!.id;
           const fare = data.fares[stId];
-          const isSelectedSt = stId != selectedStation.id
+          const isSelectedSt = stId != stationId;
 
           return {
             ...feature,
@@ -143,13 +155,18 @@ const MapController = () => {
           };
         });
 
-        setGeoStations({
+        return {
           ...features,
           features: updatedFeatures,
-        });
-      })();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        };
+      });
+      // データ更新と同じバッチで表示形式を切り替える
+      setFareStationId(stationId);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [selectedStation?.id]);
 
   return geoStations ? (
@@ -163,7 +180,7 @@ const MapController = () => {
           "icon-size": 0.07,
           "text-font": ["mplus2p-regular"],
           "text-size": 17,
-          "text-field": selectedStation ?
+          "text-field": fareStationId ?
             [
               "format",
               ["get", "name"], { "text-color": "#555" }, "\n", {},
