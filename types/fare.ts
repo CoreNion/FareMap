@@ -30,11 +30,15 @@ export interface JrFareStation extends FareStation {
 
 /** 運賃計算上の路線 */
 export interface FareLine {
-  lines: {
-    id: string;
-    chihou: boolean;
-    stations: FareStation[];
-  }[];
+  id: string;
+  stations: FareStation[];
+}
+export interface JrFareLine extends FareLine {
+  chihou: boolean;
+}
+
+export interface FareLines extends FareLine {
+  lines: FareLine[];
 }
 
 /** 運賃計算上の路線情報 */

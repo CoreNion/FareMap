@@ -1,6 +1,6 @@
 "use client";
 
-import { FareLine, FareStation, FareLineInfo, FareLineList } from "@/types/fare";
+import { FareLines, FareStation, FareLineInfo, FareLineList } from "@/types/fare";
 
 import { calculateFare } from "@/utils/calc";
 import { useEffect, useState, useCallback } from "react";
@@ -70,7 +70,7 @@ export default function CalcFareDemoPage() {
         const file = resolveFileForLineId(fromLineId);
         if (!file) return;
         const res = await fetch(`/data/jre/fare/lines/${file}.json`);
-        const data = (await res.json()) as FareLine;
+        const data = (await res.json()) as FareLines;
         const linesInFile = data.lines || [];
         const entry = linesInFile.find((ln) => ln.id === fromLineId) || linesInFile[0];
         const sts = entry?.stations || [];
@@ -91,7 +91,7 @@ export default function CalcFareDemoPage() {
         const file = resolveFileForLineId(toLineId);
         if (!file) return;
         const res = await fetch(`/data/jre/fare/lines/${file}.json`);
-        const data = (await res.json()) as FareLine;
+        const data = (await res.json()) as FareLines;
         const linesInFile = data.lines || [];
         const entry = linesInFile.find((ln) => ln.id === toLineId) || linesInFile[0];
         const sts = entry?.stations || [];

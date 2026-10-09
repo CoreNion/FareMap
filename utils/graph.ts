@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import type { FareLine, FareStation, JrFareStation } from '../types/fare.ts';
+import type { FareLines, FareStation, JrFareStation } from '../types/fare.ts';
 import type { Graph, Edge } from '../types/graph.ts';
 
 /**
@@ -10,7 +10,7 @@ import type { Graph, Edge } from '../types/graph.ts';
  * @param lines 
  * @returns 
  */
-export function buildGraphFromLines(lines: FareLine['lines']): Graph {
+export function buildGraphFromLines(lines: FareLines['lines']): Graph {
   const stations = new Map<string, FareStation>();
   const adj = new Map<string, Edge[]>();
 
@@ -91,7 +91,7 @@ export function buildGraphFromLines(lines: FareLine['lines']): Graph {
 export async function generateGraphFromFiles(dir?: string): Promise<Graph> {
   const base = dir ?? path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'lines');
   const entries = await fs.readdir(base, { withFileTypes: true });
-  const linesArr: FareLine['lines'] = [];
+  const linesArr: FareLines['lines'] = [];
 
   for (const e of entries) {
     if (!e.isFile()) continue;
@@ -99,9 +99,9 @@ export async function generateGraphFromFiles(dir?: string): Promise<Graph> {
     const fp = path.join(base, e.name);
     try {
       const txt = await fs.readFile(fp, 'utf8');
-      const json = JSON.parse(txt) as FareLine | { lines: FareLine['lines'] };
-      if (Array.isArray((json as FareLine).lines)) {
-        linesArr.push(...(json as FareLine).lines);
+      const json = JSON.parse(txt) as FareLines | { lines: FareLines['lines'] };
+      if (Array.isArray((json as FareLines).lines)) {
+        linesArr.push(...(json as FareLines).lines);
       }
     } catch (err) {
       console.warn('generateGraphFromFiles: failed to parse', fp, err);
