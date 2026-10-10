@@ -7,13 +7,17 @@ import { useEffect, useState } from "react";
 
 import { useMapStation } from "@/context/StationContext";
 import { FareTable } from "@/types/fare";
+import type { SUPPORTED_RAILWAY } from "@/types/railway";
 
 const MAP_STYLE_URL =
   "https://tile.openstreetmap.jp/styles/osm-bright-ja/style.json";
 
-const STATIONS_GEOJSON_URL = "data/jre/map.geojson";
+/** 事業者ごとの駅GeoJSONのURL */
+const getStationsGeoJsonUrl = (railway: SUPPORTED_RAILWAY) => `data/${railway}/map.geojson`;
 
 export const MainMap = () => {
+  const { railway } = useMapStation();
+
   return (
     <MapProvider>
       <Map
@@ -37,9 +41,14 @@ export const MainMap = () => {
         mapStyle={MAP_STYLE_URL}
         attributionControl={false}
       >
-        <MapController />
+        {/* 事業者の切り替え時に、運賃表示やポップアップの状態ごとリセットするためkeyを指定する */}
+        <MapController key={railway} />
         <GeolocateControl position="bottom-right" />
-        <AttributionControl position="bottom-left" customAttribution={["地図上の駅・路線データ: 鉄道駅LOD(CC-BY-SA)を編集","JR線の運賃データの出典: ＭＡＲＳ for MS-DOS"]} />
+        <AttributionControl position="bottom-left" customAttribution={[
+          "地図上の駅・路線データ: 鉄道駅LOD(CC-BY-SA)を編集",
+          "JR線の運賃データの出典: ＭＡＲＳ for MS-DOS",
+          "都営地下鉄の運賃データの出典: 東京都オープンデータカタログ(CC-BY-SA)",
+        ]} />
       </Map>
     </MapProvider>
   );
@@ -47,7 +56,7 @@ export const MainMap = () => {
 
 const MapController = () => {
   const { current: map } = useMap();
-  const { selectedStation, setSelectedStation } = useMapStation();
+  const { railway, selectedStation, setSelectedStation } = useMapStation();
   const [geoStations, setGeoStations] = useState<GeoJSON.GeoJSON | null>(null);
   // 運賃をGeoJSONへ反映し終えた発駅のID
   // ラベルの表示形式をデータの更新と同時に切り替え、再描画を1回にまとめるために使う
@@ -75,7 +84,7 @@ const MapController = () => {
         }
       }
 
-      const response = await fetch(STATIONS_GEOJSON_URL);
+      const response = await fetch(getStationsGeoJsonUrl(railway));
       const data = await response.json() as GeoJSON.GeoJSON;
       if (cancelled) return;
       setGeoStations(data);
@@ -121,7 +130,7 @@ const MapController = () => {
       map.off('mouseenter', 'stations', onStationMouseEnter);
       map.off('mouseleave', 'stations', onStationMouseLeave);
     };
-  }, [map]);
+  }, [map, railway]);
 
   useEffect(() => {
     const stationId = selectedStation?.id;
@@ -131,7 +140,7 @@ const MapController = () => {
     let cancelled = false;
 
     (async () => {
-      const response = await fetch(`data/jre/fare/table/${stationId}.json`);
+      const response = await fetch(`data/${railway}/fare/table/${stationId}.json`);
       const data = await response.json() as FareTable;
       if (cancelled) return;
 
@@ -167,7 +176,7 @@ const MapController = () => {
     return () => {
       cancelled = true;
     };
-  }, [selectedStation?.id]);
+  }, [selectedStation?.id, railway]);
 
   return geoStations ? (
     <Source id="stations-source" type="geojson" data={geoStations}>
