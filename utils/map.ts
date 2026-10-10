@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import type { Graph } from '../types/graph.ts';
+import { isSupportedRailway } from './railway.ts';
 
 import type { Feature, FeatureCollection } from 'geojson';
 
@@ -13,7 +14,11 @@ const TOP_TERMINAL_ID = [
   "omiya", "utsunomiya", "takasaki",
   "kitasenju", "tsuchiura", "mito",
   "narita-airport-t1", "chiba",
-  "maihama", "kaihinmakuhari"
+  "maihama", "kaihinmakuhari",
+  // 都営地下鉄
+  "shinjuku_subway", "oshiage", "nishimagome", "sengakuji", "mita", "daimon",
+  "otemachi", "hibiya", "jinbocho", "nishitakashimadaira", "motoyawata_subway",
+  "tochomae", "hikarigaoka", "kasuga", "uenookachimachi"
 ]
 // 表示優先度の高い駅のIDリスト
 const TERMINAL_IDs = [
@@ -27,7 +32,13 @@ const TERMINAL_IDs = [
   "abiko", "kashiwa", "ushiku", "ishioka",
   "sakura", "naruto", "kisarazu", "kazusaichinomiya",
   "ichikawa",
-  "shinkiba", "nishifunabashi", "soga"
+  "shinkiba", "nishifunabashi", "soga",
+  // 都営地下鉄
+  "gotanda_subway", "shinbashi_subway", "nihonbashi", "asakusa_subway",
+  "meguro_subway_tokyu", "shirokanetakanawa", "sugamo_subway", "takashimadaira",
+  "ichigaya_subway", "kudanshita", "morishita", "sumiyoshi", "ojima", "funabori",
+  "iidabashi_subway", "ryogoku_subway", "kiyosumishirakawa", "monzennakacho", "shiodome_subway",
+  "roppongi", "aoyamaitchome", "nakanosakaue", "nerima_subway"
 ]
 
 /**
@@ -116,13 +127,15 @@ export const processGeoJSONFiles = async (mapDir: string, graphPath: string, out
   await fs.writeFile(outputPath, JSON.stringify(outputGeoJSON, null, 2), 'utf8');
 }
 
-// CLI
+// CLI (第1引数で鉄道会社コードを指定する 例: `yarn generate-geojson toei`)
 if (require.main === module) {
   (async () => {
     try {
-      const mapDir = path.resolve(process.cwd(), 'public', 'data', 'jre', 'map');
-      const graphPath = path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'graph.json');
-      const outputPath = path.resolve(process.cwd(), 'public', 'data', 'jre', 'map.geojson');
+      const railway = process.argv[2] ?? 'jre';
+      if (!isSupportedRailway(railway)) throw new Error(`未定義の鉄道会社です: ${railway}`);
+      const mapDir = path.resolve(process.cwd(), 'public', 'data', railway, 'map');
+      const graphPath = path.resolve(process.cwd(), 'public', 'data', railway, 'fare', 'graph.json');
+      const outputPath = path.resolve(process.cwd(), 'public', 'data', railway, 'map.geojson');
 
       console.log('変換開始...');
       await processGeoJSONFiles(mapDir, graphPath, outputPath);

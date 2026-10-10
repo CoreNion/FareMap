@@ -3,6 +3,8 @@ import path from 'path';
 
 import type { FareLines, FareStation, JrFareStation } from '../types/fare.ts';
 import type { Graph, Edge } from '../types/graph.ts';
+import type { SUPPORTED_RAILWAY } from '../types/railway.ts';
+import { isSupportedRailway } from './railway.ts';
 
 /**
  * 複数の路線データ(各路線の駅一覧)から、全駅辞書と隣接駅リストを含んだグラフ構造を構築する関数
@@ -83,13 +85,13 @@ export function buildGraphFromLines(lines: FareLines['lines']): Graph {
 }
 
 /**
- * 指定ディレクトリ（デフォルト: `public/jre/fare/lines`）配下の JSON ファイルを全て読み込み、
+ * 指定ディレクトリ（デフォルト: `public/data/{railway}/fare/lines`）配下の JSON ファイルを全て読み込み、
  * 各ファイル内の `lines` 配列を束ねて `buildGraphFromLines` に渡す。
  * - ファイルが壊れていても警告を出して処理を続行する（堅牢性を重視）
  * - 戻り値は `Graph` 型（`stations` と `adj`）
  */
-export async function generateGraphFromFiles(dir?: string): Promise<Graph> {
-  const base = dir ?? path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'lines');
+export async function generateGraphFromFiles(dir?: string, railway: SUPPORTED_RAILWAY = 'jre'): Promise<Graph> {
+  const base = dir ?? path.resolve(process.cwd(), 'public', 'data', railway, 'fare', 'lines');
   const entries = await fs.readdir(base, { withFileTypes: true });
   const linesArr: FareLines['lines'] = [];
 
@@ -114,24 +116,28 @@ export async function generateGraphFromFiles(dir?: string): Promise<Graph> {
 /**
  * グラフを生成してファイルへ書き出すユーティリティ
  * - `options.dir` を指定するとそのディレクトリ内の路線ファイルを読み込む
- * - `options.outPath` で出力先を変更可能（デフォルトは `public/data/jre/fare/graph.json`）
+ * - `options.railway` で対象の鉄道会社を指定する（デフォルトは `jre`）
+ * - `options.outPath` で出力先を変更可能（デフォルトは `public/data/{railway}/fare/graph.json`）
  * - 出力先ディレクトリが無ければ作成する
  */
-export async function generateAndWriteGraph(options?: { dir?: string; outPath?: string }) {
+export async function generateAndWriteGraph(options?: { dir?: string; outPath?: string; railway?: SUPPORTED_RAILWAY }) {
   const dir = options?.dir;
-  const outPath = options?.outPath ?? path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'graph.json');
-  const graph = await generateGraphFromFiles(dir);
+  const railway = options?.railway ?? 'jre';
+  const outPath = options?.outPath ?? path.resolve(process.cwd(), 'public', 'data', railway, 'fare', 'graph.json');
+  const graph = await generateGraphFromFiles(dir, railway);
   const outDir = path.dirname(outPath);
   await fs.mkdir(outDir, { recursive: true });
   await fs.writeFile(outPath, JSON.stringify(graph, null, 2), 'utf8');
   return outPath;
 }
 
-// CLI
+// CLI (第1引数で鉄道会社コードを指定する 例: `yarn generate-graph toei`)
 if (require.main === module) {
   (async () => {
     try {
-      const out = await generateAndWriteGraph();
+      const railway = process.argv[2] ?? 'jre';
+      if (!isSupportedRailway(railway)) throw new Error(`未定義の鉄道会社です: ${railway}`);
+      const out = await generateAndWriteGraph({ railway });
       console.log('wrote', out);
     } catch (err) {
       console.error(err);
