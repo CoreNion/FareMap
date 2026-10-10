@@ -1,11 +1,14 @@
 "use client";
 
 import { FareLines, FareStation, FareLineInfo, FareLineList } from "@/types/fare";
+import type { SUPPORTED_RAILWAY } from "@/types/railway";
 
 import { calculateFare } from "@/utils/calc";
+import { RAILWAYS, isSupportedRailway } from "@/utils/railway";
 import { useEffect, useState, useCallback } from "react";
 
 export default function CalcFareDemoPage() {
+  const [railway, setRailway] = useState<SUPPORTED_RAILWAY>('jre');
   const [lines, setLines] = useState<Array<{name: string; id: string; source: string;}>>([]);
 
   const [fromLineId, setFromLineId] = useState<string>('');
@@ -20,7 +23,7 @@ export default function CalcFareDemoPage() {
 
   useEffect(() => {
     const fetchInfo = async () => {
-      const res = await fetch('/data/jre/fare/info.json');
+      const res = await fetch(`/data/${railway}/fare/info.json`);
       const info = (await res.json()) as FareLineList;
       const merged: Array<{name: string; id: string; source: string}> = [];
       (info.lines || []).forEach((l: FareLineInfo) => {
@@ -32,11 +35,13 @@ export default function CalcFareDemoPage() {
       setLines(merged);
     };
     fetchInfo();
-  }, []);
+  }, [railway]);
 
   const getLineFileName = (id: string) => {
     if (!id) return id;
     if (id.startsWith('yamanote')) return 'yamanote';
+    // 大江戸線の放射部は環状部と同じファイルに含まれている
+    if (id === 'oedo2') return 'oedo';
     return id;
   };
 
@@ -46,6 +51,15 @@ export default function CalcFareDemoPage() {
     const sourceId = sel?.source || lineId;
     return getLineFileName(sourceId);
   }, [lines]);
+
+  // 事業者を変更した場合は、選択中の路線・駅をすべてリセットする
+  const handleRailwayChange = (value: string) => {
+    if (!isSupportedRailway(value)) return;
+    setRailway(value);
+    setLines([]);
+    handleFromLineChange('');
+    handleToLineChange('');
+  };
 
   const handleFromLineChange = (value: string) => {
     setFromLineId(value);
@@ -69,7 +83,7 @@ export default function CalcFareDemoPage() {
       try {
         const file = resolveFileForLineId(fromLineId);
         if (!file) return;
-        const res = await fetch(`/data/jre/fare/lines/${file}.json`);
+        const res = await fetch(`/data/${railway}/fare/lines/${file}.json`);
         const data = (await res.json()) as FareLines;
         const linesInFile = data.lines || [];
         const entry = linesInFile.find((ln) => ln.id === fromLineId) || linesInFile[0];
@@ -82,7 +96,7 @@ export default function CalcFareDemoPage() {
       }
     };
     fetchLine();
-  }, [fromLineId, resolveFileForLineId]);
+  }, [fromLineId, resolveFileForLineId, railway]);
 
   useEffect(() => {
     if (!toLineId) return;
@@ -90,7 +104,7 @@ export default function CalcFareDemoPage() {
       try {
         const file = resolveFileForLineId(toLineId);
         if (!file) return;
-        const res = await fetch(`/data/jre/fare/lines/${file}.json`);
+        const res = await fetch(`/data/${railway}/fare/lines/${file}.json`);
         const data = (await res.json()) as FareLines;
         const linesInFile = data.lines || [];
         const entry = linesInFile.find((ln) => ln.id === toLineId) || linesInFile[0];
@@ -103,7 +117,7 @@ export default function CalcFareDemoPage() {
       }
     };
     fetchLine();
-  }, [toLineId, resolveFileForLineId]);
+  }, [toLineId, resolveFileForLineId, railway]);
 
   useEffect(() => {
     const computeFare = async () => {
@@ -111,7 +125,7 @@ export default function CalcFareDemoPage() {
       const toSt = toStations.find(st => st.id === toStation);
       console.log(`From station: ${fromSt?.name}, To station: ${toSt?.name}`);
       if (fromSt && toSt) {
-        const f = await calculateFare(fromSt, toSt);
+        const f = await calculateFare(fromSt, toSt, railway);
         console.log(`Calculated fare from ${fromSt.name} to ${toSt.name}: ${f}`);
         setFare(f);
       } else {
@@ -119,12 +133,21 @@ export default function CalcFareDemoPage() {
       }
     };
     computeFare();
-  }, [fromStation, toStation, fromStations, toStations]);
+  }, [fromStation, toStation, fromStations, toStations, railway]);
 
   return (
     <main className="p-4">
       <h1 className="text-2xl font-bold mb-4">運賃計算デモ</h1>
       <form>
+        <div className="mb-2">
+          <label className="mr-2">事業者:</label>
+          <select className="border p-2" value={railway} onChange={e => handleRailwayChange(e.target.value)}>
+            {Object.values(RAILWAYS).map(r => (
+              <option key={r.id} value={r.id}>{r.name}</option>
+            ))}
+          </select>
+        </div>
+
         <div className="mb-2">
           <label className="mr-2">出発路線:</label>
           <select className="border p-2 mr-4" value={fromLineId} onChange={e => handleFromLineChange(e.target.value)}>
