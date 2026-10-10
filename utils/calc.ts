@@ -1,4 +1,4 @@
-import type { FareStation, JrFareData, JrFareStation, SpecialFareTable } from "../types/fare.ts"
+import type { FareStation, ICFareRange, JrFareData, JrFareStation, SpecialFareTable, ToeiFareData } from "../types/fare.ts"
 import type { SUPPORTED_RAILWAY } from "../types/railway.ts"
 import type { Graph, Edge } from "../types/graph.ts";
 
@@ -34,49 +34,62 @@ const loadJson = async <T>(url: string): Promise<T> => {
 }
 
 /**
+ * 運賃表から営業キロ(km単位)に対応する運賃を検索する関数
+ * @param table 運賃表
+ * @param km 営業キロ (km単位の整数)
+ * @returns 対応する運賃 (範囲外の場合は0)
+ */
+const findFareInTable = (table: ICFareRange[], km: number): number =>
+  table.find((range) => km >= range.startK && km <= range.endK)?.fare ?? 0;
+
+/**
  * 営業キロから運賃を求める関数
- * @param distance 営業キロ
+ * @param distance 営業キロ (0.1km単位)
  * @param railway 鉄道会社コード
- * @param onlyChihou 地方交通線のみかどうか
+ * @param onlyChihou 地方交通線のみかどうか (JRのみ使用)
  * @returns 営業キロに対応する運賃
  */
 const distanceToFare = async (distance: number, railway: SUPPORTED_RAILWAY, onlyChihou: boolean): Promise<number> => {
-  let fareData: JrFareData;
   switch (railway) {
-    case 'jre':
-      fareData = await loadJson<JrFareData>('/data/jre/fare/2026.json');
-      break;
+    case 'jre': {
+      const fareData = await loadJson<JrFareData>('/data/jre/fare/2026.json');
+
+      // 1km未満は1kmとして扱い、1km以上は端数を切り上げる
+      if (distance % 10 !== 0) {
+        distance = distance < 10 ? 10 : Math.floor(distance / 10) * 10;
+      }
+
+      const table = onlyChihou ? fareData.chihou : fareData.kansen;
+
+      let fare = 0;
+      for (const range of table) {
+        if (distance >= (range.startK * 10) && distance <= (range.endK * 10)) {
+          fare = range.fare;
+          break;
+        }
+      }
+      return fare;
+    }
+    case 'toei': {
+      const fareData = await loadJson<ToeiFareData>('/data/toei/fare/2026.json');
+      // 1km未満の端数は1kmに切り上げる (0kmの場合も最低1kmとして扱う)
+      const km = Math.max(1, Math.ceil(distance / 10));
+      return findFareInTable(fareData.normal, km);
+    }
     default:
       throw new Error(`未定義の鉄道会社です: ${railway}`);
   }
-
-  let fare = 0;
-
-  // 1km未満は1kmとして扱い、1km以上は端数を切り上げる
-  if (distance % 10 !== 0) {
-    distance = distance < 10 ? 10 : Math.floor(distance / 10) * 10;
-  }
-
-  const table = onlyChihou ? fareData.chihou : fareData.kansen;
-
-  for (const range of table) {
-    if (distance >= (range.startK * 10) && distance <= (range.endK * 10)) {
-      fare = range.fare;
-      break;
-    }
-  }
-  return fare;
 }
 
 /**
  * 最短経路の運賃計算を行う関数
  * @param startSt 出発駅
  * @param endSt 到着駅
+ * @param railway 鉄道会社コード
  * @returns 計算された運賃
  */
-export const calculateFare = async (startSt: FareStation, endSt: FareStation): Promise<number> => {
-  const graph = await loadJson<Graph>('/data/jre/fare/graph.json');
-  const specialFareTable = await loadJson<SpecialFareTable>('/data/jre/fare/special.json');
+export const calculateFare = async (startSt: FareStation, endSt: FareStation, railway: SUPPORTED_RAILWAY = 'jre'): Promise<number> => {
+  const graph = await loadJson<Graph>(`/data/${railway}/fare/graph.json`);
 
   const startId = startSt.id;
   const endId = endSt.id;
@@ -84,18 +97,30 @@ export const calculateFare = async (startSt: FareStation, endSt: FareStation): P
     throw new Error('start または end 駅がグラフに存在しません');
   }
 
-  // 特別な運賃が適用されている場合はそれを返す
-  const specialFare = specialFareTable.specialFares.find(
-    (s) => (s.to == startId && s.from == endId) || (s.from == startId && s.to == endId)
-  );
-  if (specialFare) return specialFare.fare;
+  switch (railway) {
+    case 'jre': {
+      const specialFareTable = await loadJson<SpecialFareTable>('/data/jre/fare/special.json');
 
-  // 営業キロの算出を行う
-  const { fareDistance, onlyChihou } = calcJrFareDistance(graph, (startSt as JrFareStation), (endSt as JrFareStation))
+      // 特別な運賃が適用されている場合はそれを返す
+      const specialFare = specialFareTable.specialFares.find(
+        (s) => (s.to == startId && s.from == endId) || (s.from == startId && s.to == endId)
+      );
+      if (specialFare) return specialFare.fare;
 
-  // 営業キロを運賃に変換
-  const fare = await distanceToFare(fareDistance, 'jre', onlyChihou);
-  return fare;
+      // 営業キロの算出を行う
+      const { fareDistance, onlyChihou } = calcJrFareDistance(graph, (startSt as JrFareStation), (endSt as JrFareStation))
+
+      // 営業キロを運賃に変換
+      return await distanceToFare(fareDistance, 'jre', onlyChihou);
+    }
+    case 'toei': {
+      // 都営地下鉄は最短経路の営業キロで運賃を算出する
+      const { fareDistance } = calculateShortDistance(graph, startId, endId);
+      return await distanceToFare(fareDistance, 'toei', false);
+    }
+    default:
+      throw new Error(`未定義の鉄道会社です: ${railway}`);
+  }
 }
 
 /**

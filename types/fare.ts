@@ -17,6 +17,11 @@ export interface JrFareData {
   kasan: BaseFareRange[];
 }
 
+/** 都営地下鉄の運賃データ */
+export interface ToeiFareData {
+  normal: ICFareRange[];
+}
+
 /** 運賃計算用の駅データ */
 export interface FareStation {
   name: string;
