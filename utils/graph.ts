@@ -128,10 +128,16 @@ export async function generateAndWriteGraph(options?: { dir?: string; outPath?: 
 }
 
 // CLI
+// 引数で事業者IDを指定すると、その事業者のグラフを生成する (例: `yarn generate-graph metro`)
 if (require.main === module) {
   (async () => {
     try {
-      const out = await generateAndWriteGraph();
+      const railway = process.argv[2] ?? 'jre';
+      const fareDir = path.resolve(process.cwd(), 'public', 'data', railway, 'fare');
+      const out = await generateAndWriteGraph({
+        dir: path.join(fareDir, 'lines'),
+        outPath: path.join(fareDir, 'graph.json'),
+      });
       console.log('wrote', out);
     } catch (err) {
       console.error(err);

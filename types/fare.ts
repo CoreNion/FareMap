@@ -1,3 +1,8 @@
+import type { RailwayId } from "./railway.ts";
+
+/** 運賃の種別 (ticket: きっぷ運賃, ic: IC運賃) */
+export type FareType = 'ticket' | 'ic';
+
 /** 営業キロごとの運賃 */
 export interface BaseFareRange {
   startK: number;
@@ -85,7 +90,11 @@ export interface FareTable {
   id: string;
   name: string;
   fares: {
-    [destinationId: string]: number;
+    [destinationId: string]: number | null;
+  }
+  /** JR線のみではない経路で運賃を算出した駅の、利用する事業者の並び (IC運賃の表のみ) */
+  via?: {
+    [destinationId: string]: RailwayId[];
   }
 }
 
@@ -100,4 +109,20 @@ export interface SpecialFare {
   to: string,
   fare: number,
   icFare: number
+}
+
+/** 事業者をまたぐ経路のうち、1事業者を利用する区間 */
+export interface FareSegment {
+  railway: RailwayId;
+  from: string;
+  to: string;
+  fare: number;
+}
+
+/** IC運賃の計算結果 */
+export interface IcFareResult {
+  /** 合計のIC運賃 */
+  fare: number;
+  /** 運賃を算出した経路の区間 */
+  segments: FareSegment[];
 }

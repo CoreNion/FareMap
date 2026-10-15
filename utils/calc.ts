@@ -1,50 +1,23 @@
-import type { FareStation, JrFareData, JrFareStation, SpecialFareTable } from "../types/fare.ts"
+import type { FareStation, FareType, JrFareData, SpecialFareTable } from "../types/fare.ts"
 import type { SUPPORTED_RAILWAY } from "../types/railway.ts"
-import type { Graph, Edge } from "../types/graph.ts";
-
-const jsonCache = new Map<string, unknown>();
-
-/**
- * 環境に応じた形でJSONファイルを読み込む関数
- * @param url 
- * @returns 
- */
-const loadJson = async <T>(url: string): Promise<T> => {
-  if (jsonCache.has(url)) {
-    return jsonCache.get(url) as T;
-  }
-
-  // ブラウザ環境ならfetchでURLから読み込む
-  if (typeof window !== 'undefined') {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`fetch failed: ${res.status} ${res.statusText}`);
-    const data = await res.json();
-    jsonCache.set(url, data);
-    return data as T;
-  }
-
-  // Node.js(スクリプト)ならpublic配下のファイルを読み込む
-  const { readFile } = await import('fs/promises');
-  const { join } = await import('path');
-  const diskPath = join(process.cwd(), 'public', ...url.replace(/^\/+/, '').split('/'));
-  const txt = await readFile(diskPath, 'utf-8');
-  const data = JSON.parse(txt);
-  jsonCache.set(url, data);
-  return data as T;
-}
+import type { Graph } from "../types/graph.ts";
+import { loadJson } from "./data.ts";
+import { calculateShortDistance } from "./shortestPath.ts";
+import { calculateIcFare } from "./icRoute.ts";
 
 /**
  * 営業キロから運賃を求める関数
  * @param distance 営業キロ
  * @param railway 鉄道会社コード
  * @param onlyChihou 地方交通線のみかどうか
+ * @param type 運賃の種別
  * @returns 営業キロに対応する運賃
  */
-const distanceToFare = async (distance: number, railway: SUPPORTED_RAILWAY, onlyChihou: boolean): Promise<number> => {
+const distanceToFare = async (distance: number, railway: SUPPORTED_RAILWAY, onlyChihou: boolean, type: FareType): Promise<number> => {
   let fareData: JrFareData;
   switch (railway) {
     case 'jre':
-      fareData = await loadJson<JrFareData>('/data/jre/fare/2026.json');
+      fareData = await loadJson<JrFareData>('/data/jre/fare/fare.json');
       break;
     default:
       throw new Error(`未定義の鉄道会社です: ${railway}`);
@@ -59,7 +32,7 @@ const distanceToFare = async (distance: number, railway: SUPPORTED_RAILWAY, only
 
   for (const range of table) {
     if (distance >= (range.startK * 10) && distance <= (range.endK * 10)) {
-      fare = range.fare;
+      fare = type === 'ic' ? range.icFare : range.fare;
       break;
     }
   }
@@ -67,18 +40,38 @@ const distanceToFare = async (distance: number, railway: SUPPORTED_RAILWAY, only
 }
 
 /**
- * 最短経路の運賃計算を行う関数
+ * 運賃計算を行う関数
+ * - きっぷ運賃: JR線の最短経路で計算する
+ * - IC運賃: 他社線を含めた最も安価となる経路で計算する
  * @param startSt 出発駅
  * @param endSt 到着駅
+ * @param type 運賃の種別
  * @returns 計算された運賃
  */
-export const calculateFare = async (startSt: FareStation, endSt: FareStation): Promise<number> => {
+export const calculateFare = async (startSt: FareStation, endSt: FareStation, type: FareType = 'ticket'): Promise<number> => {
+  if (type === 'ic') {
+    const { fare } = await calculateIcFare(startSt.id, endSt.id);
+    return fare;
+  }
+  return calculateJrFare(startSt.id, endSt.id, type);
+}
+
+/**
+ * JR線のみを利用する場合の運賃計算を行う関数
+ *
+ * 特定都区市内・東京山手線内の制度はきっぷ・IC運賃の両方で適用する
+ * @param startId 出発駅ID
+ * @param endId 到着駅ID
+ * @param type 運賃の種別
+ * @returns 計算された運賃
+ */
+export const calculateJrFare = async (startId: string, endId: string, type: FareType): Promise<number> => {
   const graph = await loadJson<Graph>('/data/jre/fare/graph.json');
   const specialFareTable = await loadJson<SpecialFareTable>('/data/jre/fare/special.json');
 
-  const startId = startSt.id;
-  const endId = endSt.id;
-  if (!graph.stations?.[startId] || !graph.stations?.[endId]) {
+  const startSt = graph.stations?.[startId];
+  const endSt = graph.stations?.[endId];
+  if (!startSt || !endSt) {
     throw new Error('start または end 駅がグラフに存在しません');
   }
 
@@ -86,14 +79,13 @@ export const calculateFare = async (startSt: FareStation, endSt: FareStation): P
   const specialFare = specialFareTable.specialFares.find(
     (s) => (s.to == startId && s.from == endId) || (s.from == startId && s.to == endId)
   );
-  if (specialFare) return specialFare.fare;
+  if (specialFare) return type === 'ic' ? specialFare.icFare : specialFare.fare;
 
   // 営業キロの算出を行う
-  const { fareDistance, onlyChihou } = calcJrFareDistance(graph, (startSt as JrFareStation), (endSt as JrFareStation))
+  const { fareDistance, onlyChihou } = calcJrFareDistance(graph, startSt, endSt);
 
   // 営業キロを運賃に変換
-  const fare = await distanceToFare(fareDistance, 'jre', onlyChihou);
-  return fare;
+  return distanceToFare(fareDistance, 'jre', onlyChihou, type);
 }
 
 /** JRの特定都区市内ごとの中心駅 */
@@ -117,7 +109,7 @@ const JR_SP_CENTER_STATIONS: Record<string, string> = {
  *
  * - 特定都区市内・東京山手線内の場合の処理に対応
  */
-const calcJrFareDistance = (graph: Graph, startSt: JrFareStation, endSt: JrFareStation): { fareDistance: number, onlyChihou: boolean } => {
+const calcJrFareDistance = (graph: Graph, startSt: FareStation, endSt: FareStation): { fareDistance: number, onlyChihou: boolean } => {
   // 同じ特定都区市内同士の場合は通常通り算出する
   if (startSt.sp.some((sp) => endSt.sp.includes(sp))) {
     return calculateShortDistance(graph, startSt.id, endSt.id);
@@ -145,107 +137,4 @@ const calcJrFareDistance = (graph: Graph, startSt: JrFareStation, endSt: JrFareS
   const startCalcStId = getCalcStId(startSt, endSt);
   const endCalcStId = getCalcStId(endSt, startSt);
   return calculateShortDistance(graph, startCalcStId, endCalcStId);
-}
-
-/**
- * 最短営業キロを計算する関数
- * 
- * Dijkstra法で計算
- * @param graph Dijkstraで用いるグラフ
- * @param startId 開始駅ID
- * @param endId 到着駅ID
- * @returns 運賃計算キロ・営業キロと地方交通線のみフラグ
- */
-const calculateShortDistance = (graph: Graph, startId: string, endId: string): { fareDistance: number, operatingDistance: number, onlyChihou: boolean } => {
-  // ヒープは配列で実装した最小ヒープ（優先度付きキュー）。
-  // 要素は `[distance, nodeId]` のタプルで、distance が小さい順に取り出す。
-  type HeapItem = [number, string];
-  const heap: HeapItem[] = [];
-  const heapPush = (item: HeapItem) => {
-    heap.push(item);
-    let i = heap.length - 1;
-    while (i > 0) {
-      const p = Math.floor((i - 1) / 2);
-      if (heap[p][0] <= heap[i][0]) break;
-      [heap[p], heap[i]] = [heap[i], heap[p]];
-      i = p;
-    }
-  };
-  const heapPop = (): HeapItem | undefined => {
-    if (!heap.length) return undefined;
-    const top = heap[0];
-    const last = heap.pop()!;
-    if (heap.length) {
-      heap[0] = last;
-      let i = 0;
-      while (true) {
-        const l = i * 2 + 1;
-        const r = i * 2 + 2;
-        let smallest = i;
-        if (l < heap.length && heap[l][0] < heap[smallest][0]) smallest = l;
-        if (r < heap.length && heap[r][0] < heap[smallest][0]) smallest = r;
-        if (smallest === i) break;
-        [heap[smallest], heap[i]] = [heap[i], heap[smallest]];
-        i = smallest;
-      }
-    }
-    return top;
-  };
-
-  // 隣接リストと Dijkstra 用の距離配列・前駆点配列を初期化する
-  const adj = graph.adj || {};
-  const dist: Record<string, number> = {};
-  // 前駆点には { from: string, edge: Edge } を保存して経路復元を可能にする
-  const prev: Record<string, { from: string, edge: Edge } | null> = {};
-
-  for (const id of Object.keys(graph.stations)) {
-    dist[id] = Infinity;
-    prev[id] = null;
-  }
-
-  dist[startId] = 0;
-  heapPush([0, startId]);
-
-  // メインループ
-  while (true) {
-    const cur = heapPop();
-    if (!cur) break;
-    const [d, u] = cur;
-    if (d !== dist[u]) continue;
-    if (u === endId) break;
-
-    const edges = adj[u] || [];
-    for (const e of edges) {
-      // 混在時は地方交通線は fareWeight を使用する（運賃計算キロの算出）
-      const cost = e.chihou ? e.fareWeight : e.weight;
-      const nd = d + cost;
-      if (nd < (dist[e.to] ?? Infinity)) {
-        dist[e.to] = nd;
-        prev[e.to] = { from: u, edge: e };
-        heapPush([nd, e.to]);
-      }
-    }
-  }
-
-  if (!isFinite(dist[endId])) throw new Error('経路が見つかりません');
-
-  // 経路復元して、地方交通線のみかどうかを判定する
-  let onlyChihou = true;
-  let operatingDistance = 0;
-  let curr = endId;
-  while (prev[curr]) {
-    const p = prev[curr]!;
-    if (!p.edge.chihou) {
-      onlyChihou = false;
-    }
-    operatingDistance += p.edge.weight;
-    curr = p.from;
-  }
-
-  // 地方交通線のみの場合は営業キロの合計を、そうでない場合は Dijkstra で求めた fareDistance (運賃計算キロ) を返す
-  return {
-    fareDistance: onlyChihou ? operatingDistance : dist[endId],
-    operatingDistance,
-    onlyChihou
-  };
 }
