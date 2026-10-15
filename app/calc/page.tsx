@@ -1,6 +1,6 @@
 "use client";
 
-import { FareLines, FareStation, FareLineInfo, FareLineList, FareSegment, FareType } from "@/types/fare";
+import { AppliedTransferDiscount, FareLines, FareStation, FareLineInfo, FareLineList, FareSegment, FareType } from "@/types/fare";
 
 import { calculateFare } from "@/utils/calc";
 import { calculateIcFare } from "@/utils/icRoute";
@@ -22,6 +22,8 @@ export default function CalcFareDemoPage() {
   const [fareType, setFareType] = useState<FareType>('ticket');
   // IC運賃の場合の経路の区間
   const [segments, setSegments] = useState<FareSegment[]>([]);
+  // IC運賃の場合に適用した乗継割引
+  const [discounts, setDiscounts] = useState<AppliedTransferDiscount[]>([]);
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -122,15 +124,18 @@ export default function CalcFareDemoPage() {
           console.log(`Calculated IC fare from ${fromSt.name} to ${toSt.name}: ${result.fare}`);
           setFare(result.fare);
           setSegments(result.segments);
+          setDiscounts(result.discounts);
         } else {
           const f = await calculateFare(fromSt, toSt, fareType);
           console.log(`Calculated fare from ${fromSt.name} to ${toSt.name}: ${f}`);
           setFare(f);
           setSegments([]);
+          setDiscounts([]);
         }
       } else {
         setFare(0);
         setSegments([]);
+        setDiscounts([]);
       }
     };
     computeFare();
@@ -192,6 +197,9 @@ export default function CalcFareDemoPage() {
           <ul className="mt-2 list-disc list-inside">
             {segments.map((s) => (
               <li key={`${s.railway}-${s.from}-${s.to}`}>{RAILWAY_NAMES[s.railway]} {s.from} → {s.to}: {s.fare}円</li>
+            ))}
+            {discounts.map((d) => (
+              <li key={d.id}>乗継割引 ({d.id}): -{d.amount}円</li>
             ))}
           </ul>
         )}
