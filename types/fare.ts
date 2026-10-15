@@ -17,6 +17,34 @@ export interface JrFareData {
   kasan: BaseFareRange[];
 }
 
+/** 加算運賃(加算区間の駅を利用した場合に定額を加算) */
+export interface FixedKasanFare {
+  kinds: 'additional';
+  /** 駅データの`sp`から参照される加算運賃のID */
+  id: string;
+  fare: number;
+  icFare?: number;
+}
+
+/** 加算運賃(加算区間内の営業キロに応じて加算) */
+export interface RangeKasanFare {
+  kinds: 'additional_range';
+  /** 駅データの`sp`から参照される加算運賃のID */
+  id: string;
+  ranges: ICFareRange[];
+}
+
+/** 私鉄の加算運賃 */
+export type KasanFare = FixedKasanFare | RangeKasanFare;
+
+/** JR以外(私鉄・地下鉄)の運賃データ */
+export interface PrivateFareData {
+  /** 営業キロごとの普通運賃 */
+  normal: ICFareRange[];
+  /** 加算運賃(加算運賃が無い事業者は省略) */
+  kasan?: KasanFare[];
+}
+
 /** 運賃計算用の駅データ */
 export interface FareStation {
   name: string;
