@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 import { useMapStation } from "@/context/StationContext";
 import { FareTable } from "@/types/fare";
+import { RAILWAY_NAMES } from "@/utils/railway";
 
 const MAP_STYLE_URL =
   "https://tile.openstreetmap.jp/styles/osm-bright-ja/style.json";
@@ -39,7 +40,7 @@ export const MainMap = () => {
       >
         <MapController />
         <GeolocateControl position="bottom-right" />
-        <AttributionControl position="bottom-left" customAttribution={["地図上の駅・路線データ: 鉄道駅LOD(CC-BY-SA)を編集","JR線の運賃データの出典: ＭＡＲＳ for MS-DOS"]} />
+        <AttributionControl position="bottom-left" customAttribution={["地図上の駅・路線データ: 鉄道駅LOD(CC-BY-SA)を編集","JR線の運賃データの出典: ＭＡＲＳ for MS-DOS", "他社線のIC運賃データの出典: 東京地下鉄「旅客営業規程」ほか各社"]} />
       </Map>
     </MapProvider>
   );
@@ -47,7 +48,7 @@ export const MainMap = () => {
 
 const MapController = () => {
   const { current: map } = useMap();
-  const { selectedStation, setSelectedStation } = useMapStation();
+  const { selectedStation, setSelectedStation, fareType } = useMapStation();
   const [geoStations, setGeoStations] = useState<GeoJSON.GeoJSON | null>(null);
   // 運賃をGeoJSONへ反映し終えた発駅のID
   // ラベルの表示形式をデータの更新と同時に切り替え、再描画を1回にまとめるために使う
@@ -131,7 +132,9 @@ const MapController = () => {
     let cancelled = false;
 
     (async () => {
-      const response = await fetch(`data/jre/fare/table/${stationId}.json`);
+      // 運賃の種別に応じて、きっぷ運賃またはIC運賃の運賃表を取得する
+      const tableDir = fareType === "ic" ? "ic-table" : "table";
+      const response = await fetch(`data/jre/fare/${tableDir}/${stationId}.json`);
       const data = await response.json() as FareTable;
       if (cancelled) return;
 
@@ -144,6 +147,8 @@ const MapController = () => {
           const stId = feature.properties!.id;
           const fare = data.fares[stId];
           const isSelectedSt = stId != stationId;
+          // JR線のみではない経路の場合は、経由する事業者を表示する
+          const via = data.via?.[stId]?.filter((r) => r !== "jre").map((r) => RAILWAY_NAMES[r]).join("・");
 
           return {
             ...feature,
@@ -151,6 +156,7 @@ const MapController = () => {
               ...feature.properties,
               fare: isSelectedSt ?
                 (fare ? `${fare}円` : "情報なし") : "発駅",
+              via: via ? `${via}経由` : "",
             },
           };
         });
@@ -167,7 +173,7 @@ const MapController = () => {
     return () => {
       cancelled = true;
     };
-  }, [selectedStation?.id]);
+  }, [selectedStation?.id, fareType]);
 
   return geoStations ? (
     <Source id="stations-source" type="geojson" data={geoStations}>
@@ -198,7 +204,11 @@ const MapController = () => {
             <h3 className="text-lg font-bold">{popUpOptions!.feature.properties!.name}駅</h3>
             {popUpOptions!.feature.properties!.fare && popUpOptions!.feature.properties!.id != selectedStation!.id
               &&
-              <span>{selectedStation!.name}駅からの運賃: <strong>{popUpOptions!.feature.properties!.fare}</strong></span>
+              <span>{selectedStation!.name}駅からの{fareType === "ic" ? "IC" : "切符"}運賃: <strong>{popUpOptions!.feature.properties!.fare}</strong></span>
+            }
+            {popUpOptions!.feature.properties!.via && popUpOptions!.feature.properties!.id != selectedStation?.id
+              &&
+              <span className="text-xs">({popUpOptions!.feature.properties!.via}の最安経路)</span>
             }
             {
               popUpOptions!.feature.properties!.id != selectedStation?.id ?

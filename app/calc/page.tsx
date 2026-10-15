@@ -1,8 +1,10 @@
 "use client";
 
-import { FareLines, FareStation, FareLineInfo, FareLineList } from "@/types/fare";
+import { FareLines, FareStation, FareLineInfo, FareLineList, FareSegment, FareType } from "@/types/fare";
 
 import { calculateFare } from "@/utils/calc";
+import { calculateIcFare } from "@/utils/icRoute";
+import { RAILWAY_NAMES } from "@/utils/railway";
 import { useEffect, useState, useCallback } from "react";
 
 export default function CalcFareDemoPage() {
@@ -17,6 +19,9 @@ export default function CalcFareDemoPage() {
   const [fromStation, setFromStation] = useState<string>('');
   const [toStation, setToStation] = useState<string>('');
   const [fare, setFare] = useState<number>(0);
+  const [fareType, setFareType] = useState<FareType>('ticket');
+  // IC運賃の場合の経路の区間
+  const [segments, setSegments] = useState<FareSegment[]>([]);
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -111,15 +116,25 @@ export default function CalcFareDemoPage() {
       const toSt = toStations.find(st => st.id === toStation);
       console.log(`From station: ${fromSt?.name}, To station: ${toSt?.name}`);
       if (fromSt && toSt) {
-        const f = await calculateFare(fromSt, toSt);
-        console.log(`Calculated fare from ${fromSt.name} to ${toSt.name}: ${f}`);
-        setFare(f);
+        if (fareType === 'ic') {
+          // IC運賃は他社線を含めた最安経路で計算し、経路の区間も表示する
+          const result = await calculateIcFare(fromSt.id, toSt.id);
+          console.log(`Calculated IC fare from ${fromSt.name} to ${toSt.name}: ${result.fare}`);
+          setFare(result.fare);
+          setSegments(result.segments);
+        } else {
+          const f = await calculateFare(fromSt, toSt, fareType);
+          console.log(`Calculated fare from ${fromSt.name} to ${toSt.name}: ${f}`);
+          setFare(f);
+          setSegments([]);
+        }
       } else {
         setFare(0);
+        setSegments([]);
       }
     };
     computeFare();
-  }, [fromStation, toStation, fromStations, toStations]);
+  }, [fromStation, toStation, fromStations, toStations, fareType]);
 
   return (
     <main className="p-4">
@@ -161,9 +176,25 @@ export default function CalcFareDemoPage() {
           </select>
         </div>
 
+        <div className="mb-2">
+          <label className="mr-2">運賃の種別:</label>
+          <select className="border p-2" value={fareType} onChange={e => setFareType(e.target.value as FareType)}>
+            <option value="ticket">きっぷ運賃</option>
+            <option value="ic">IC運賃</option>
+          </select>
+        </div>
+
         <div>
           までの運賃: <span className="font-bold ml-2">{fare}</span>
         </div>
+
+        {segments.length > 0 && (
+          <ul className="mt-2 list-disc list-inside">
+            {segments.map((s) => (
+              <li key={`${s.railway}-${s.from}-${s.to}`}>{RAILWAY_NAMES[s.railway]} {s.from} → {s.to}: {s.fare}円</li>
+            ))}
+          </ul>
+        )}
       </form>
     </main>
   );
