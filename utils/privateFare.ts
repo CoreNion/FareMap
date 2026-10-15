@@ -18,41 +18,46 @@ const findRangeFare = (ranges: ICFareRange[], distance: number, type: FareType):
 
 /**
  * 経路上の加算運賃の合計を求める関数
- * - `additional`: 経路上(発着駅を含む)に加算区間の駅があれば1回だけ加算する
- * - `additional_range`: 加算区間内を乗車したキロに応じて加算する
- *   加算区間の駅同士の間に加えて、加算区間の駅と加算運賃の無い駅の間(区間の境界)も加算区間内として数える
+ *
+ * 加算区間は、区間の両端を含む駅の`sp`に加算運賃のIDを持たせて表す
+ * - 両端の駅が加算区間に含まれる駅間を、加算区間内の乗車として扱う
+ * - 加算区間の駅が1駅のみの場合(駅の利用で加算する場合)は、経路上(発着駅を含む)にその駅があれば加算区間内の乗車として扱う
+ *
+ * `additional`は加算区間内を乗車した場合に1回だけ加算し、`additional_range`は加算区間内を乗車したキロに応じて加算する
  * @param graph 事業者のグラフ
  * @param kasanList 事業者の加算運賃の一覧
  * @param path 経路上の駅ID
  * @param type 運賃の種別
  */
 const calcKasanFare = (graph: Graph, kasanList: KasanFare[], path: string[], type: FareType): number => {
-  const kasanIds = new Set(kasanList.map((k) => k.id));
-  // 駅が属する加算区間のIDの一覧
-  const getKasanIds = (stId: string): string[] => (graph.stations[stId]?.sp ?? []).filter((sp) => kasanIds.has(sp));
+  const inKasan = (stId: string, kasanId: string): boolean => graph.stations[stId]?.sp.includes(kasanId) ?? false;
 
   let total = 0;
   for (const kasan of kasanList) {
+    // 加算区間内の駅間を乗車した営業キロを合計する
+    let distance = 0;
+    let rideInSection = false;
+    for (let i = 1; i < path.length; i++) {
+      if (!inKasan(path[i - 1], kasan.id) || !inKasan(path[i], kasan.id)) continue;
+
+      const edges = (graph.adj[path[i - 1]] ?? []).filter((e) => e.to === path[i]);
+      distance += Math.min(...edges.map((e) => e.weight));
+      rideInSection = true;
+    }
+
+    // 加算区間の駅が1駅のみの場合は、その駅の利用で判定する
+    const isSingleStation = Object.values(graph.stations).filter((st) => st.sp.includes(kasan.id)).length === 1;
+    if (isSingleStation && path.some((stId) => inKasan(stId, kasan.id))) {
+      rideInSection = true;
+    }
+
     if (kasan.kinds === 'additional') {
-      if (path.some((stId) => getKasanIds(stId).includes(kasan.id))) {
+      if (rideInSection) {
         total += (type === 'ic' ? kasan.icFare : undefined) ?? kasan.fare;
       }
       continue;
     }
 
-    // 加算区間内の営業キロを合計する
-    let distance = 0;
-    for (let i = 1; i < path.length; i++) {
-      const a = getKasanIds(path[i - 1]);
-      const b = getKasanIds(path[i]);
-      const inA = a.includes(kasan.id);
-      const inB = b.includes(kasan.id);
-      const inSection = (inA && inB) || (inA && b.length === 0) || (inB && a.length === 0);
-      if (!inSection) continue;
-
-      const edges = (graph.adj[path[i - 1]] ?? []).filter((e) => e.to === path[i]);
-      distance += Math.min(...edges.map((e) => e.weight));
-    }
     if (distance > 0) {
       const fare = findRangeFare(kasan.ranges, distance, type);
       if (fare === undefined) throw new Error(`加算運賃の範囲外です: ${kasan.id} ${distance}`);
