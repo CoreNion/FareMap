@@ -12,4 +12,4 @@ export type PrivateRailwayId = Exclude<RailwayId, 'jre'>;
  */
 export type OperatorId = RailwayId
   | 'keio' | 'keikyu' | 'odakyu' | 'tobu' | 'seibu' | 'keisei'
-  | 'hokuso' | 'toyo' | 'saitama' | 'yokohama-minatomirai';
+  | 'hokuso' | 'toyo' | 'saitama' | 'yokohama-kosoku';
