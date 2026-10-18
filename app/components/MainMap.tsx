@@ -7,12 +7,28 @@ import { useEffect, useState } from "react";
 
 import { useMapStation } from "@/context/StationContext";
 import { FareTable } from "@/types/fare";
+import type { RailMode } from "@/types/map";
+import type { RailwayId } from "@/types/railway";
 import { RAILWAY_NAMES } from "@/utils/railway";
 
 const MAP_STYLE_URL =
   "https://tile.openstreetmap.jp/styles/osm-bright-ja/style.json";
 
-const STATIONS_GEOJSON_URL = "data/jre/map.geojson";
+/** 路線の区分ごとの駅のGeoJSON */
+const STATIONS_GEOJSON_URLS: Record<RailMode, string> = {
+  jr: "data/jre/map.geojson",
+  private: "data/private/map.geojson",
+};
+
+/** 路線の区分ごとの運賃表のディレクトリ */
+const FARE_DATA_DIRS: Record<RailMode, string> = {
+  jr: "data/jre/fare",
+  private: "data/private/fare",
+};
+
+/** 私鉄線モードで、JR線のみの駅かどうか */
+const isJrOnlyStation = (railMode: RailMode, railways: RailwayId[] | undefined): boolean =>
+  railMode === "private" && railways?.length === 1 && railways[0] === "jre";
 
 export const MainMap = () => {
   return (
@@ -40,7 +56,7 @@ export const MainMap = () => {
       >
         <MapController />
         <GeolocateControl position="bottom-right" />
-        <AttributionControl position="bottom-left" customAttribution={["地図上の駅・路線データ: 鉄道駅LOD(CC-BY-SA)を編集","JR線の運賃データの出典: ＭＡＲＳ for MS-DOS", "他社線のIC運賃データの出典: 東京地下鉄「旅客営業規程」ほか各社"]} />
+        <AttributionControl position="bottom-left" customAttribution={["地図上の駅・路線データ: 鉄道駅LOD(CC-BY-SA)を編集", "JR線の運賃データの出典: ＭＡＲＳ for MS-DOS", "私鉄・地下鉄線の運賃データの出典: 東京地下鉄「旅客営業規程」ほか各社の旅客営業規程・ICカード乗車券取扱規則", "都営地下鉄の運賃データ: 東京都オープンデータカタログ(CC-BY-SA)"]} />
       </Map>
     </MapProvider>
   );
@@ -48,7 +64,7 @@ export const MainMap = () => {
 
 const MapController = () => {
   const { current: map } = useMap();
-  const { selectedStation, setSelectedStation, fareType } = useMapStation();
+  const { selectedStation, setSelectedStation, fareType, railMode } = useMapStation();
   const [geoStations, setGeoStations] = useState<GeoJSON.GeoJSON | null>(null);
   // 運賃をGeoJSONへ反映し終えた発駅のID
   // ラベルの表示形式をデータの更新と同時に切り替え、再描画を1回にまとめるために使う
@@ -75,11 +91,6 @@ const MapController = () => {
           map.addImage("station", stIcon.data);
         }
       }
-
-      const response = await fetch(STATIONS_GEOJSON_URL);
-      const data = await response.json() as GeoJSON.GeoJSON;
-      if (cancelled) return;
-      setGeoStations(data);
     }
     )();
 
@@ -124,6 +135,34 @@ const MapController = () => {
     };
   }, [map]);
 
+  // 路線の区分に応じた駅のGeoJSONを読み込む
+  useEffect(() => {
+    // 区分を素早く切り替えた際に、古いリクエストの結果で上書きしないためのフラグ
+    let cancelled = false;
+
+    (async () => {
+      const response = await fetch(STATIONS_GEOJSON_URLS[railMode]);
+      const data = await response.json() as GeoJSON.FeatureCollection;
+      if (cancelled) return;
+
+      // 私鉄線モードでは、JR線のみの駅は発駅を選択するまで表示しない
+      const features = data.features.map((feature) => {
+        const jrOnly = isJrOnlyStation(railMode, feature.properties?.railways);
+        return {
+          ...feature,
+          properties: { ...feature.properties, jrOnly, hidden: jrOnly },
+        };
+      });
+      setGeoStations({ ...data, features });
+      setFareStationId(null);
+      setShowPopup(false);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [railMode]);
+
   useEffect(() => {
     const stationId = selectedStation?.id;
     if (!stationId) return undefined;
@@ -134,7 +173,9 @@ const MapController = () => {
     (async () => {
       // 運賃の種別に応じて、きっぷ運賃またはIC運賃の運賃表を取得する
       const tableDir = fareType === "ic" ? "ic-table" : "table";
-      const response = await fetch(`data/jre/fare/${tableDir}/${stationId}.json`);
+      const response = await fetch(`${FARE_DATA_DIRS[railMode]}/${tableDir}/${stationId}.json`);
+      // 区分の切り替え直後など、運賃表が無い駅の場合は何もしない
+      if (!response.ok) return;
       const data = await response.json() as FareTable;
       if (cancelled) return;
 
@@ -147,8 +188,11 @@ const MapController = () => {
           const stId = feature.properties!.id;
           const fare = data.fares[stId];
           const isSelectedSt = stId != stationId;
-          // JR線のみではない経路の場合は、経由する事業者を表示する
-          const via = data.via?.[stId]?.filter((r) => r !== "jre").map((r) => RAILWAY_NAMES[r]).join("・");
+          // JR線モードは、JR線のみではない経路の場合に経由する他社線を表示する
+          // 私鉄線モードは、他社線をまたぐ経路の場合に利用する全事業者を表示する
+          const via = data.via?.[stId]
+            ?.filter((r) => railMode === "private" || r !== "jre")
+            .map((r) => RAILWAY_NAMES[r]).join("・");
 
           return {
             ...feature,
@@ -157,6 +201,8 @@ const MapController = () => {
               fare: isSelectedSt ?
                 (fare ? `${fare}円` : "情報なし") : "発駅",
               via: via ? `${via}経由` : "",
+              // JR線のみの駅は、運賃表に含まれる駅(JR線区間が100km以内)のみ表示する
+              hidden: feature.properties!.jrOnly && !(stId in data.fares),
             },
           };
         });
@@ -173,7 +219,7 @@ const MapController = () => {
     return () => {
       cancelled = true;
     };
-  }, [selectedStation?.id, fareType]);
+  }, [selectedStation?.id, fareType, railMode]);
 
   return geoStations ? (
     <Source id="stations-source" type="geojson" data={geoStations}>
@@ -181,6 +227,7 @@ const MapController = () => {
         id="stations"
         type="symbol"
         source="stations-source"
+        filter={["!=", ["get", "hidden"], true]}
         layout={{
           "icon-image": "station",
           "icon-size": 0.07,
@@ -211,6 +258,8 @@ const MapController = () => {
               <span className="text-xs">({popUpOptions!.feature.properties!.via}の最安経路)</span>
             }
             {
+              popUpOptions!.feature.properties!.jrOnly ?
+                <span className="text-xs">JR線の駅からの運賃は、JR線の表示で確認できます</span> :
               popUpOptions!.feature.properties!.id != selectedStation?.id ?
                 <button className="p-1 bg-green-200 rounded-xl text-xs font-bold cursor-pointer hover:bg-green-300" onClick={() => {
                   const feature = popUpOptions!.feature;

@@ -5,10 +5,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL('https://fare.cnion.dev/'),
   title: "Fare Map | 運賃マップ",
-  description: "起点駅からの運賃を地図上に表示するWebアプリ。現在は首都圏のJR東日本の切符運賃に対応しています。",
+  description: "起点駅からの運賃を地図上に表示するWebアプリ。首都圏のJR東日本線と私鉄・地下鉄線のきっぷ・IC運賃に対応しています。",
   openGraph: {
     title: 'Fare Map | 運賃マップ',
-    description: "起点駅からの運賃を地図上に表示するWebアプリ。現在は首都圏のJR東日本の切符運賃に対応しています。",
+    description: "起点駅からの運賃を地図上に表示するWebアプリ。首都圏のJR東日本線と私鉄・地下鉄線のきっぷ・IC運賃に対応しています。",
     url: 'https://fare.cnion.dev/',
     siteName: "CoreNion's Page",
     images:
