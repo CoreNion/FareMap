@@ -9,7 +9,7 @@ import { useMapStation } from "@/context/StationContext";
 import { FareTable } from "@/types/fare";
 import type { RailMode } from "@/types/map";
 import type { RailwayId } from "@/types/railway";
-import { RAILWAY_NAMES } from "@/utils/railway";
+import { RAILWAYS, RAILWAY_COLORS, RAILWAY_NAMES } from "@/utils/railway";
 
 const MAP_STYLE_URL =
   "https://tile.openstreetmap.jp/styles/osm-bright-ja/style.json";
@@ -20,10 +20,38 @@ const STATIONS_GEOJSON_URLS: Record<RailMode, string> = {
   private: "data/private/map.geojson",
 };
 
+/** 全事業者の路線の線のGeoJSON */
+const LINES_GEOJSON_URL = "data/lines.geojson";
+
 /** 路線の区分ごとの運賃表のディレクトリ */
 const FARE_DATA_DIRS: Record<RailMode, string> = {
   jr: "data/jre/fare",
   private: "data/private/fare",
+};
+
+/**
+ * 駅アイコンの画像を事業者の色で塗った画像を作る関数
+ * - 元の画像の不透明な部分だけを指定した色で塗りつぶす
+ */
+const createTintedImage = (image: HTMLImageElement | ImageBitmap, color: string): ImageData => {
+  const canvas = document.createElement("canvas");
+  canvas.width = image.width;
+  canvas.height = image.height;
+  const ctx = canvas.getContext("2d")!;
+  ctx.drawImage(image, 0, 0);
+  ctx.globalCompositeOperation = "source-in";
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  return ctx.getImageData(0, 0, canvas.width, canvas.height);
+};
+
+/**
+ * 地図のイベントから取得したfeatureの事業者一覧を取り出す関数
+ * - MapLibreのイベントでは、配列のプロパティがJSON文字列になるため変換する
+ */
+const parseRailways = (value: unknown): RailwayId[] | undefined => {
+  if (typeof value === "string") return JSON.parse(value) as RailwayId[];
+  return value as RailwayId[] | undefined;
 };
 
 /** 私鉄線モードで、JR線のみの駅かどうか */
@@ -65,8 +93,9 @@ export const MainMap = () => {
 
 const MapController = () => {
   const { current: map } = useMap();
-  const { selectedStation, setSelectedStation, fareType, railMode } = useMapStation();
+  const { selectedStation, setSelectedStation, fareType, railMode, showJrStations } = useMapStation();
   const [geoStations, setGeoStations] = useState<GeoJSON.GeoJSON | null>(null);
+  const [geoLines, setGeoLines] = useState<GeoJSON.GeoJSON | null>(null);
   // 運賃をGeoJSONへ反映し終えた発駅のID
   // ラベルの表示形式をデータの更新と同時に切り替え、再描画を1回にまとめるために使う
   const [fareStationId, setFareStationId] = useState<string | null>(null);
@@ -85,13 +114,23 @@ const MapController = () => {
     let cancelled = false;
 
     (async () => {
-      if (!map.hasImage("station")) {
+      // 事業者ごとに色を付けた駅アイコンを登録する
+      if (!map.hasImage("station-jre")) {
         const stIcon = await map.loadImage("icons/station.png");
-        // await中に別の実行が画像を登録している可能性があるため、追加直前に再確認する
-        if (!cancelled && !map.hasImage("station")) {
-          map.addImage("station", stIcon.data);
+        for (const railway of RAILWAYS) {
+          const name = `station-${railway}`;
+          // await中に別の実行が画像を登録している可能性があるため、追加直前に再確認する
+          if (!cancelled && !map.hasImage(name)) {
+            map.addImage(name, createTintedImage(stIcon.data, RAILWAY_COLORS[railway]));
+          }
         }
       }
+
+      // 路線の線は区分によらず共通のため、一度だけ読み込む
+      const response = await fetch(LINES_GEOJSON_URL);
+      const lines = await response.json() as GeoJSON.GeoJSON;
+      if (cancelled) return;
+      setGeoLines(lines);
     }
     )();
 
@@ -146,12 +185,12 @@ const MapController = () => {
       const data = await response.json() as GeoJSON.FeatureCollection;
       if (cancelled) return;
 
-      // 私鉄線モードでは、JR線のみの駅は発駅を選択するまで表示しない
+      // 私鉄線モードでは、JR線のみの駅の表示を切り替えられるように印を付ける
       const features = data.features.map((feature) => {
         const jrOnly = isJrOnlyStation(railMode, feature.properties?.railways);
         return {
           ...feature,
-          properties: { ...feature.properties, jrOnly, hidden: jrOnly },
+          properties: { ...feature.properties, jrOnly, hidden: false },
         };
       });
       setGeoStations({ ...data, features });
@@ -202,8 +241,9 @@ const MapController = () => {
               fare: isSelectedSt ?
                 (fare ? `${fare}円` : "情報なし") : "発駅",
               via: via ? `${via}経由` : "",
-              // JR線のみの駅は、運賃表に含まれる駅(JR線区間が100km以内)のみ表示する
-              hidden: feature.properties!.jrOnly && !(stId in data.fares),
+              // 運賃の無い駅(範囲外・経路が無い駅)は表示しない
+              // (JR線のみの駅は、JR線区間が100km以内の駅のみ運賃表に含まれる)
+              hidden: isSelectedSt && fare == null,
             },
           };
         });
@@ -222,15 +262,20 @@ const MapController = () => {
     };
   }, [selectedStation?.id, fareType, railMode]);
 
+  // 私鉄線モードでJR線の駅を表示するか (発駅の選択前は表示しない)
+  const showJr = railMode === "jr" || (!!selectedStation && showJrStations);
+
   return geoStations ? (
+    <>
     <Source id="stations-source" type="geojson" data={geoStations}>
       <Layer
         id="stations"
         type="symbol"
         source="stations-source"
-        filter={["!=", ["get", "hidden"], true]}
+        filter={showJr ? ["!=", ["get", "hidden"], true] :
+          ["all", ["!=", ["get", "hidden"], true], ["!=", ["get", "jrOnly"], true]]}
         layout={{
-          "icon-image": "station",
+          "icon-image": ["concat", "station-", ["coalesce", ["get", "railway"], "jre"]],
           "icon-size": 0.07,
           "text-font": ["mplus2p-regular"],
           "text-size": 17,
@@ -268,6 +313,7 @@ const MapController = () => {
                   setSelectedStation({
                     id: feature.properties!.id,
                     name: feature.properties!.name,
+                    railways: parseRailways(feature.properties!.railways),
                   });
                   setShowPopup(false);
                   map?.flyTo(
@@ -285,5 +331,25 @@ const MapController = () => {
         </Popup>
       }
     </Source>
+    {/* 路線の線は駅の下に表示する (駅のレイヤーの追加後に、その下へ挿入する) */}
+    {geoLines &&
+      <Source id="lines-source" type="geojson" data={geoLines}>
+        <Layer
+          id="lines"
+          type="line"
+          source="lines-source"
+          beforeId="stations"
+          filter={railMode === "jr" ? ["==", ["get", "railway"], "jre"] :
+            showJr ? ["boolean", true] : ["!=", ["get", "railway"], "jre"]}
+          layout={{ "line-cap": "round", "line-join": "round" }}
+          paint={{
+            "line-color": ["get", "color"],
+            "line-width": ["interpolate", ["linear"], ["zoom"], 8, 1.5, 12, 4, 15, 6],
+            "line-opacity": 0.8,
+          }}
+        />
+      </Source>
+    }
+    </>
   ) : <></>;
 }
