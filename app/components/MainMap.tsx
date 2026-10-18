@@ -56,7 +56,8 @@ export const MainMap = () => {
       >
         <MapController />
         <GeolocateControl position="bottom-right" />
-        <AttributionControl position="bottom-left" customAttribution={["地図上の駅・路線データ: 鉄道駅LOD(CC-BY-SA)を編集", "JR線の運賃データの出典: ＭＡＲＳ for MS-DOS", "私鉄・地下鉄線の運賃データの出典: 東京地下鉄「旅客営業規程」ほか各社の旅客営業規程・ICカード乗車券取扱規則", "都営地下鉄の運賃データ: 東京都オープンデータカタログ(CC-BY-SA)"]} />
+        <AttributionControl position="bottom-left" compact={true}
+          customAttribution={["地図上の駅・路線データ: 鉄道駅LOD(CC-BY-SA)を編集", "JR線の運賃データの出典: ＭＡＲＳ for MS-DOS", "都営地下鉄の運賃データ: 東京都オープンデータカタログ(CC-BY-SA)", "他の各社の路線・運賃情報は、各社の旅客営業規程やICカード乗車券取扱規則を参照", ]} />
       </Map>
     </MapProvider>
   );
