@@ -1,6 +1,9 @@
 import fs from 'fs/promises';
 import path from 'path';
 import type { Graph } from '../types/graph.ts';
+import type { FareLines } from '../types/fare.ts';
+import type { RailwayId } from '../types/railway.ts';
+import { PRIVATE_RAILWAYS, RAILWAYS } from './railway.ts';
 
 import type { Feature, FeatureCollection } from 'geojson';
 
@@ -13,7 +16,12 @@ const TOP_TERMINAL_ID = [
   "omiya", "utsunomiya", "takasaki",
   "kitasenju", "tsuchiura", "mito",
   "narita-airport-t1", "chiba",
-  "maihama", "kaihinmakuhari"
+  "maihama", "kaihinmakuhari",
+  // 私鉄線
+  "shibuya_subway_tokyu", "shinjuku_metro", "ikebukuro_subway", "otemachi_metro", "ginza", "ueno_subway", "omotesando",
+  "shinjuku_odakyu", "shinjuku_toei_keio", "seibushinjuku", "ikebukuro_seibu", "shibuya_keio",
+  "yokohama_tokyu_mm", "yokohama_sotetsu", "yokohama_keikyu", "shinagawa_keikyu", "sengakuji", "oshiage_toei_keisei",
+  "haneda_airport_terminal1_2", "odawara_odakyu", "hakoneyumoto"
 ]
 // 表示優先度の高い駅のIDリスト
 const TERMINAL_IDs = [
@@ -27,8 +35,22 @@ const TERMINAL_IDs = [
   "abiko", "kashiwa", "ushiku", "ishioka",
   "sakura", "naruto", "kisarazu", "kazusaichinomiya",
   "ichikawa",
-  "shinkiba", "nishifunabashi", "soga"
+  "shinkiba", "nishifunabashi", "soga",
+  // 私鉄線
+  "kitasenju", "nakano", "wakoshi", "yoyogiuehara", "nakameguro", "meguro_subway_tokyu", "shirokanetakanawa", "kudanshita",
+  "futakotamagawa", "mizonokuchi", "azamino", "chuorinkan_tokyu", "jiyugaoka", "musashikosugi_tokyu", "shinyokohama_tokyu_sotetsu",
+  "ebina_sotetsu", "shonandai_sotetsu", "keikyukamata", "kamiooka_keikyu", "misakiguchi",
+  "meidaimae", "chofu", "keiohachioji", "hashimoto_keio", "takaosanguchi",
+  "shinyurigaoka", "machida_odakyu", "sagamiono", "fujisawa_odakyu", "kataseenoshima",
+  "tokorozawa", "hanno", "honkawagoe", "nerima", "takadanobaba_seibu",
+  "shinyokohama_yokohama-city", "totsuka_yokohama-city", "urawamisono", "toyokatsutadai", "nishimagome", "tochomae"
 ]
+
+/**
+ * 駅名の表記揺れ(ヶ/ケ、半角の中黒など)をそろえる関数
+ */
+const normalizeStationName = (name: string): string =>
+  name.replace(/[ヶヵ]/g, 'ケ').replace(/[･]/g, '・');
 
 /**
  * GeoJSON(鉄道駅LOD GeoJSON)を運賃マップで使うデータに加工する
@@ -38,18 +60,21 @@ const TERMINAL_IDs = [
  * 
  * @param geojson 変換前のGeoJSON (FeatureCollection)
  * @param graph 駅情報のグラフデータ
+ * @param lineStations 優先して照合する路線の駅 (同じ駅名の駅が複数ある事業者で、地図の路線の駅に絞り込むために使う)
  * @returns 変換後のGeoJSON
  */
-export const transformGeoJSON = (geojson: FeatureCollection, graph: Graph) => {
+export const transformGeoJSON = (geojson: FeatureCollection, graph: Graph, lineStations: { id: string, name: string }[] = []) => {
   if (!geojson || !geojson.features) return geojson;
 
-  const stations = Object.values(graph.stations);
+  // 路線の駅を先に並べ、駅名が同じ場合は路線の駅を優先する
+  const stations = [...lineStations, ...Object.values(graph.stations)];
+  const findStation = (name: string) => stations.find(s => normalizeStationName(s.name) === normalizeStationName(name));
 
   const transformedFeatures = geojson.features
     .filter((feature: Feature) => {
       if (feature.geometry?.type === 'Point' && feature.properties?.name) {
         // 運賃マップに存在しない駅は削除
-        const station = stations.find(s => s.name === feature.properties?.name);
+        const station = findStation(feature.properties.name);
         return !!station;
       } else {
         // 駅Point以外のfeatureは削除
@@ -61,7 +86,7 @@ export const transformGeoJSON = (geojson: FeatureCollection, graph: Graph) => {
         delete feature.properties.uri;
 
         // 対応するstation.idを追加
-        const station = stations.find(s => s.name === feature.properties!.name);
+        const station = findStation(feature.properties.name);
         feature.properties.id = station!.id;
 
         // 表示優先度を追加
@@ -116,16 +141,121 @@ export const processGeoJSONFiles = async (mapDir: string, graphPath: string, out
   await fs.writeFile(outputPath, JSON.stringify(outputGeoJSON, null, 2), 'utf8');
 }
 
+/** 地図の路線ファイル名と、運賃計算用の路線ファイル名が異なるもの */
+const MAP_LINE_ALIASES: Record<string, string> = {
+  nanboku: 'namboku',
+  'marunouchi-honancho': 'marunouchi',
+};
+
+/**
+ * 事業者の地図データ(GeoJSON)のファイル一覧を取得する関数
+ * - `{id}/map/*.geojson` が無い事業者は、`{id}/*.geojson` を使う (生成物の`map.geojson`は除く)
+ */
+const listRailwayMapFiles = async (railwayDir: string): Promise<string[]> => {
+  const mapDir = path.join(railwayDir, 'map');
+  const hasMapDir = await fs.stat(mapDir).then((st) => st.isDirectory()).catch(() => false);
+  const dir = hasMapDir ? mapDir : railwayDir;
+  const files = await fs.readdir(dir);
+  return files
+    .filter((f) => f.endsWith('.geojson') && f !== 'map.geojson')
+    .map((f) => path.join(dir, f));
+}
+
+/**
+ * 地図の路線ファイルに対応する、運賃計算用の路線の駅一覧を読み込む関数
+ * @returns 路線の駅一覧 (対応する路線ファイルが無い場合は空配列)
+ */
+const loadLineStations = async (railwayDir: string, mapFile: string) => {
+  const base = path.basename(mapFile, '.geojson');
+  const lineName = MAP_LINE_ALIASES[base] ?? base;
+  try {
+    const txt = await fs.readFile(path.join(railwayDir, 'fare', 'lines', `${lineName}.json`), 'utf8');
+    const json = JSON.parse(txt) as { lines: FareLines['lines'] };
+    return json.lines.flatMap((line) => line.stations);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * 私鉄線モード用に、私鉄各社とJR線の駅を一つのGeoJSONファイルにまとめて保存する関数
+ * - 私鉄の駅は各社の地図データを各社のグラフで変換し、駅IDで重複を除く
+ * - JR線の駅は`jre/map.geojson`から追加する (私鉄の駅と同じIDの駅は除く)
+ * - 各featureに、駅を含む事業者の一覧(`railways`)を追加する
+ *
+ * @param dataDir `public/data` のパス
+ * @param outputPath 変換後のGeoJSONを保存するパス
+ */
+export const processPrivateGeoJSONFiles = async (dataDir: string, outputPath: string) => {
+  // 駅ID -> 駅を含む事業者の一覧
+  const stationRailways = new Map<string, RailwayId[]>();
+  const graphs = new Map<RailwayId, Graph>();
+  for (const railway of RAILWAYS) {
+    const graph: Graph = JSON.parse(await fs.readFile(path.join(dataDir, railway, 'fare', 'graph.json'), 'utf8'));
+    graphs.set(railway, graph);
+    for (const id of Object.keys(graph.stations)) {
+      stationRailways.set(id, [...(stationRailways.get(id) ?? []), railway]);
+    }
+  }
+
+  let allFeatures: Feature[] = [];
+  for (const railway of PRIVATE_RAILWAYS) {
+    const railwayDir = path.join(dataDir, railway);
+    for (const file of await listRailwayMapFiles(railwayDir)) {
+      const geojson = JSON.parse(await fs.readFile(file, 'utf8'));
+      const lineStations = await loadLineStations(railwayDir, file);
+      const transformed = transformGeoJSON(geojson, graphs.get(railway)!, lineStations);
+      allFeatures = allFeatures.concat(transformed.features);
+    }
+  }
+
+  // JR線の駅を追加する
+  const jrGeoJSON: FeatureCollection = JSON.parse(await fs.readFile(path.join(dataDir, 'jre', 'map.geojson'), 'utf8'));
+  allFeatures = allFeatures.concat(jrGeoJSON.features);
+
+  // 重複するfeatureを削除（idが同じものは一つだけ残す）
+  const seenIds = new Set<string>();
+  const uniqueAllFeatures = allFeatures
+    .filter((feature) => {
+      const id = feature.properties?.id;
+      if (seenIds.has(id)) return false;
+      seenIds.add(id);
+      return true;
+    })
+    .map((feature) => ({
+      ...feature,
+      properties: {
+        ...feature.properties,
+        railways: stationRailways.get(feature.properties!.id) ?? [],
+      },
+    }));
+
+  const outputGeoJSON = {
+    type: "FeatureCollection",
+    features: uniqueAllFeatures
+  };
+
+  await fs.mkdir(path.dirname(outputPath), { recursive: true });
+  await fs.writeFile(outputPath, JSON.stringify(outputGeoJSON, null, 2), 'utf8');
+}
+
 // CLI
+// `--private` を指定すると私鉄線モード用のGeoJSONを生成する (例: `yarn generate-geojson --private`)
 if (require.main === module) {
   (async () => {
     try {
-      const mapDir = path.resolve(process.cwd(), 'public', 'data', 'jre', 'map');
-      const graphPath = path.resolve(process.cwd(), 'public', 'data', 'jre', 'fare', 'graph.json');
-      const outputPath = path.resolve(process.cwd(), 'public', 'data', 'jre', 'map.geojson');
+      const dataDir = path.resolve(process.cwd(), 'public', 'data');
 
       console.log('変換開始...');
-      await processGeoJSONFiles(mapDir, graphPath, outputPath);
+      if (process.argv.includes('--private')) {
+        await processPrivateGeoJSONFiles(dataDir, path.join(dataDir, 'private', 'map.geojson'));
+      } else {
+        await processGeoJSONFiles(
+          path.join(dataDir, 'jre', 'map'),
+          path.join(dataDir, 'jre', 'fare', 'graph.json'),
+          path.join(dataDir, 'jre', 'map.geojson'),
+        );
+      }
       console.log('変換が完了しました');
     } catch (err) {
       console.error('変換中にエラーが発生しました...', err);
