@@ -1,6 +1,6 @@
-import type { AppliedTransferDiscount, FareSegment, TransferDiscount, TransferDiscountData, TransferDiscountSection } from "../types/fare.ts";
+import type { AppliedTransferDiscount, FareSegment, TransferDiscount, TransferDiscountData, TransferDiscountSection, TransferDiscountTicketType } from "../types/fare.ts";
 import { loadOptionalJson } from "./data.ts";
-import { RAILWAYS } from "./railway.ts";
+import { RAILWAYS, toRailwayId } from "./railway.ts";
 
 /** 乗継割引の候補 (経路のどの区間からどの区間までに適用するか) */
 interface DiscountCandidate {
@@ -11,25 +11,31 @@ interface DiscountCandidate {
   discount: AppliedTransferDiscount;
 }
 
-let rulesPromise: Promise<TransferDiscount[]> | undefined;
+/** 乗車券の種別ごとの乗継割引の読み込み結果 */
+const rulesPromises = new Map<TransferDiscountTicketType, Promise<TransferDiscount[]>>();
 
 /**
- * 全事業者のIC運賃に適用できる乗継割引を読み込む関数
+ * 全事業者の乗継割引のうち、指定した乗車券の種別に適用できるものを読み込む関数
  * - 同じ割引は両社のデータに同じIDで収録されているため、IDで重複を除く
+ * @param ticketType 乗車券の種別 (paper: 連絡きっぷ, ic: ICカード乗車券)
  */
-export const loadTransferDiscounts = (): Promise<TransferDiscount[]> => {
-  rulesPromise ??= (async () => {
-    const rules = new Map<string, TransferDiscount>();
-    for (const railway of RAILWAYS) {
-      const data = await loadOptionalJson<TransferDiscountData>(`/data/${railway}/fare/transfer-discounts.json`);
-      for (const rule of data?.rules ?? []) {
-        if (!rule.ticketTypes.includes('ic')) continue;
-        if (!rules.has(rule.id)) rules.set(rule.id, rule);
+export const loadTransferDiscounts = (ticketType: TransferDiscountTicketType = 'ic'): Promise<TransferDiscount[]> => {
+  let promise = rulesPromises.get(ticketType);
+  if (!promise) {
+    promise = (async () => {
+      const rules = new Map<string, TransferDiscount>();
+      for (const railway of RAILWAYS) {
+        const data = await loadOptionalJson<TransferDiscountData>(`/data/${railway}/fare/transfer-discounts.json`);
+        for (const rule of data?.rules ?? []) {
+          if (!rule.ticketTypes.includes(ticketType)) continue;
+          if (!rules.has(rule.id)) rules.set(rule.id, rule);
+        }
       }
-    }
-    return [...rules.values()];
-  })();
-  return rulesPromise;
+      return [...rules.values()];
+    })();
+    rulesPromises.set(ticketType, promise);
+  }
+  return promise;
 }
 
 /**
@@ -41,14 +47,14 @@ const getAdultDiscount = (rule: TransferDiscount): number =>
   rule.kind === 'combinedFare' ? rule.calculation.adultDiscount : rule.discount.adult;
 
 /** 乗継割引の最大の割引額 (経路探索の打ち切りに使う) */
-export const getMaxTransferDiscount = async (): Promise<number> => {
-  const rules = await loadTransferDiscounts();
+export const getMaxTransferDiscount = async (ticketType: TransferDiscountTicketType = 'ic'): Promise<number> => {
+  const rules = await loadTransferDiscounts(ticketType);
   return Math.max(0, ...rules.map(getAdultDiscount));
 }
 
 /** 駅が乗継割引の対象区間の発着駅かどうか */
 const isSectionStation = (section: TransferDiscountSection, railway: string, stId: string): boolean => {
-  if (section.operator !== railway) return false;
+  if (toRailwayId(section.operator) !== railway) return false;
   if ('allStations' in section) return true;
   return section.stations.some((s) => s.id === stId);
 }
@@ -73,13 +79,13 @@ const matchesRule = (rule: TransferDiscount, segments: FareSegment[], reversed: 
   // 経由する事業者の並びを判定する
   const via = rule.viaOperators ?? [];
   const actualVia = segments.slice(1, -1).map((s) => s.railway);
-  const expectedVia = reversed ? [...via].reverse() : via;
+  const expectedVia = (reversed ? [...via].reverse() : via).map(toRailwayId);
   if (actualVia.length !== expectedVia.length || actualVia.some((r, i) => r !== expectedVia[i])) return false;
 
   // 接続駅を判定する (経由する事業者が無い場合のみ指定がある)
   if (rule.connection && segments.length === 2) {
     const transferId = first.to;
-    const connectionOf = (railway: string) => rule.connection!.find((c) => c.operator === railway);
+    const connectionOf = (railway: string) => rule.connection!.find((c) => toRailwayId(c.operator) === railway);
     if (connectionOf(first.railway)?.id !== transferId) return false;
     if (connectionOf(last.railway)?.id !== transferId) return false;
   }
@@ -88,15 +94,16 @@ const matchesRule = (rule: TransferDiscount, segments: FareSegment[], reversed: 
 }
 
 /**
- * 経路に適用する乗継割引を求める関数
+ * 経路に適用する乗継割引を、対象の区間の範囲とともに求める関数
  * - 1回の乗車で複数の乗継割引が対象になる場合は、対象の区間が重複しない範囲で適用する
  *   (区間が重複する場合は、割引額の合計が最も大きくなる組み合わせを選ぶ)
  * @param segments 経路の区間
- * @returns 適用する乗継割引
+ * @param ticketType 乗車券の種別
+ * @returns 適用する乗継割引の候補
  */
-export const calcTransferDiscounts = async (segments: FareSegment[]): Promise<AppliedTransferDiscount[]> => {
+const findTransferDiscounts = async (segments: FareSegment[], ticketType: TransferDiscountTicketType): Promise<DiscountCandidate[]> => {
   if (segments.length < 2) return [];
-  const rules = await loadTransferDiscounts();
+  const rules = await loadTransferDiscounts(ticketType);
 
   // 経路の区間の並びごとに、適用できる乗継割引の候補を列挙する
   const candidates: DiscountCandidate[] = [];
@@ -131,5 +138,32 @@ export const calcTransferDiscounts = async (segments: FareSegment[]): Promise<Ap
   };
   search(0, [], 0);
 
-  return best.map((c) => c.discount);
+  return best;
+}
+
+/**
+ * 経路に適用する乗継割引を求める関数
+ * @param segments 経路の区間
+ * @param ticketType 乗車券の種別
+ * @returns 適用する乗継割引
+ */
+export const calcTransferDiscounts = async (segments: FareSegment[], ticketType: TransferDiscountTicketType = 'ic'): Promise<AppliedTransferDiscount[]> => {
+  const applied = await findTransferDiscounts(segments, ticketType);
+  return applied.map((c) => c.discount);
+}
+
+/**
+ * 経路のすべての乗継ぎ箇所に乗継割引が適用されるかを判定し、適用する乗継割引を求める関数
+ * - 連絡きっぷの運賃は、乗継割引のある事業者間の乗継ぎのみ計算するために使う
+ * @param segments 経路の区間
+ * @param ticketType 乗車券の種別
+ * @returns 適用する乗継割引 (乗継割引の無い乗継ぎ箇所がある場合はnull)
+ */
+export const calcFullyDiscountedTransfers = async (segments: FareSegment[], ticketType: TransferDiscountTicketType): Promise<AppliedTransferDiscount[] | null> => {
+  const applied = await findTransferDiscounts(segments, ticketType);
+  // 区間iと区間i+1の間の乗継ぎ箇所が、いずれかの割引の対象範囲に含まれるかを判定する
+  for (let i = 0; i + 1 < segments.length; i++) {
+    if (!applied.some((c) => c.start <= i && i + 1 <= c.end)) return null;
+  }
+  return applied.map((c) => c.discount);
 }

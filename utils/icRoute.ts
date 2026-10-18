@@ -1,11 +1,11 @@
-import type { FareSegment, IcFareResult } from "../types/fare.ts";
+import type { FareSegment, FareType, IcFareResult } from "../types/fare.ts";
 import type { Graph } from "../types/graph.ts";
 import type { RailwayId } from "../types/railway.ts";
 import { loadJson } from "./data.ts";
 import { calculateJrFare } from "./calc.ts";
 import { calculatePrivateFare } from "./privateFare.ts";
 import { RAILWAYS } from "./railway.ts";
-import { calcTransferDiscounts, getMaxTransferDiscount } from "./transferDiscount.ts";
+import { calcFullyDiscountedTransfers, calcTransferDiscounts, getMaxTransferDiscount } from "./transferDiscount.ts";
 
 /** 改札を通らずに乗り継げる事業者数の上限 (5社線以上は自動精算できない) */
 const MAX_RAILWAYS = 4;
@@ -47,21 +47,22 @@ const loadNetwork = (): Promise<IcNetwork> => {
   return networkPromise;
 }
 
-/** 1事業者の区間ごとのIC運賃のキャッシュ (計算できない区間はnull) */
+/** 1事業者の区間ごとの運賃のキャッシュ (計算できない区間はnull) */
 const segmentFareCache = new Map<string, Promise<number | null>>();
 
 /**
- * 1事業者のみを利用する区間のIC運賃を求める関数
- * @returns IC運賃 (経路が無いなど計算できない場合はnull)
+ * 1事業者のみを利用する区間の運賃を求める関数
+ * @param type 運賃の種別
+ * @returns 運賃 (経路が無いなど計算できない場合はnull)
  */
-const getSegmentFare = (railway: RailwayId, from: string, to: string): Promise<number | null> => {
+const getSegmentFare = (railway: RailwayId, from: string, to: string, type: FareType): Promise<number | null> => {
   // 運賃は方向に依存しないため、駅IDを並べ替えてキャッシュする
-  const key = [railway, ...[from, to].sort()].join(':');
+  const key = [type, railway, ...[from, to].sort()].join(':');
   let cached = segmentFareCache.get(key);
   if (!cached) {
     cached = (railway === 'jre'
-      ? calculateJrFare(from, to, 'ic')
-      : calculatePrivateFare(railway, from, to, 'ic')
+      ? calculateJrFare(from, to, type)
+      : calculatePrivateFare(railway, from, to, type)
     ).catch(() => null);
     segmentFareCache.set(key, cached);
   }
@@ -69,7 +70,7 @@ const getSegmentFare = (railway: RailwayId, from: string, to: string): Promise<n
 }
 
 /**
- * IC運賃(チャージ残額で乗車する場合)の計算を行う関数
+ * 事業者をまたぐ経路の運賃計算を行う関数
  *
  * 改札を通らずに乗車した場合の運賃を、以下のルールで計算する
  * - 発駅と着駅がどちらも同じ1事業者のみの駅の場合は、その事業者のみの運賃とする
@@ -77,11 +78,14 @@ const getSegmentFare = (railway: RailwayId, from: string, to: string): Promise<n
  * - それ以外は、4社線以内で乗り継げる経路のうち、最も安価となる経路の運賃とする
  *   (同じ事業者を2回以上利用する経路は除く)
  * - 事業者間の乗継割引がある場合は、割引を適用した運賃で比較する
+ * - きっぷ運賃の場合は、すべての乗継ぎ箇所に連絡きっぷの乗継割引がある経路のみを対象とする
  * @param startId 出発駅ID
  * @param endId 到着駅ID
+ * @param type 運賃の種別
  * @returns 合計運賃と経路の区間・適用した乗継割引
  */
-export const calculateIcFare = async (startId: string, endId: string): Promise<IcFareResult> => {
+export const calculateRouteFare = async (startId: string, endId: string, type: FareType): Promise<IcFareResult> => {
+  const ticketType = type === 'ic' ? 'ic' : 'paper';
   const { stationRailways, boundaries } = await loadNetwork();
   const startRailways = stationRailways.get(startId);
   const endRailways = stationRailways.get(endId);
@@ -92,13 +96,13 @@ export const calculateIcFare = async (startId: string, endId: string): Promise<I
   // 発着駅が同じ1事業者のみの駅の場合は、その事業者のみで計算する
   if (startRailways.length === 1 && endRailways.length === 1 && startRailways[0] === endRailways[0]) {
     const railway = startRailways[0];
-    const fare = await getSegmentFare(railway, startId, endId);
+    const fare = await getSegmentFare(railway, startId, endId, type);
     if (fare === null) throw new Error('経路が見つかりません');
     return { fare, segments: [{ railway, from: startId, to: endId, fare }], discounts: [] };
   }
 
   // 経路全体で受けられる乗継割引の上限 (乗継割引は2区間以上に適用するため、4社線では最大2回)
-  const maxTotalDiscount = (await getMaxTransferDiscount()) * Math.floor(MAX_RAILWAYS / 2);
+  const maxTotalDiscount = (await getMaxTransferDiscount(ticketType)) * Math.floor(MAX_RAILWAYS / 2);
 
   let best: IcFareResult | undefined;
 
@@ -116,12 +120,16 @@ export const calculateIcFare = async (startId: string, endId: string): Promise<I
     // 着駅まで直接行ける事業者を先に調べる (同額の場合は区間の少ない経路を優先するため)
     for (const railway of railways) {
       if (!endRailways.includes(railway)) continue;
-      const fare = await getSegmentFare(railway, stId, endId);
+      const fare = await getSegmentFare(railway, stId, endId, type);
       if (fare === null) continue;
 
       const nextSegments = [...segments, { railway, from: stId, to: endId, fare }];
       // 乗継割引を適用した運賃で比較する
-      const discounts = await calcTransferDiscounts(nextSegments);
+      // (きっぷ運賃は、乗継割引の無い乗継ぎ箇所がある経路を除く)
+      const discounts = type === 'ic'
+        ? await calcTransferDiscounts(nextSegments, ticketType)
+        : await calcFullyDiscountedTransfers(nextSegments, ticketType);
+      if (!discounts) continue;
       const nextTotal = total + fare - discounts.reduce((sum, d) => sum + d.amount, 0);
       if (!best || nextTotal < best.fare) {
         best = { fare: nextTotal, segments: nextSegments, discounts };
@@ -139,7 +147,7 @@ export const calculateIcFare = async (startId: string, endId: string): Promise<I
         const nextRailways = stationRailways.get(boundaryId)!;
         if (!nextRailways.some((r) => r !== railway && !usedRailways.includes(r))) continue;
 
-        const fare = await getSegmentFare(railway, stId, boundaryId);
+        const fare = await getSegmentFare(railway, stId, boundaryId, type);
         if (fare === null) continue;
         // 乗継割引を最大限受けても、既に見つかった経路より高くなる場合は打ち切る
         if (best && total + fare - maxTotalDiscount >= best.fare) continue;
@@ -154,3 +162,12 @@ export const calculateIcFare = async (startId: string, endId: string): Promise<I
   if (!best) throw new Error('経路が見つかりません');
   return best;
 }
+
+/**
+ * IC運賃(チャージ残額で乗車する場合)の計算を行う関数
+ * @param startId 出発駅ID
+ * @param endId 到着駅ID
+ * @returns 合計運賃と経路の区間・適用した乗継割引
+ */
+export const calculateIcFare = (startId: string, endId: string): Promise<IcFareResult> =>
+  calculateRouteFare(startId, endId, 'ic');

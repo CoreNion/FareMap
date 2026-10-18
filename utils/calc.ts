@@ -88,6 +88,17 @@ export const calculateJrFare = async (startId: string, endId: string, type: Fare
   return distanceToFare(fareDistance, 'jre', onlyChihou, type);
 }
 
+/**
+ * JR線の2駅間の最短の営業キロを求める関数
+ * @param startId 出発駅ID
+ * @param endId 到着駅ID
+ * @returns 営業キロ (0.1km単位)
+ */
+export const getJrDistance = async (startId: string, endId: string): Promise<number> => {
+  const graph = await loadJson<Graph>('/data/jre/fare/graph.json');
+  return calculateShortDistance(graph, startId, endId).operatingDistance;
+}
+
 /** JRの特定都区市内ごとの中心駅 */
 const JR_SP_CENTER_STATIONS: Record<string, string> = {
   yamanote: "tokyo",
