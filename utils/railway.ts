@@ -29,6 +29,42 @@ export const RAILWAY_NAMES: Record<RailwayId, string> = {
   'toyo-kosoku': '東葉高速線',
 };
 
+/** 事業者ごとの略称 (同じ駅名で改札が異なる駅の表示に使う) */
+export const RAILWAY_SHORT_NAMES: Record<RailwayId, string> = {
+  jre: 'JR',
+  metro: 'メトロ',
+  toei: '都営',
+  tokyu: '東急',
+  sotetsu: '相鉄',
+  keikyu: '京急',
+  keio: '京王',
+  odakyu: '小田急',
+  seibu: '西武',
+  'yokohama-kosoku': 'みなとみらい',
+  'yokohama-city': '横浜市営',
+  hakone: '箱根登山',
+  'saitama-kosoku': '埼玉高速',
+  'toyo-kosoku': '東葉',
+};
+
+/** 事業者ごとの色 (駅アイコンと、色の無い路線に使う) */
+export const RAILWAY_COLORS: Record<RailwayId, string> = {
+  jre: '#008f3c',
+  metro: '#00a3d9',
+  toei: '#7cbf3f',
+  tokyu: '#e60044',
+  sotetsu: '#1d2c6b',
+  keikyu: '#f2701c',
+  keio: '#c8006e',
+  odakyu: '#1e64c8',
+  seibu: '#e5a800',
+  'yokohama-kosoku': '#7a5c2e',
+  'yokohama-city': '#0a8a8f',
+  hakone: '#9b1b30',
+  'saitama-kosoku': '#7b3f99',
+  'toyo-kosoku': '#5d6b75',
+};
+
 /** 乗継割引のデータの事業者IDのうち、運賃データの事業者IDと異なるもの */
 const OPERATOR_RAILWAY_IDS: Partial<Record<OperatorId, RailwayId>> = {
   saitama: 'saitama-kosoku',

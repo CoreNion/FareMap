@@ -35,6 +35,8 @@ interface FareTableStations {
   stations: Graph['stations'];
   /** JR線のみの駅のID (私鉄線モードのみ) */
   jrOnlyIds: string[];
+  /** JR線の全駅のID (私鉄線モードのみ) */
+  jrIds: string[];
 }
 
 const readJson = async <T>(p: string): Promise<T> => {
@@ -50,7 +52,7 @@ const readJson = async <T>(p: string): Promise<T> => {
 const loadFareTableStations = async (mode: RailMode, graphPath: string): Promise<FareTableStations> => {
   const jrGraph = await readJson<Graph>(graphPath);
   if (mode === 'jr') {
-    return { originIds: Object.keys(jrGraph.stations), stations: jrGraph.stations, jrOnlyIds: [] };
+    return { originIds: Object.keys(jrGraph.stations), stations: jrGraph.stations, jrOnlyIds: [], jrIds: [] };
   }
 
   const privateStations: Graph['stations'] = {};
@@ -65,6 +67,7 @@ const loadFareTableStations = async (mode: RailMode, graphPath: string): Promise
     originIds: Object.keys(privateStations),
     stations: { ...jrGraph.stations, ...privateStations },
     jrOnlyIds,
+    jrIds: Object.keys(jrGraph.stations),
   };
 };
 
@@ -72,6 +75,7 @@ const loadFareTableStations = async (mode: RailMode, graphPath: string): Promise
  * 私鉄線モードで、指定した駅から全駅への運賃を計算し、運賃テーブルを生成する
  * - JR線経由を含む最安経路で計算し、他社線をまたぐ駅の事業者の並びを`via`に記録する
  * - JR線のみの駅は、経路のJR線区間の営業キロが上限以内の場合のみ運賃表に含める
+ *   (発駅がJR線と同じ改札の駅の場合は上限を設けない)
  */
 const generatePrivateFareTableForStation = async (
   targets: FareTableStations,
@@ -83,12 +87,14 @@ const generatePrivateFareTableForStation = async (
   const fares: FareTable['fares'] = {};
   const via: NonNullable<FareTable['via']> = {};
   const jrOnlyIds = new Set(targets.jrOnlyIds);
+  // JR線と同じ改札の駅(西船橋など)は、JR線の駅と同様に営業キロの上限を設けない
+  const sharesJrGate = targets.jrIds.includes(stationID);
 
   for (const toId of Object.keys(targets.stations)) {
     try {
       const { fare, segments } = await calculateRouteFare(stationID, toId, type);
 
-      if (jrOnlyIds.has(toId)) {
+      if (jrOnlyIds.has(toId) && !sharesJrGate) {
         // JR線区間の営業キロの合計が上限を超える駅は表示しない
         let jrDistance = 0;
         for (const s of segments.filter((s) => s.railway === 'jre')) {

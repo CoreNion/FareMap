@@ -3,7 +3,7 @@ import path from 'path';
 import type { Graph } from '../types/graph.ts';
 import type { FareLines } from '../types/fare.ts';
 import type { RailwayId } from '../types/railway.ts';
-import { PRIVATE_RAILWAYS, RAILWAYS } from './railway.ts';
+import { PRIVATE_RAILWAYS, RAILWAYS, RAILWAY_COLORS, RAILWAY_SHORT_NAMES } from './railway.ts';
 
 import type { Feature, FeatureCollection } from 'geojson';
 
@@ -222,13 +222,31 @@ export const processPrivateGeoJSONFiles = async (dataDir: string, outputPath: st
       seenIds.add(id);
       return true;
     })
-    .map((feature) => ({
-      ...feature,
-      properties: {
-        ...feature.properties,
-        railways: stationRailways.get(feature.properties!.id) ?? [],
-      },
-    }));
+    .map((feature) => {
+      const railways = stationRailways.get(feature.properties!.id) ?? [];
+      return {
+        ...feature,
+        properties: {
+          ...feature.properties,
+          name: feature.properties!.name as string,
+          railways,
+          // 駅アイコンの色に使う事業者 (私鉄の駅は最初の私鉄、JR線のみの駅はJR線)
+          railway: railways.find((r) => r !== 'jre') ?? 'jre',
+        },
+      };
+    });
+
+  // 同じ駅名で改札(駅ID)が異なる駅は、駅名の前に対象の事業者を付ける (例: [JR]渋谷、[京王]渋谷)
+  const nameCounts = new Map<string, number>();
+  for (const feature of uniqueAllFeatures) {
+    const name = normalizeStationName(feature.properties.name);
+    nameCounts.set(name, (nameCounts.get(name) ?? 0) + 1);
+  }
+  for (const feature of uniqueAllFeatures) {
+    if (nameCounts.get(normalizeStationName(feature.properties.name))! < 2) continue;
+    const operators = feature.properties.railways.map((r) => RAILWAY_SHORT_NAMES[r]).join('・');
+    feature.properties.name = `[${operators}]${feature.properties.name}`;
+  }
 
   const outputGeoJSON = {
     type: "FeatureCollection",
@@ -239,15 +257,57 @@ export const processPrivateGeoJSONFiles = async (dataDir: string, outputPath: st
   await fs.writeFile(outputPath, JSON.stringify(outputGeoJSON, null, 2), 'utf8');
 }
 
+/** 路線の線のGeoJSONで、座標を丸める桁数 (約10m単位) */
+const LINE_COORD_DIGITS = 4;
+
+/**
+ * 全事業者の地図データから路線の線(LineString)を取り出し、一つのGeoJSONファイルとして保存する関数
+ * - 各featureには、路線の色(`color`)と事業者(`railway`)のみを残す
+ * - 色が無い路線は事業者の色を使う
+ * - ファイルサイズを抑えるため、座標を丸めて改行無しで出力する
+ *
+ * @param dataDir `public/data` のパス
+ * @param outputPath 変換後のGeoJSONを保存するパス
+ */
+export const processLineGeoJSONFiles = async (dataDir: string, outputPath: string) => {
+  const round = (v: number) => Number(v.toFixed(LINE_COORD_DIGITS));
+  const features: Feature[] = [];
+
+  for (const railway of RAILWAYS) {
+    for (const file of await listRailwayMapFiles(path.join(dataDir, railway))) {
+      const geojson: FeatureCollection = JSON.parse(await fs.readFile(file, 'utf8'));
+      for (const feature of geojson.features) {
+        const geometry = feature.geometry;
+        if (geometry?.type !== 'LineString' && geometry?.type !== 'MultiLineString') continue;
+
+        const color = feature.properties?.color ? `#${feature.properties.color}` : RAILWAY_COLORS[railway];
+        const coordinates = geometry.type === 'LineString'
+          ? geometry.coordinates.map((c) => c.map(round))
+          : geometry.coordinates.map((line) => line.map((c) => c.map(round)));
+        features.push({
+          type: 'Feature',
+          properties: { color, railway },
+          geometry: { type: geometry.type, coordinates } as Feature['geometry'],
+        });
+      }
+    }
+  }
+
+  await fs.writeFile(outputPath, JSON.stringify({ type: 'FeatureCollection', features }), 'utf8');
+}
+
 // CLI
-// `--private` を指定すると私鉄線モード用のGeoJSONを生成する (例: `yarn generate-geojson --private`)
+// `--private` を指定すると私鉄線モード用のGeoJSONを生成する
+// `--lines` を指定すると全事業者の路線の線のGeoJSONを生成する (例: `yarn generate-geojson --lines`) (例: `yarn generate-geojson --private`)
 if (require.main === module) {
   (async () => {
     try {
       const dataDir = path.resolve(process.cwd(), 'public', 'data');
 
       console.log('変換開始...');
-      if (process.argv.includes('--private')) {
+      if (process.argv.includes('--lines')) {
+        await processLineGeoJSONFiles(dataDir, path.join(dataDir, 'lines.geojson'));
+      } else if (process.argv.includes('--private')) {
         await processPrivateGeoJSONFiles(dataDir, path.join(dataDir, 'private', 'map.geojson'));
       } else {
         await processGeoJSONFiles(
