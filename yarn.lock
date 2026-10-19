@@ -842,7 +842,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mapbox/jsonlint-lines-primitives@npm:^2.0.2, @mapbox/jsonlint-lines-primitives@npm:~2.0.2":
+"@mapbox/jsonlint-lines-primitives@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "@mapbox/jsonlint-lines-primitives@npm:2.0.3"
+  checksum: 10c0/e114b27757a21ccbf20e3c99761e8b48d2527cb321f47e5a4d9aa4b5781b16f15b1f6f4ab678a4329f93668956281a05b56387331dc0260981a2ef695414fc1d
+  languageName: node
+  linkType: hard
+
+"@mapbox/jsonlint-lines-primitives@npm:~2.0.2":
   version: 2.0.2
   resolution: "@mapbox/jsonlint-lines-primitives@npm:2.0.2"
   checksum: 10c0/5814e42fc453700132f93ea742aabcef9a3c98d9bf17d4c1106f82d1dcd91bbc93052e66e29014323b9b2a41b020c743d897e4a96cc4ed2f734482d587d8c2b2
@@ -856,10 +863,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mapbox/tiny-sdf@npm:^2.1.0":
-  version: 2.2.0
-  resolution: "@mapbox/tiny-sdf@npm:2.2.0"
-  checksum: 10c0/9cfddf94bcdbedb047cd5e1bf17b8d90cdfe3e5d0286282769f697d8972955be33cc3e49c23f60d977c99439f3de80ed429b4bf73599cec441cb493ba3c6c8ed
+"@mapbox/tiny-sdf@npm:^2.2.0":
+  version: 2.3.0
+  resolution: "@mapbox/tiny-sdf@npm:2.3.0"
+  checksum: 10c0/999e2e94d97804346fe8c3a01d97263c43dfe65210bef6d1e20698c9d52e28e13e9093d0526e0dcd503ab2dde37f60d6158a2bb766d6bbe82b823430e3dc5515
   languageName: node
   linkType: hard
 
@@ -877,30 +884,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mapbox/vector-tile@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "@mapbox/vector-tile@npm:2.0.4"
+"@mapbox/vector-tile@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@mapbox/vector-tile@npm:3.0.0"
   dependencies:
     "@mapbox/point-geometry": "npm:~1.1.0"
     "@types/geojson": "npm:^7946.0.16"
-    pbf: "npm:^4.0.1"
-  checksum: 10c0/3cade1c8c3a4e0896bbe8ee1d6bcdb78cb34dc2257bc0151ba85d06f2cb96c87b5bddfd28f8b8a20131a85aa26af7091965da19ac356bf126eb66e20d48542fa
+    pbf: "npm:^5.0.0"
+  checksum: 10c0/ccede784967394a171956376de98b9cc9d5683ae67e3516246082d7bd5a157f711777955d111cd4885cc9dc4e22ef26e8b9af70ef6c8746392dd8de84e201ba6
   languageName: node
   linkType: hard
 
-"@mapbox/whoots-js@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "@mapbox/whoots-js@npm:3.1.0"
-  checksum: 10c0/fe9e959a9049bcbc2c05d9d1156e050191ad697a1bd95e41cdfa069051ff1d6f2930ced234a8d68d5a0bf78091feab30d76497418ec800d90f0aac8691fe4fd4
-  languageName: node
-  linkType: hard
-
-"@maplibre/geojson-vt@npm:^6.1.0":
-  version: 6.1.1
-  resolution: "@maplibre/geojson-vt@npm:6.1.1"
+"@maplibre/geojson-vt@npm:^6.1.2":
+  version: 6.3.0
+  resolution: "@maplibre/geojson-vt@npm:6.3.0"
   dependencies:
     kdbush: "npm:^4.1.0"
-  checksum: 10c0/75f2fcfd0c25e1c92f83609affefa762aaf52995f86c6b5258d797050b39392b2f39bc7462ef015c82884e2b2c329bef823b614a1c9fbc8d98ddb8fa8c042854
+  checksum: 10c0/64f28e38cb27d43c49ce26f8b8b7f113daaa611192f49de1a03ca622a67cacaa926c4dce30fdbd5bd5bcabbded03bdb3bed78df2b41870bb1c785e889b063388
   languageName: node
   linkType: hard
 
@@ -922,11 +922,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@maplibre/maplibre-gl-style-spec@npm:^24.8.1":
-  version: 24.10.0
-  resolution: "@maplibre/maplibre-gl-style-spec@npm:24.10.0"
+"@maplibre/maplibre-gl-style-spec@npm:^26.4.4":
+  version: 26.4.4
+  resolution: "@maplibre/maplibre-gl-style-spec@npm:26.4.4"
   dependencies:
-    "@mapbox/jsonlint-lines-primitives": "npm:~2.0.2"
+    "@mapbox/jsonlint-lines-primitives": "npm:^2.0.3"
     "@mapbox/unitbezier": "npm:^1.0.0"
     json-stringify-pretty-compact: "npm:^4.0.0"
     minimist: "npm:^1.2.8"
@@ -936,20 +936,20 @@ __metadata:
     gl-style-format: dist/gl-style-format.mjs
     gl-style-migrate: dist/gl-style-migrate.mjs
     gl-style-validate: dist/gl-style-validate.mjs
-  checksum: 10c0/43ababa29ca151b274c5faea8a3cfe6c84c4b5ae47430fb92ea3711c733ea05db159eb56b3430febd2a11a0416ae01617ffa63f1951a4d8a44d0671299fd7bce
+  checksum: 10c0/a5af3e5c7e7b3ab5c427d9e51a9b5ba54981faeee9c46085fa765a043947cf327514e39e28ff488b5812620961ad315f0080acb1cdb940e626c7ba0d72f24651
   languageName: node
   linkType: hard
 
-"@maplibre/mlt@npm:^1.1.8":
-  version: 1.2.0
-  resolution: "@maplibre/mlt@npm:1.2.0"
+"@maplibre/mlt@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "@maplibre/mlt@npm:1.3.0"
   dependencies:
     "@mapbox/point-geometry": "npm:^1.1.0"
-  checksum: 10c0/2435fc519805ca11a8df7d5f74bdf50ef3a863a7ddfd1830ab89b335c6fbe6aed169cdcc2536b2d573978670cf7efb3347d8523c767368bfbfe36edc1d595660
+  checksum: 10c0/b5a62767c49e56e68031d9b2b9c2284e8694946a1d6f12db361118d0c0d0a6c3961c04f0361ce44921692752c266bfe3f72b39a979db289e5479f6b511482b5a
   languageName: node
   linkType: hard
 
-"@maplibre/vt-pbf@npm:^4.3.0":
+"@maplibre/vt-pbf@npm:^4.3.2":
   version: 4.3.2
   resolution: "@maplibre/vt-pbf@npm:4.3.2"
   dependencies:
@@ -1682,11 +1682,11 @@ __metadata:
   linkType: hard
 
 "acorn@npm:^8.15.0":
-  version: 8.15.0
-  resolution: "acorn@npm:8.15.0"
+  version: 8.19.0
+  resolution: "acorn@npm:8.19.0"
   bin:
     acorn: bin/acorn
-  checksum: 10c0/dec73ff59b7d6628a01eebaece7f2bdb8bb62b9b5926dcad0f8931f2b8b79c2be21f6c68ac095592adb5adb15831a3635d9343e6a91d028bbe85d564875ec3ec
+  checksum: 10c0/21007e0ca638dd13d44a0ad26856b7a885cc6c4319cd2bc71694bc8ec3f0606c23ecd12b157e167f909d9d2b2d68d5b50fe3f54211b1aab7c3451a7c801fe62e
   languageName: node
   linkType: hard
 
@@ -1919,6 +1919,15 @@ __metadata:
   bin:
     baseline-browser-mapping: dist/cli.cjs
   checksum: 10c0/1110ca70b60de9fa673e6d71154cbb2752225c28e069266c2f455f5a26367efc0e5b47a52afba22c9ef1e06d56a6c81aa964dda1fbc66c487e65c18a7c1e11c4
+  languageName: node
+  linkType: hard
+
+"bidi-js@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "bidi-js@npm:1.1.0"
+  dependencies:
+    require-from-string: "npm:^2.0.2"
+  checksum: 10c0/b608addec6bd6e5d1c0cc7b6116002d589c6e666966503aca2aa7b2f61717ecaaeb0ac1a16c1374d61ee757de4f2f24017312a70781f5c4b127ffab54a2f7187
   languageName: node
   linkType: hard
 
@@ -2247,10 +2256,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"earcut@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "earcut@npm:3.0.2"
-  checksum: 10c0/3d76da3d8a935244d59713edc70de71cdb5326a80b31c5c5cb96bc5b61f56b86ed35f032fffb66be7a4558e06efe1e94934f43ba6ca1b6c2af1420e87dd7ad71
+"earcut@npm:^3.2.4":
+  version: 3.2.4
+  resolution: "earcut@npm:3.2.4"
+  checksum: 10c0/c50c93a6a0b56aadbe9d225322184f93b6b6dff81f2ca6e6bd8bb1141eaefc5116aac4c969f576bc2569d9c6ddd5108d74bf3825b3fd5529ebcc59c9f2b55e5a
   languageName: node
   linkType: hard
 
@@ -2872,7 +2881,7 @@ __metadata:
     "@types/react-dom": "npm:^19.3.0"
     eslint: "npm:^9.39.5"
     eslint-config-next: "npm:16.4.2"
-    maplibre-gl: "npm:^5.24.0"
+    maplibre-gl: "npm:^6.14.0"
     next: "npm:16.4.2"
     react: "npm:19.3.1"
     react-dom: "npm:19.3.1"
@@ -2977,9 +2986,9 @@ __metadata:
   linkType: hard
 
 "flatted@npm:^3.2.9":
-  version: 3.3.3
-  resolution: "flatted@npm:3.3.3"
-  checksum: 10c0/e957a1c6b0254aa15b8cce8533e24165abd98fadc98575db082b786b5da1b7d72062b81bfdcd1da2f4d46b6ed93bec2434e62333e9b4261d79ef2e75a10dd538
+  version: 3.4.4
+  resolution: "flatted@npm:3.4.4"
+  checksum: 10c0/a3a52a88ea5a4c333e5a1f097dcd87a037fa31c236a77cf46222c2aa4036ef895ab9bc76138a66d9dc22bdb3652128f9598cd26e7439561bf19f67276e2bc37e
   languageName: node
   linkType: hard
 
@@ -3761,13 +3770,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kdbush@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "kdbush@npm:4.0.2"
-  checksum: 10c0/d50183b299c57e2573114e902ab47aed7494be3ca41b66d456779ecc3b2f153f491de341f9609965414784f728894f9a9001152eb9f3a40cd3755521c06a45a3
-  languageName: node
-  linkType: hard
-
 "kdbush@npm:^4.1.0":
   version: 4.1.0
   resolution: "kdbush@npm:4.1.0"
@@ -4001,30 +4003,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"maplibre-gl@npm:^5.24.0":
-  version: 5.24.0
-  resolution: "maplibre-gl@npm:5.24.0"
+"maplibre-gl@npm:^6.14.0":
+  version: 6.14.0
+  resolution: "maplibre-gl@npm:6.14.0"
   dependencies:
-    "@mapbox/jsonlint-lines-primitives": "npm:^2.0.2"
     "@mapbox/point-geometry": "npm:^1.1.0"
-    "@mapbox/tiny-sdf": "npm:^2.1.0"
-    "@mapbox/unitbezier": "npm:^0.0.1"
-    "@mapbox/vector-tile": "npm:^2.0.4"
-    "@mapbox/whoots-js": "npm:^3.1.0"
-    "@maplibre/geojson-vt": "npm:^6.1.0"
-    "@maplibre/maplibre-gl-style-spec": "npm:^24.8.1"
-    "@maplibre/mlt": "npm:^1.1.8"
-    "@maplibre/vt-pbf": "npm:^4.3.0"
+    "@mapbox/tiny-sdf": "npm:^2.2.0"
+    "@mapbox/unitbezier": "npm:^1.0.0"
+    "@mapbox/vector-tile": "npm:^3.0.0"
+    "@maplibre/geojson-vt": "npm:^6.1.2"
+    "@maplibre/maplibre-gl-style-spec": "npm:^26.4.4"
+    "@maplibre/mlt": "npm:^1.3.0"
+    "@maplibre/vt-pbf": "npm:^4.3.2"
     "@types/geojson": "npm:^7946.0.16"
-    earcut: "npm:^3.0.2"
+    bidi-js: "npm:^1.1.0"
+    earcut: "npm:^3.2.4"
     gl-matrix: "npm:^3.4.4"
-    kdbush: "npm:^4.0.2"
+    kdbush: "npm:^4.1.0"
     murmurhash-js: "npm:^1.0.0"
-    pbf: "npm:^4.0.1"
+    pbf: "npm:^5.1.2"
     potpack: "npm:^2.1.0"
     quickselect: "npm:^3.0.0"
     tinyqueue: "npm:^3.0.0"
-  checksum: 10c0/4ebe63987d307a8133a8cce6b3a414c2ca1b9901b98b2867590d4ce517bdc82c46900610b7693d6eeffb792271596751cf0bf40e59ee7d5e5c779bef9296cf10
+  checksum: 10c0/00e570e3308da0262856ab8e928edcce1b1026df71f18056f45705c44bcfb4121c433b06402860a453ac99ac8508ae482873b45e48c5c93e0399d1d1b5730960
   languageName: node
   linkType: hard
 
@@ -4487,18 +4488,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pbf@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "pbf@npm:4.0.1"
-  dependencies:
-    resolve-protobuf-schema: "npm:^2.1.0"
-  bin:
-    pbf: bin/pbf
-  checksum: 10c0/1a95cc3bdc61ee01d4728f4a57a9f1233732d183a8568818b714a747fd8b957d99b63e1c67f0f72dc5623657c42f88a1a7e44e1fbcd06e2fe2ef9a85a964832e
-  languageName: node
-  linkType: hard
-
-"pbf@npm:^5.1.0":
+"pbf@npm:^5.0.0, pbf@npm:^5.1.0, pbf@npm:^5.1.2":
   version: 5.1.2
   resolution: "pbf@npm:5.1.2"
   dependencies:
@@ -4701,6 +4691,13 @@ __metadata:
     gopd: "npm:^1.2.0"
     set-function-name: "npm:^2.0.2"
   checksum: 10c0/83b88e6115b4af1c537f8dabf5c3744032cb875d63bc05c288b1b8c0ef37cbe55353f95d8ca817e8843806e3e150b118bc624e4279b24b4776b4198232735a77
+  languageName: node
+  linkType: hard
+
+"require-from-string@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "require-from-string@npm:2.0.2"
+  checksum: 10c0/aaa267e0c5b022fc5fd4eef49d8285086b15f2a1c54b28240fdf03599cbd9c26049fee3eab894f2e1f6ca65e513b030a7c264201e3f005601e80c49fb2937ce2
   languageName: node
   linkType: hard
 

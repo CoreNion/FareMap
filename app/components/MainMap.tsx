@@ -14,6 +14,16 @@ import { RAILWAYS, RAILWAY_COLORS, RAILWAY_NAMES } from "@/utils/railway";
 const MAP_STYLE_URL =
   "https://tile.openstreetmap.jp/styles/osm-bright-ja/style.json";
 
+/**
+ * MapLibre GL JS v6のWorkerのURL
+ * - v6はWorkerの場所を`import.meta.url`から求めるが、バンドル後はWorkerを読み込めないため、
+ *   バンドラーにアセットとして出力させたWorkerのURLを明示的に指定する
+ */
+const MAPLIBRE_WORKER_URL = new URL(
+  "maplibre-gl/dist/maplibre-gl-worker.mjs",
+  import.meta.url,
+).href;
+
 /** 路線の区分ごとの駅のGeoJSON */
 const STATIONS_GEOJSON_URLS: Record<RailMode, string> = {
   jr: "data/jre/map.geojson",
@@ -80,6 +90,7 @@ export const MainMap = () => {
           zIndex: -1,
         }}
         mapStyle={MAP_STYLE_URL}
+        workerUrl={MAPLIBRE_WORKER_URL}
         attributionControl={false}
       >
         <MapController />
