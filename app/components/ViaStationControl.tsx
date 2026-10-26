@@ -17,7 +17,7 @@ const optionClassName = (selected: boolean): string =>
   `px-2 py-1 rounded-lg border text-left cursor-pointer ${selected ? "bg-green-600 border-green-600 text-white" : "bg-white border-zinc-300 hover:bg-green-100"}`;
 
 /**
- * 画面右上に表示する、改札外乗り換えの経由駅の指定
+ * 画面左上に表示する、改札外乗り換えの経由駅の指定
  * - 経由駅(降車駅)は地図の駅のポップアップから手動で指定する
  * - 降車駅の近くにある別の駅(物理的には近いが運賃計算上は遠い駅)を、乗車駅の候補として一覧表示する
  */
@@ -55,7 +55,8 @@ export const ViaStationControl = () => {
     && !candidateList?.some((c) => c.station.id === viaStation.board.id) ? viaStation.board : undefined;
 
   return (
-    <div className="flex flex-col items-end gap-2">
+    // パネルはボタンの下に重ねて表示し、右側のコントロールの位置に影響させない
+    <div className="select-none pointer-events-auto relative">
       <button
         type="button"
         aria-expanded={open}
@@ -68,7 +69,7 @@ export const ViaStationControl = () => {
       </button>
       {open &&
         <section aria-label="経由駅の指定"
-          className="w-64 max-h-[60dvh] overflow-y-auto p-3 bg-white rounded-2xl border border-zinc-400 shadow-md text-xs grid gap-2">
+          className="absolute top-full left-0 mt-2 z-10 w-64 max-w-[calc(100vw-1rem)] max-h-[60dvh] overflow-y-auto p-3 bg-white rounded-2xl border border-zinc-400 shadow-md text-xs grid gap-2">
           <h2 className="font-bold text-sm">経由駅 (改札外乗り換え)</h2>
           {!viaStation ?
             <p className="text-zinc-600">地図の駅を選び、ポップアップの「経由駅に指定」から改札を出る駅を指定します。</p> :

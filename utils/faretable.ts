@@ -5,7 +5,7 @@ import { cpus } from 'node:os';
 
 import type { FareTable, FareType } from '../types/fare.ts';
 import type { Graph } from '../types/graph.ts';
-import type { RailMode } from '../types/map.ts';
+import type { FareDataMode } from '../types/map.ts';
 import { calculateFare, getJrDistance } from './calc.ts';
 import { calculateIcFare, calculateRouteFare } from './icRoute.ts';
 import { PRIVATE_RAILWAYS } from './railway.ts';
@@ -13,7 +13,7 @@ import { PRIVATE_RAILWAYS } from './railway.ts';
 const DATA_DIR = path.resolve(process.cwd(), 'public', 'data');
 const DEFAULT_GRAPH_PATH = path.join(DATA_DIR, 'jre', 'fare', 'graph.json');
 /** 路線の区分・運賃の種別ごとの運賃表の出力先 */
-const DEFAULT_OUT_DIRS: Record<RailMode, Record<FareType, string>> = {
+const DEFAULT_OUT_DIRS: Record<FareDataMode, Record<FareType, string>> = {
   jr: {
     ticket: path.join(DATA_DIR, 'jre', 'fare', 'table'),
     ic: path.join(DATA_DIR, 'jre', 'fare', 'ic-table'),
@@ -49,7 +49,7 @@ const readJson = async <T>(p: string): Promise<T> => {
  * - JR線モード: JR線の全駅
  * - 私鉄線モード: 発駅は私鉄各社の全駅、着駅は私鉄各社とJR線の全駅
  */
-const loadFareTableStations = async (mode: RailMode, graphPath: string): Promise<FareTableStations> => {
+const loadFareTableStations = async (mode: FareDataMode, graphPath: string): Promise<FareTableStations> => {
   const jrGraph = await readJson<Graph>(graphPath);
   if (mode === 'jr') {
     return { originIds: Object.keys(jrGraph.stations), stations: jrGraph.stations, jrOnlyIds: [], jrIds: [] };
@@ -130,7 +130,7 @@ export const generateFareTableForStation = async (
   targets: FareTableStations,
   stationID: string,
   type: FareType = 'ticket',
-  mode: RailMode = 'jr',
+  mode: FareDataMode = 'jr',
 ): Promise<FareTable> => {
   if (mode === 'private') return generatePrivateFareTableForStation(targets, stationID, type);
 
@@ -173,7 +173,7 @@ export const generateAndWriteAllFareTables = async (options?: {
   farePath?: string;
   outDir?: string;
   type?: FareType;
-  mode?: RailMode;
+  mode?: FareDataMode;
 }) => {
   const graphPath = options?.graphPath ?? DEFAULT_GRAPH_PATH;
   const type = options?.type ?? 'ticket';
@@ -263,7 +263,7 @@ if (isMainThread && require.main === module) {
     try {
       const startTime = Date.now();
       const type: FareType = process.argv.includes('--ic') ? 'ic' : 'ticket';
-      const mode: RailMode = process.argv.includes('--private') ? 'private' : 'jr';
+      const mode: FareDataMode = process.argv.includes('--private') ? 'private' : 'jr';
       const r = await generateAndWriteAllFareTables({ type, mode });
       const endTime = Date.now();
       console.log('全駅の処理が完了しました。総数=', r.count);

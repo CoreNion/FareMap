@@ -1,19 +1,19 @@
 import type { Feature, FeatureCollection, Point } from "geojson";
 
 import type { FareTable, FareType } from "../types/fare.ts";
-import type { MapStation, RailMode } from "../types/map.ts";
+import type { FareDataMode, MapStation, RailMode } from "../types/map.ts";
 import type { RailwayId } from "../types/railway.ts";
 import type { TransferCandidate } from "../types/via.ts";
 import { loadJson, loadOptionalJson } from "./data.ts";
 
-/** 路線の区分ごとの駅のGeoJSON */
-export const STATIONS_GEOJSON_URLS: Record<RailMode, string> = {
+/** 運賃表のデータがある路線の区分ごとの駅のGeoJSON */
+export const STATIONS_GEOJSON_URLS: Record<FareDataMode, string> = {
   jr: "data/jre/map.geojson",
   private: "data/private/map.geojson",
 };
 
-/** 路線の区分ごとの運賃表のディレクトリ */
-export const FARE_DATA_DIRS: Record<RailMode, string> = {
+/** 運賃表のデータがある路線の区分ごとの運賃表のディレクトリ */
+export const FARE_DATA_DIRS: Record<FareDataMode, string> = {
   jr: "data/jre/fare",
   private: "data/private/fare",
 };
@@ -23,12 +23,13 @@ const TRANSFER_CANDIDATE_RADIUS = 600;
 
 /**
  * 地図に表示する駅のfeatureを読み込む関数
- * - JR線モードでは、改札外乗り換えの乗換駅に使えるように、私鉄線のみの駅も含める
- *   (私鉄線のみの駅には`privateOnly`の印を付け、表示を切り替えられるようにする)
+ * - 私鉄線モードは、私鉄線の駅とJR線の駅
+ * - JR線モード・全線モードは、JR線の駅に私鉄線のみの駅を加える
+ *   (JR線モードでは改札外乗り換えの乗換駅に使う。私鉄線のみの駅には`privateOnly`の印を付ける)
  */
 export const loadStationFeatures = async (railMode: RailMode): Promise<Feature[]> => {
-  const features = (await loadJson<FeatureCollection>(STATIONS_GEOJSON_URLS[railMode])).features;
-  if (railMode === "private") return features;
+  if (railMode === "private") return (await loadJson<FeatureCollection>(STATIONS_GEOJSON_URLS.private)).features;
+  const features = (await loadJson<FeatureCollection>(STATIONS_GEOJSON_URLS.jr)).features;
 
   // JR線の駅と同じIDの駅(JR線の駅・JR線と同じ改札の駅)は、JR線の駅として表示する
   const jrIds = new Set(features.map((f) => f.properties?.id));
@@ -38,21 +39,51 @@ export const loadStationFeatures = async (railMode: RailMode): Promise<Feature[]
   return [...features, ...privateFeatures];
 };
 
+/** 運賃表のデータがある区分の運賃表を読み込む関数 */
+const loadFareTable = (mode: FareDataMode, fareType: FareType, stationId: string): Promise<FareTable | undefined> => {
+  const tableDir = fareType === "ic" ? "ic-table" : "table";
+  return loadOptionalJson<FareTable>(`${FARE_DATA_DIRS[mode]}/${tableDir}/${stationId}.json`);
+};
+
+/**
+ * JR線と私鉄線の運賃表を、着駅ごとに安い方の運賃でまとめる関数 (全線モード用)
+ * - 経由する事業者(`via`)は、採用した運賃表のものを使う
+ */
+const mergeFareTables = (jr: FareTable, priv: FareTable): FareTable => {
+  const fares: FareTable["fares"] = {};
+  const via: NonNullable<FareTable["via"]> = {};
+  for (const id of new Set([...Object.keys(jr.fares), ...Object.keys(priv.fares)])) {
+    const jrFare = jr.fares[id];
+    const privateFare = priv.fares[id];
+    const usePrivate = privateFare != null && (jrFare == null || privateFare < jrFare);
+    const table = usePrivate ? priv : jr;
+    fares[id] = usePrivate ? privateFare : jrFare ?? null;
+    if (table.via?.[id]) via[id] = table.via[id];
+  }
+  return { id: jr.id, name: jr.name, fares, via };
+};
+
 /**
  * 駅の運賃表を取得する関数
  * - 表示中の区分に運賃表が無い駅(私鉄線モードのJR線のみの駅・JR線モードの私鉄線のみの駅)は、
  *   もう一方の区分の運賃表を使う
+ * - 全線モードでは、両方の運賃表がある駅(JR線と同じ改札の駅)は安い方の運賃にまとめる
  * @returns 運賃表 (どちらにも無い場合は`undefined`)
  */
 export const fetchFareTable = async (railMode: RailMode, fareType: FareType, stationId: string): Promise<FareTable | undefined> => {
-  const tableDir = fareType === "ic" ? "ic-table" : "table";
-  const otherMode: RailMode = railMode === "jr" ? "private" : "jr";
-  return await loadOptionalJson<FareTable>(`${FARE_DATA_DIRS[railMode]}/${tableDir}/${stationId}.json`)
-    ?? loadOptionalJson<FareTable>(`${FARE_DATA_DIRS[otherMode]}/${tableDir}/${stationId}.json`);
+  if (railMode === "all") {
+    const [jr, priv] = await Promise.all([
+      loadFareTable("jr", fareType, stationId),
+      loadFareTable("private", fareType, stationId),
+    ]);
+    return jr && priv ? mergeFareTables(jr, priv) : jr ?? priv;
+  }
+  const otherMode: FareDataMode = railMode === "jr" ? "private" : "jr";
+  return await loadFareTable(railMode, fareType, stationId) ?? loadFareTable(otherMode, fareType, stationId);
 };
 
 /** 2点間の直線距離 (m) を求める関数 (ハバーサイン公式) */
-const distanceBetween = ([lng1, lat1]: number[], [lng2, lat2]: number[]): number => {
+export const distanceBetween = ([lng1, lat1]: number[], [lng2, lat2]: number[]): number => {
   const toRad = (deg: number) => deg * Math.PI / 180;
   const dLat = toRad(lat2 - lat1);
   const dLng = toRad(lng2 - lng1);
