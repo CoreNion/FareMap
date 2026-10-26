@@ -2,6 +2,7 @@
 
 import { useMapStation } from "@/context/StationContext";
 import type { RailMode } from "@/types/map";
+import { ViaStationControl } from "./ViaStationControl";
 
 /** 路線の区分ごとの表示名 */
 const RAIL_MODE_LABELS: Record<RailMode, string> = {
@@ -12,6 +13,7 @@ const RAIL_MODE_LABELS: Record<RailMode, string> = {
 /**
  * 画面右上に表示する、JR線と私鉄線の切り替えボタン
  * - 私鉄線モードで発駅を選択している場合は、JR線の駅の表示/非表示の切り替えも表示する
+ * - 発駅を選択している場合は、改札外乗り換えの経由駅の指定も表示する
  */
 export const RailModeSwitch = () => {
   const { railMode, setRailMode, selectedStation, showJrStations, setShowJrStations } = useMapStation();
@@ -42,6 +44,7 @@ export const RailModeSwitch = () => {
           JR線の駅: {showJrStations ? "表示中" : "非表示"}
         </button>
       }
+      <ViaStationControl />
     </div>
   );
 };

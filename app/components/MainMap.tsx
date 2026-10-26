@@ -7,9 +7,10 @@ import { useEffect, useState } from "react";
 
 import { useMapStation } from "@/context/StationContext";
 import { FareTable } from "@/types/fare";
-import type { RailMode } from "@/types/map";
+import type { MapStation, RailMode } from "@/types/map";
 import type { RailwayId } from "@/types/railway";
 import { RAILWAYS, RAILWAY_COLORS, RAILWAY_NAMES } from "@/utils/railway";
+import { STATIONS_GEOJSON_URLS, fetchFareTable } from "@/utils/viaStation";
 
 const MAP_STYLE_URL =
   "https://tile.openstreetmap.jp/styles/osm-bright-ja/style.json";
@@ -24,20 +25,8 @@ const MAPLIBRE_WORKER_URL = new URL(
   import.meta.url,
 ).href;
 
-/** 路線の区分ごとの駅のGeoJSON */
-const STATIONS_GEOJSON_URLS: Record<RailMode, string> = {
-  jr: "data/jre/map.geojson",
-  private: "data/private/map.geojson",
-};
-
 /** 全事業者の路線の線のGeoJSON */
 const LINES_GEOJSON_URL = "data/lines.geojson";
-
-/** 路線の区分ごとの運賃表のディレクトリ */
-const FARE_DATA_DIRS: Record<RailMode, string> = {
-  jr: "data/jre/fare",
-  private: "data/private/fare",
-};
 
 /**
  * 駅アイコンの画像を事業者の色で塗った画像を作る関数
@@ -63,6 +52,16 @@ const parseRailways = (value: unknown): RailwayId[] | undefined => {
   if (typeof value === "string") return JSON.parse(value) as RailwayId[];
   return value as RailwayId[] | undefined;
 };
+
+/** 経由駅を指定した場合のみ駅のGeoJSONに持たせるプロパティ */
+const VIA_PROPERTY_KEYS = ["alightFare", "boardFare", "directFare", "viaRole"];
+
+/** 地図のイベントから取得したfeatureを、地図の駅データに変換する関数 */
+const toMapStation = (feature: Feature): MapStation => ({
+  id: feature.properties!.id,
+  name: feature.properties!.name,
+  railways: parseRailways(feature.properties!.railways),
+});
 
 /** 私鉄線モードで、JR線のみの駅かどうか */
 const isJrOnlyStation = (railMode: RailMode, railways: RailwayId[] | undefined): boolean =>
@@ -104,7 +103,10 @@ export const MainMap = () => {
 
 const MapController = () => {
   const { current: map } = useMap();
-  const { selectedStation, setSelectedStation, fareType, railMode, showJrStations } = useMapStation();
+  const {
+    selectedStation, setSelectedStation, fareType, railMode, showJrStations,
+    viaStation, setViaAlightStation, setViaBoardStation,
+  } = useMapStation();
   const [geoStations, setGeoStations] = useState<GeoJSON.GeoJSON | null>(null);
   const [geoLines, setGeoLines] = useState<GeoJSON.GeoJSON | null>(null);
   // 運賃をGeoJSONへ反映し終えた発駅のID
@@ -214,6 +216,9 @@ const MapController = () => {
     };
   }, [railMode]);
 
+  const alightId = viaStation?.alight.id;
+  const boardId = viaStation?.board.id;
+
   useEffect(() => {
     const stationId = selectedStation?.id;
     if (!stationId) return undefined;
@@ -223,12 +228,46 @@ const MapController = () => {
 
     (async () => {
       // 運賃の種別に応じて、きっぷ運賃またはIC運賃の運賃表を取得する
-      const tableDir = fareType === "ic" ? "ic-table" : "table";
-      const response = await fetch(`${FARE_DATA_DIRS[railMode]}/${tableDir}/${stationId}.json`);
+      const data = await fetchFareTable(railMode, fareType, stationId);
       // 区分の切り替え直後など、運賃表が無い駅の場合は何もしない
-      if (!response.ok) return;
-      const data = await response.json() as FareTable;
+      if (!data) return;
+
+      // 経由駅を指定している場合は、乗車駅からの運賃表も取得する
+      // (発駅→降車駅の運賃 + 乗車駅→各駅の運賃 で、改札外乗り換えの運賃を求める)
+      const boardTable = alightId && boardId ? await fetchFareTable(railMode, fareType, boardId) : undefined;
+      const alightFare = alightId ? data.fares[alightId] : undefined;
+      const viaActive = !!boardTable && alightFare != null;
       if (cancelled) return;
+
+      /** 駅の経由する他社線の表示 */
+      const viaText = (table: FareTable, stId: string) => {
+        // JR線モードは、JR線のみではない経路の場合に経由する他社線を表示する
+        // 私鉄線モードは、他社線をまたぐ経路の場合に利用する全事業者を表示する
+        const via = table.via?.[stId]
+          ?.filter((r) => railMode === "private" || r !== "jre")
+          .map((r) => RAILWAY_NAMES[r]).join("・");
+        return via ? `${via}経由` : "";
+      };
+
+      /** 経由駅を指定した場合の、駅ごとの運賃の表示 */
+      const viaProperties = (stId: string) => {
+        if (stId === alightId) {
+          return { fare: `${alightFare}円`, via: viaText(data, stId), viaRole: "alight", hidden: false };
+        }
+        if (stId === boardId) {
+          return { fare: "乗換駅", via: "", viaRole: "board", hidden: false };
+        }
+        const boardFare = boardTable!.fares[stId];
+        return {
+          fare: boardFare != null ? `${alightFare! + boardFare}円` : "情報なし",
+          via: viaText(boardTable!, stId),
+          // 内訳の表示用に、区間ごとの運賃を持たせる
+          alightFare,
+          boardFare,
+          viaRole: "",
+          hidden: boardFare == null,
+        };
+      };
 
       // 各駅の運賃をGeoJSONのプロパティに追加
       // 最新のGeoJSONを基にするため、関数形式で更新する
@@ -236,25 +275,31 @@ const MapController = () => {
         if (!prev) return prev;
         const features = prev as GeoJSON.FeatureCollection;
         const updatedFeatures = features.features.map((feature) => {
-          const stId = feature.properties!.id;
+          // 前回の経由駅の運賃の内訳を残さないように取り除く
+          const properties = Object.fromEntries(
+            Object.entries(feature.properties!).filter(([key]) => !VIA_PROPERTY_KEYS.includes(key)),
+          );
+          const stId = properties.id;
           const fare = data.fares[stId];
-          const isSelectedSt = stId != stationId;
-          // JR線モードは、JR線のみではない経路の場合に経由する他社線を表示する
-          // 私鉄線モードは、他社線をまたぐ経路の場合に利用する全事業者を表示する
-          const via = data.via?.[stId]
-            ?.filter((r) => railMode === "private" || r !== "jre")
-            .map((r) => RAILWAY_NAMES[r]).join("・");
 
+          if (stId === stationId) {
+            return { ...feature, properties: { ...properties, fare: "発駅", via: "", hidden: false } };
+          }
+          if (viaActive) {
+            return {
+              ...feature,
+              properties: { ...properties, ...viaProperties(stId), directFare: fare },
+            };
+          }
           return {
             ...feature,
             properties: {
-              ...feature.properties,
-              fare: isSelectedSt ?
-                (fare ? `${fare}円` : "情報なし") : "発駅",
-              via: via ? `${via}経由` : "",
+              ...properties,
+              fare: fare ? `${fare}円` : "情報なし",
+              via: viaText(data, stId),
               // 運賃の無い駅(範囲外・経路が無い駅)は表示しない
               // (JR線のみの駅は、JR線区間が100km以内の駅のみ運賃表に含まれる)
-              hidden: isSelectedSt && fare == null,
+              hidden: fare == null,
             },
           };
         });
@@ -271,7 +316,7 @@ const MapController = () => {
     return () => {
       cancelled = true;
     };
-  }, [selectedStation?.id, fareType, railMode]);
+  }, [selectedStation?.id, fareType, railMode, alightId, boardId]);
 
   // 私鉄線モードでJR線の駅を表示するか (発駅の選択前は表示しない)
   const showJr = railMode === "jr" || (!!selectedStation && showJrStations);
@@ -307,8 +352,21 @@ const MapController = () => {
           <div className="popup grid grid-cols-1 gap-1 text-base antialiased">
             <h3 className="text-lg font-bold">{popUpOptions!.feature.properties!.name}駅</h3>
             {popUpOptions!.feature.properties!.fare && popUpOptions!.feature.properties!.id != selectedStation!.id
-              &&
+              && popUpOptions!.feature.properties!.viaRole !== "board" &&
               <span>{selectedStation!.name}駅からの{fareType === "ic" ? "IC" : "切符"}運賃: <strong>{popUpOptions!.feature.properties!.fare}</strong></span>
+            }
+            {/* 経由駅を指定している場合は、区間ごとの運賃の内訳を表示する */}
+            {popUpOptions!.feature.properties!.boardFare != null && viaStation &&
+              <span className="text-xs">
+                ({viaStation.alight.name}駅まで{popUpOptions!.feature.properties!.alightFare}円 + {viaStation.board.name}駅から{popUpOptions!.feature.properties!.boardFare}円
+                {popUpOptions!.feature.properties!.directFare != null && <>、経由しない場合は{popUpOptions!.feature.properties!.directFare}円</>})
+              </span>
+            }
+            {popUpOptions!.feature.properties!.viaRole === "alight" &&
+              <span className="text-xs">経由駅 (改札を出る駅)</span>
+            }
+            {popUpOptions!.feature.properties!.viaRole === "board" &&
+              <span className="text-xs">乗換駅 ({viaStation?.alight.name}駅から改札外を移動して乗車する駅)</span>
             }
             {popUpOptions!.feature.properties!.via && popUpOptions!.feature.properties!.id != selectedStation?.id
               &&
@@ -321,11 +379,7 @@ const MapController = () => {
                 <button className="p-1 bg-green-200 rounded-xl text-xs font-bold cursor-pointer hover:bg-green-300" onClick={() => {
                   const feature = popUpOptions!.feature;
                   const coordinates = (feature.geometry as Point).coordinates;
-                  setSelectedStation({
-                    id: feature.properties!.id,
-                    name: feature.properties!.name,
-                    railways: parseRailways(feature.properties!.railways),
-                  });
+                  setSelectedStation(toMapStation(feature));
                   setShowPopup(false);
                   map?.flyTo(
                     {
@@ -337,6 +391,23 @@ const MapController = () => {
                   )
                 }}>当駅からの運賃を表示</button>
                 : <span className="text-xs">当駅からの運賃を表示中</span>
+            }
+            {/* 改札外乗り換えの経由駅の指定 (発駅以外の駅) */}
+            {selectedStation && popUpOptions!.feature.properties!.id != selectedStation.id &&
+              <div className="grid grid-cols-1 gap-1">
+                {popUpOptions!.feature.properties!.id != viaStation?.alight.id &&
+                  <button className="p-1 bg-sky-100 rounded-xl text-xs font-bold cursor-pointer hover:bg-sky-200" onClick={() => {
+                    setViaAlightStation(toMapStation(popUpOptions!.feature));
+                    setShowPopup(false);
+                  }}>経由駅に指定 (改札外乗り換え)</button>
+                }
+                {viaStation && popUpOptions!.feature.properties!.id != viaStation.alight.id && popUpOptions!.feature.properties!.id != viaStation.board.id &&
+                  <button className="p-1 bg-sky-100 rounded-xl text-xs font-bold cursor-pointer hover:bg-sky-200" onClick={() => {
+                    setViaBoardStation(toMapStation(popUpOptions!.feature));
+                    setShowPopup(false);
+                  }}>{viaStation.alight.name}駅からの乗換駅に指定</button>
+                }
+              </div>
             }
           </div>
         </Popup>

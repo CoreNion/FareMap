@@ -5,6 +5,11 @@ import { createContext, useContext, useState, ReactNode } from "react";
 import type { MapStation, RailMode } from "@/types/map";
 import type { FareType } from "@/types/fare";
 import type { RailwayId } from "@/types/railway";
+import type { ViaStation } from "@/types/via";
+
+/** 私鉄線モードで、JR線のみの駅かどうか */
+const isJrOnly = (station: MapStation): boolean =>
+  station.railways?.length === 1 && station.railways[0] === "jre";
 
 /** 私鉄線モードで、発駅に選択した場合にJR線の駅を初期表示する事業者 (JR線と直通・同じ改札の駅がある事業者) */
 const SHOW_JR_BY_DEFAULT_RAILWAYS: RailwayId[] = ["metro", "sotetsu"];
@@ -21,6 +26,14 @@ interface StationContextType {
   /** 私鉄線モードで、JR線のみの駅を表示するか */
   showJrStations: boolean;
   setShowJrStations: (show: boolean) => void;
+  /** 改札外乗り換えの経由駅 (未指定の場合は`undefined`) */
+  viaStation: ViaStation | undefined;
+  /** 経由駅(降車駅)を指定する (乗車駅は同じ駅にリセットされる) */
+  setViaAlightStation: (station: MapStation) => void;
+  /** 経由駅で再び乗車する駅を指定する (降車駅の指定後のみ) */
+  setViaBoardStation: (station: MapStation) => void;
+  /** 経由駅の指定を解除する */
+  clearViaStation: () => void;
 }
 
 const StationContext = createContext<StationContextType | undefined>(undefined);
@@ -30,12 +43,32 @@ export const MapStationProvider = ({ children }: { children: ReactNode }) => {
   const [fareType, setFareType] = useState<FareType>('ticket');
   const [railMode, setRailModeState] = useState<RailMode>('jr');
   const [showJrStations, setShowJrStations] = useState(false);
+  const [viaStation, setViaStation] = useState<ViaStation | undefined>();
 
   // 発駅の選択時に、発駅の事業者に応じてJR線の駅の表示を初期化する
+  // 経由駅は発駅ごとに指定するため解除する
   const setSelectedStation = (station: MapStation | undefined) => {
     setSelectedStationState(station);
     setShowJrStations(station?.railways?.some((r) => SHOW_JR_BY_DEFAULT_RAILWAYS.includes(r)) ?? false);
+    setViaStation(undefined);
   };
+
+  // 私鉄線モードでJR線のみの駅を経由駅にした場合は、地図で確認できるようにJR線の駅を表示する
+  const showJrIfNeeded = (station: MapStation) => {
+    if (railMode === "private" && isJrOnly(station)) setShowJrStations(true);
+  };
+
+  const setViaAlightStation = (station: MapStation) => {
+    setViaStation({ alight: station, board: station });
+    showJrIfNeeded(station);
+  };
+
+  const setViaBoardStation = (station: MapStation) => {
+    setViaStation((prev) => prev && { ...prev, board: station });
+    showJrIfNeeded(station);
+  };
+
+  const clearViaStation = () => setViaStation(undefined);
 
   // 路線の区分ごとに発駅となる駅が異なるため、切り替え時に選択中の駅を解除する
   const setRailMode = (mode: RailMode) => {
@@ -47,6 +80,7 @@ export const MapStationProvider = ({ children }: { children: ReactNode }) => {
   return (
     <StationContext.Provider value={{
       selectedStation, setSelectedStation, fareType, setFareType, railMode, setRailMode, showJrStations, setShowJrStations,
+      viaStation, setViaAlightStation, setViaBoardStation, clearViaStation,
     }}>
       {children}
     </StationContext.Provider>
