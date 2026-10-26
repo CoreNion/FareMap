@@ -4,15 +4,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 
 import type { MapStation, RailMode } from "@/types/map";
 import type { FareType } from "@/types/fare";
-import type { RailwayId } from "@/types/railway";
 import type { ViaStation } from "@/types/via";
-
-/** 私鉄線モードで、JR線のみの駅かどうか */
-const isJrOnly = (station: MapStation): boolean =>
-  station.railways?.length === 1 && station.railways[0] === "jre";
-
-/** 私鉄線モードで、発駅に選択した場合にJR線の駅を初期表示する事業者 (JR線と直通・同じ改札の駅がある事業者) */
-const SHOW_JR_BY_DEFAULT_RAILWAYS: RailwayId[] = ["metro", "sotetsu"];
 
 interface StationContextType {
   selectedStation: MapStation | undefined;
@@ -23,9 +15,6 @@ interface StationContextType {
   /** 地図に表示する路線の区分 (JR線 / 私鉄線) */
   railMode: RailMode;
   setRailMode: (railMode: RailMode) => void;
-  /** 私鉄線モードで、JR線のみの駅を表示するか */
-  showJrStations: boolean;
-  setShowJrStations: (show: boolean) => void;
   /** 営業キロが物理的な距離に比べて大きすぎる駅も含めて、全駅を表示するか */
   showAllStations: boolean;
   setShowAllStations: (show: boolean) => void;
@@ -48,35 +37,25 @@ export const MapStationProvider = ({ children }: { children: ReactNode }) => {
   const [selectedStation, setSelectedStationState] = useState<MapStation | undefined>();
   const [fareType, setFareType] = useState<FareType>('ticket');
   const [railMode, setRailModeState] = useState<RailMode>('jr');
-  const [showJrStations, setShowJrStations] = useState(false);
   const [showAllStations, setShowAllStations] = useState(false);
   const [viaStation, setViaStation] = useState<ViaStation | undefined>();
   const [viaPanelOpen, setViaPanelOpen] = useState(false);
 
-  // 発駅の選択時に、発駅の事業者に応じてJR線の駅の表示を初期化する
-  // 経由駅は発駅ごとに指定するため解除する
+  // 経由駅は発駅ごとに指定するため、発駅の選択時に解除する
   const setSelectedStation = (station: MapStation | undefined) => {
     setSelectedStationState(station);
-    setShowJrStations(station?.railways?.some((r) => SHOW_JR_BY_DEFAULT_RAILWAYS.includes(r)) ?? false);
     setViaStation(undefined);
     setViaPanelOpen(false);
-  };
-
-  // 私鉄線モードでJR線のみの駅を経由駅にした場合は、地図で確認できるようにJR線の駅を表示する
-  const showJrIfNeeded = (station: MapStation) => {
-    if (railMode === "private" && isJrOnly(station)) setShowJrStations(true);
   };
 
   // 経由駅の指定時は、乗換駅の候補を確認できるようにパネルを開く
   const setViaAlightStation = (station: MapStation) => {
     setViaStation({ alight: station, board: station });
     setViaPanelOpen(true);
-    showJrIfNeeded(station);
   };
 
   const setViaBoardStation = (station: MapStation) => {
     setViaStation((prev) => prev && { ...prev, board: station });
-    showJrIfNeeded(station);
   };
 
   const clearViaStation = () => setViaStation(undefined);
@@ -90,7 +69,7 @@ export const MapStationProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <StationContext.Provider value={{
-      selectedStation, setSelectedStation, fareType, setFareType, railMode, setRailMode, showJrStations, setShowJrStations,
+      selectedStation, setSelectedStation, fareType, setFareType, railMode, setRailMode,
       showAllStations, setShowAllStations, viaPanelOpen, setViaPanelOpen,
       viaStation, setViaAlightStation, setViaBoardStation, clearViaStation,
     }}>

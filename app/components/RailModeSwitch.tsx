@@ -16,12 +16,11 @@ const toggleClassName = (pressed: boolean): string =>
 
 /**
  * 画面右上に表示する、JR線・私鉄線・全線の切り替えボタン
- * - 私鉄線モードで発駅を選択している場合は、JR線の駅の表示/非表示の切り替えも表示する
  * - 発駅を選択している場合は、営業キロにかかわらず全駅を表示するかの切り替えも表示する
  */
 export const RailModeSwitch = () => {
   const {
-    railMode, setRailMode, selectedStation, showJrStations, setShowJrStations, showAllStations, setShowAllStations,
+    railMode, setRailMode, selectedStation, showAllStations, setShowAllStations,
   } = useMapStation();
 
   return (
@@ -40,16 +39,6 @@ export const RailModeSwitch = () => {
           </button>
         ))}
       </div>
-      {railMode === "private" && selectedStation &&
-        <button
-          type="button"
-          aria-pressed={showJrStations}
-          className={toggleClassName(showJrStations)}
-          onClick={() => setShowJrStations(!showJrStations)}
-        >
-          JR線の駅: {showJrStations ? "表示中" : "非表示"}
-        </button>
-      }
       {selectedStation &&
         <button
           type="button"

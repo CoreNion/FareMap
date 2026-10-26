@@ -108,7 +108,7 @@ export const MainMap = () => {
 const MapController = () => {
   const { current: map } = useMap();
   const {
-    selectedStation, setSelectedStation, fareType, railMode, showJrStations, showAllStations,
+    selectedStation, setSelectedStation, fareType, railMode, showAllStations,
     viaStation, setViaAlightStation, setViaBoardStation,
   } = useMapStation();
   const [geoStations, setGeoStations] = useState<GeoJSON.GeoJSON | null>(null);
@@ -346,8 +346,9 @@ const MapController = () => {
     };
   }, [selectedStation?.id, fareType, railMode, alightId, boardId]);
 
-  // 私鉄線モードでJR線の駅を表示するか (発駅の選択前は表示しない)
-  const showJr = railMode === "jr" || (!!selectedStation && showJrStations);
+  // 私鉄線モードでJR線のみの駅を表示するか
+  // (発駅の選択前は表示しない。選択後は運賃表にある駅(JR線区間が100km以内の駅)を表示する)
+  const showJr = railMode !== "private" || !!selectedStation;
   // JR線モードで私鉄線のみの駅を表示するか (改札外乗り換えの乗換駅に使うため、経由駅の指定時のみ表示する)
   const showPrivate = railMode !== "jr" || !!viaStation;
 
