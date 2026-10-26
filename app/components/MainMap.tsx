@@ -10,7 +10,7 @@ import { FareTable } from "@/types/fare";
 import type { MapStation, RailMode } from "@/types/map";
 import type { RailwayId } from "@/types/railway";
 import { RAILWAYS, RAILWAY_COLORS, RAILWAY_NAMES } from "@/utils/railway";
-import { STATIONS_GEOJSON_URLS, fetchFareTable } from "@/utils/viaStation";
+import { fetchFareTable, loadStationFeatures } from "@/utils/viaStation";
 
 const MAP_STYLE_URL =
   "https://tile.openstreetmap.jp/styles/osm-bright-ja/style.json";
@@ -104,7 +104,7 @@ export const MainMap = () => {
 const MapController = () => {
   const { current: map } = useMap();
   const {
-    selectedStation, setSelectedStation, fareType, railMode, showJrStations,
+    selectedStation, setSelectedStation, fareType, railMode, showJrStations, showPrivateStations,
     viaStation, setViaAlightStation, setViaBoardStation,
   } = useMapStation();
   const [geoStations, setGeoStations] = useState<GeoJSON.GeoJSON | null>(null);
@@ -194,19 +194,19 @@ const MapController = () => {
     let cancelled = false;
 
     (async () => {
-      const response = await fetch(STATIONS_GEOJSON_URLS[railMode]);
-      const data = await response.json() as GeoJSON.FeatureCollection;
+      // JR線モードでは、私鉄線のみの駅(`privateOnly`)も含めて読み込む
+      const data = await loadStationFeatures(railMode);
       if (cancelled) return;
 
       // 私鉄線モードでは、JR線のみの駅の表示を切り替えられるように印を付ける
-      const features = data.features.map((feature) => {
+      const features = data.map((feature) => {
         const jrOnly = isJrOnlyStation(railMode, feature.properties?.railways);
         return {
           ...feature,
           properties: { ...feature.properties, jrOnly, hidden: false },
         };
       });
-      setGeoStations({ ...data, features });
+      setGeoStations({ type: "FeatureCollection", features });
       setFareStationId(null);
       setShowPopup(false);
     })();
@@ -291,6 +291,10 @@ const MapController = () => {
               properties: { ...properties, ...viaProperties(stId), directFare: fare },
             };
           }
+          // JR線モードの私鉄線のみの駅は、発駅からの運賃が無いが乗換駅に指定できるように駅名のみ表示する
+          if (properties.privateOnly && fare == null) {
+            return { ...feature, properties: { ...properties, fare: "", via: "", hidden: false } };
+          }
           return {
             ...feature,
             properties: {
@@ -320,6 +324,8 @@ const MapController = () => {
 
   // 私鉄線モードでJR線の駅を表示するか (発駅の選択前は表示しない)
   const showJr = railMode === "jr" || (!!selectedStation && showJrStations);
+  // JR線モードで私鉄線のみの駅を表示するか (発駅の選択前は表示しない)
+  const showPrivate = railMode === "private" || (!!selectedStation && showPrivateStations);
 
   return geoStations ? (
     <>
@@ -328,8 +334,11 @@ const MapController = () => {
         id="stations"
         type="symbol"
         source="stations-source"
-        filter={showJr ? ["!=", ["get", "hidden"], true] :
-          ["all", ["!=", ["get", "hidden"], true], ["!=", ["get", "jrOnly"], true]]}
+        filter={["all",
+          ["!=", ["get", "hidden"], true],
+          showJr ? ["boolean", true] : ["!=", ["get", "jrOnly"], true],
+          showPrivate ? ["boolean", true] : ["!=", ["get", "privateOnly"], true],
+        ]}
         layout={{
           "icon-image": ["concat", "station-", ["coalesce", ["get", "railway"], "jre"]],
           "icon-size": 0.07,
@@ -375,6 +384,8 @@ const MapController = () => {
             {
               popUpOptions!.feature.properties!.jrOnly ?
                 <span className="text-xs">JR線の駅からの運賃は、JR線の表示で確認できます</span> :
+              popUpOptions!.feature.properties!.privateOnly ?
+                <span className="text-xs">私鉄線の駅からの運賃は、私鉄線の表示で確認できます</span> :
               popUpOptions!.feature.properties!.id != selectedStation?.id ?
                 <button className="p-1 bg-green-200 rounded-xl text-xs font-bold cursor-pointer hover:bg-green-300" onClick={() => {
                   const feature = popUpOptions!.feature;
@@ -395,7 +406,8 @@ const MapController = () => {
             {/* 改札外乗り換えの経由駅の指定 (発駅以外の駅) */}
             {selectedStation && popUpOptions!.feature.properties!.id != selectedStation.id &&
               <div className="grid grid-cols-1 gap-1">
-                {popUpOptions!.feature.properties!.id != viaStation?.alight.id &&
+                {/* JR線モードの私鉄線のみの駅は、発駅からの運賃が無いため乗換駅にのみ指定できる */}
+                {popUpOptions!.feature.properties!.id != viaStation?.alight.id && !popUpOptions!.feature.properties!.privateOnly &&
                   <button className="p-1 bg-sky-100 rounded-xl text-xs font-bold cursor-pointer hover:bg-sky-200" onClick={() => {
                     setViaAlightStation(toMapStation(popUpOptions!.feature));
                     setShowPopup(false);
@@ -421,8 +433,8 @@ const MapController = () => {
           type="line"
           source="lines-source"
           beforeId="stations"
-          filter={railMode === "jr" ? ["==", ["get", "railway"], "jre"] :
-            showJr ? ["boolean", true] : ["!=", ["get", "railway"], "jre"]}
+          filter={showJr && showPrivate ? ["boolean", true] :
+            showJr ? ["==", ["get", "railway"], "jre"] : ["!=", ["get", "railway"], "jre"]}
           layout={{ "line-cap": "round", "line-join": "round" }}
           paint={{
             "line-color": ["get", "color"],

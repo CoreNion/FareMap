@@ -22,15 +22,33 @@ export const FARE_DATA_DIRS: Record<RailMode, string> = {
 const TRANSFER_CANDIDATE_RADIUS = 600;
 
 /**
+ * 地図に表示する駅のfeatureを読み込む関数
+ * - JR線モードでは、改札外乗り換えの乗換駅に使えるように、私鉄線のみの駅も含める
+ *   (私鉄線のみの駅には`privateOnly`の印を付け、表示を切り替えられるようにする)
+ */
+export const loadStationFeatures = async (railMode: RailMode): Promise<Feature[]> => {
+  const features = (await loadJson<FeatureCollection>(STATIONS_GEOJSON_URLS[railMode])).features;
+  if (railMode === "private") return features;
+
+  // JR線の駅と同じIDの駅(JR線の駅・JR線と同じ改札の駅)は、JR線の駅として表示する
+  const jrIds = new Set(features.map((f) => f.properties?.id));
+  const privateFeatures = (await loadJson<FeatureCollection>(STATIONS_GEOJSON_URLS.private)).features
+    .filter((f) => !jrIds.has(f.properties?.id))
+    .map((f) => ({ ...f, properties: { ...f.properties, privateOnly: true } }));
+  return [...features, ...privateFeatures];
+};
+
+/**
  * 駅の運賃表を取得する関数
- * - 私鉄線モードのJR線のみの駅は私鉄線の運賃表が無いため、JR線の運賃表を使う
+ * - 表示中の区分に運賃表が無い駅(私鉄線モードのJR線のみの駅・JR線モードの私鉄線のみの駅)は、
+ *   もう一方の区分の運賃表を使う
  * @returns 運賃表 (どちらにも無い場合は`undefined`)
  */
 export const fetchFareTable = async (railMode: RailMode, fareType: FareType, stationId: string): Promise<FareTable | undefined> => {
   const tableDir = fareType === "ic" ? "ic-table" : "table";
-  const table = await loadOptionalJson<FareTable>(`${FARE_DATA_DIRS[railMode]}/${tableDir}/${stationId}.json`);
-  if (table || railMode === "jr") return table;
-  return loadOptionalJson<FareTable>(`${FARE_DATA_DIRS.jr}/${tableDir}/${stationId}.json`);
+  const otherMode: RailMode = railMode === "jr" ? "private" : "jr";
+  return await loadOptionalJson<FareTable>(`${FARE_DATA_DIRS[railMode]}/${tableDir}/${stationId}.json`)
+    ?? loadOptionalJson<FareTable>(`${FARE_DATA_DIRS[otherMode]}/${tableDir}/${stationId}.json`);
 };
 
 /** 2点間の直線距離 (m) を求める関数 (ハバーサイン公式) */
@@ -60,11 +78,11 @@ const toMapStation = (feature: Feature): MapStation => ({
  * @returns 近い順に並べた乗換候補
  */
 export const findTransferCandidates = async (railMode: RailMode, alight: MapStation): Promise<TransferCandidate[]> => {
-  const [geojson, table] = await Promise.all([
-    loadJson<FeatureCollection>(STATIONS_GEOJSON_URLS[railMode]),
+  const [features, table] = await Promise.all([
+    loadStationFeatures(railMode),
     fetchFareTable(railMode, "ticket", alight.id),
   ]);
-  const alightFeature = geojson.features.find((f) => f.properties?.id === alight.id);
+  const alightFeature = features.find((f) => f.properties?.id === alight.id);
   if (!alightFeature || !table) return [];
 
   // 降車駅からの初乗り運賃 (運賃表の最安の運賃)
@@ -74,7 +92,7 @@ export const findTransferCandidates = async (railMode: RailMode, alight: MapStat
   const minFare = Math.min(...fares);
 
   const origin = (alightFeature.geometry as Point).coordinates;
-  return geojson.features
+  return features
     .filter((f) => f.properties?.id !== alight.id)
     .map((f) => ({
       station: toMapStation(f),

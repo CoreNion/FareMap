@@ -12,11 +12,19 @@ const RAIL_MODE_LABELS: Record<RailMode, string> = {
 
 /**
  * 画面右上に表示する、JR線と私鉄線の切り替えボタン
- * - 私鉄線モードで発駅を選択している場合は、JR線の駅の表示/非表示の切り替えも表示する
+ * - 発駅を選択している場合は、もう一方の区分の駅(私鉄線モードではJR線の駅、JR線モードでは私鉄線の駅)の
+ *   表示/非表示の切り替えも表示する
  * - 発駅を選択している場合は、改札外乗り換えの経由駅の指定も表示する
  */
 export const RailModeSwitch = () => {
-  const { railMode, setRailMode, selectedStation, showJrStations, setShowJrStations } = useMapStation();
+  const {
+    railMode, setRailMode, selectedStation, showJrStations, setShowJrStations, showPrivateStations, setShowPrivateStations,
+  } = useMapStation();
+
+  // 表示中の区分ごとの、もう一方の区分の駅の表示の切り替え
+  const otherStations = railMode === "private" ?
+    { label: "JR線の駅", show: showJrStations, setShow: setShowJrStations } :
+    { label: "私鉄線の駅", show: showPrivateStations, setShow: setShowPrivateStations };
 
   return (
     <div className="select-none fixed right-2 top-18 md:top-22 md:right-5 lg:top-5 z-10 flex flex-col items-end gap-2">
@@ -34,14 +42,14 @@ export const RailModeSwitch = () => {
           </button>
         ))}
       </div>
-      {railMode === "private" && selectedStation &&
+      {selectedStation &&
         <button
           type="button"
-          aria-pressed={showJrStations}
-          className={`px-3 py-1 rounded-full border border-zinc-400 shadow-md text-xs font-bold cursor-pointer break-keep ${showJrStations ? "bg-green-600 text-white" : "bg-white hover:bg-green-100"}`}
-          onClick={() => setShowJrStations(!showJrStations)}
+          aria-pressed={otherStations.show}
+          className={`px-3 py-1 rounded-full border border-zinc-400 shadow-md text-xs font-bold cursor-pointer break-keep ${otherStations.show ? "bg-green-600 text-white" : "bg-white hover:bg-green-100"}`}
+          onClick={() => otherStations.setShow(!otherStations.show)}
         >
-          JR線の駅: {showJrStations ? "表示中" : "非表示"}
+          {otherStations.label}: {otherStations.show ? "表示中" : "非表示"}
         </button>
       }
       <ViaStationControl />

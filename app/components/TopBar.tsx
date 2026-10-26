@@ -10,7 +10,7 @@ const FARE_TYPE_LABELS: Record<FareType, string> = {
 };
 
 export const TopBar = () => {
-  const { selectedStation, fareType, setFareType, railMode } = useMapStation();
+  const { selectedStation, fareType, setFareType, railMode, viaStation, viaPanelOpen } = useMapStation();
 
   // 運賃の算出方法の補足
   const fareNote = fareType === "ic" ? " (最安経路)..." :
@@ -40,6 +40,14 @@ export const TopBar = () => {
           </button>
         ))}
       </div>
+      {/* 経由駅の指定パネルを開いていて、経由駅が未指定の場合の案内 (ヘッダーの高さに合わせて直下に表示する) */}
+      {selectedStation && viaPanelOpen && !viaStation &&
+        <p role="status"
+          className="absolute top-full mt-2 left-2 md:left-1/2 md:-translate-x-1/2 px-4 py-1.5 rounded-2xl md:rounded-full bg-sky-600 text-white text-sm font-bold shadow-md break-keep">
+          経由駅を指定してください
+          <span className="block md:inline md:ml-2 text-xs font-normal">(地図の駅を選択)</span>
+        </p>
+      }
     </header>
   );
 };

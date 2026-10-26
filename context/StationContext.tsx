@@ -26,6 +26,12 @@ interface StationContextType {
   /** 私鉄線モードで、JR線のみの駅を表示するか */
   showJrStations: boolean;
   setShowJrStations: (show: boolean) => void;
+  /** JR線モードで、私鉄線のみの駅を表示するか */
+  showPrivateStations: boolean;
+  setShowPrivateStations: (show: boolean) => void;
+  /** 経由駅の指定パネルを開いているか */
+  viaPanelOpen: boolean;
+  setViaPanelOpen: (open: boolean) => void;
   /** 改札外乗り換えの経由駅 (未指定の場合は`undefined`) */
   viaStation: ViaStation | undefined;
   /** 経由駅(降車駅)を指定する (乗車駅は同じ駅にリセットされる) */
@@ -43,14 +49,18 @@ export const MapStationProvider = ({ children }: { children: ReactNode }) => {
   const [fareType, setFareType] = useState<FareType>('ticket');
   const [railMode, setRailModeState] = useState<RailMode>('jr');
   const [showJrStations, setShowJrStations] = useState(false);
+  const [showPrivateStations, setShowPrivateStations] = useState(false);
   const [viaStation, setViaStation] = useState<ViaStation | undefined>();
+  const [viaPanelOpen, setViaPanelOpen] = useState(false);
 
   // 発駅の選択時に、発駅の事業者に応じてJR線の駅の表示を初期化する
   // 経由駅は発駅ごとに指定するため解除する
   const setSelectedStation = (station: MapStation | undefined) => {
     setSelectedStationState(station);
     setShowJrStations(station?.railways?.some((r) => SHOW_JR_BY_DEFAULT_RAILWAYS.includes(r)) ?? false);
+    setShowPrivateStations(false);
     setViaStation(undefined);
+    setViaPanelOpen(false);
   };
 
   // 私鉄線モードでJR線のみの駅を経由駅にした場合は、地図で確認できるようにJR線の駅を表示する
@@ -58,9 +68,13 @@ export const MapStationProvider = ({ children }: { children: ReactNode }) => {
     if (railMode === "private" && isJrOnly(station)) setShowJrStations(true);
   };
 
+  // 経由駅の指定時は、乗換駅の候補を確認できるようにパネルを開く
+  // JR線モードでは、私鉄線の駅へ乗り換えられるように私鉄線の駅を表示する
   const setViaAlightStation = (station: MapStation) => {
     setViaStation({ alight: station, board: station });
+    setViaPanelOpen(true);
     showJrIfNeeded(station);
+    if (railMode === "jr") setShowPrivateStations(true);
   };
 
   const setViaBoardStation = (station: MapStation) => {
@@ -80,6 +94,7 @@ export const MapStationProvider = ({ children }: { children: ReactNode }) => {
   return (
     <StationContext.Provider value={{
       selectedStation, setSelectedStation, fareType, setFareType, railMode, setRailMode, showJrStations, setShowJrStations,
+      showPrivateStations, setShowPrivateStations, viaPanelOpen, setViaPanelOpen,
       viaStation, setViaAlightStation, setViaBoardStation, clearViaStation,
     }}>
       {children}

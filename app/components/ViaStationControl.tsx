@@ -22,19 +22,14 @@ const optionClassName = (selected: boolean): string =>
  * - 降車駅の近くにある別の駅(物理的には近いが運賃計算上は遠い駅)を、乗車駅の候補として一覧表示する
  */
 export const ViaStationControl = () => {
-  const { selectedStation, railMode, viaStation, setViaBoardStation, clearViaStation } = useMapStation();
-  const [open, setOpen] = useState(false);
+  const {
+    selectedStation, railMode, viaStation, setViaBoardStation, clearViaStation,
+    viaPanelOpen: open, setViaPanelOpen: setOpen,
+  } = useMapStation();
   // 候補を求めた降車駅のIDと一緒に保持し、降車駅の変更直後に古い候補を表示しないようにする
   const [candidates, setCandidates] = useState<{ alightId: string; list: TransferCandidate[] } | null>(null);
 
   const alight = viaStation?.alight;
-
-  // 降車駅を指定した際に、乗車駅の候補を確認できるようにパネルを開く
-  const [prevAlightId, setPrevAlightId] = useState(alight?.id);
-  if (prevAlightId !== alight?.id) {
-    setPrevAlightId(alight?.id);
-    if (alight) setOpen(true);
-  }
 
   useEffect(() => {
     if (!alight) return undefined;
