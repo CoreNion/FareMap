@@ -35,8 +35,8 @@ const StationContext = createContext<StationContextType | undefined>(undefined);
 
 export const MapStationProvider = ({ children }: { children: ReactNode }) => {
   const [selectedStation, setSelectedStationState] = useState<MapStation | undefined>();
-  const [fareType, setFareType] = useState<FareType>('ticket');
-  const [railMode, setRailModeState] = useState<RailMode>('jr');
+  const [fareType, setFareType] = useState<FareType>('ic');
+  const [railMode, setRailModeState] = useState<RailMode>('all');
   const [showAllStations, setShowAllStations] = useState(false);
   const [viaStation, setViaStation] = useState<ViaStation | undefined>();
   const [viaPanelOpen, setViaPanelOpen] = useState(false);
