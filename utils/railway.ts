@@ -73,3 +73,14 @@ const OPERATOR_RAILWAY_IDS: Partial<Record<OperatorId, RailwayId>> = {
 
 /** 乗継割引のデータの事業者IDを、運賃データの事業者IDに変換する */
 export const toRailwayId = (operator: OperatorId): string => OPERATOR_RAILWAY_IDS[operator] ?? operator;
+
+/**
+ * 地図の駅名を、会社名と駅名に分ける関数
+ * - 同名駅の区別のため、駅名には`[メトロ]新宿`のように会社名の接頭辞が付いている場合がある
+ * - 接頭辞の無い駅は、駅の事業者(未指定はJR線)の略称を会社名とする
+ */
+export const splitStationName = (name: string, railway?: RailwayId): { company: string; baseName: string } => {
+  const match = name.match(/^\[(.+?)\](.+)$/);
+  if (match) return { company: match[1], baseName: match[2] };
+  return { company: RAILWAY_SHORT_NAMES[railway ?? 'jre'], baseName: name };
+};
