@@ -61,11 +61,14 @@ const DETOUR_RATIO = 4;
 /** クリックした駅と並べてポップアップに表示する、改札(ID)が別の近接駅の最大の直線距離 (m) */
 const NEARBY_STATION_RADIUS = 400;
 
+/** 同名駅(会社名を除いた駅名が同じ駅)を、運賃を比べる同じ駅として扱う最大の直線距離 (m) */
+const SAME_NAME_STATION_RADIUS = 1000;
+
 /** 地図の駅名に会社名(`[メトロ]`など)を付けて表示する最小のズームレベル */
 const COMPANY_LABEL_MIN_ZOOM = 13;
 
 /** 経由駅を指定した場合のみ駅のGeoJSONに持たせるプロパティ */
-const VIA_PROPERTY_KEYS = ["alightFare", "boardFare", "directFare", "viaRole"];
+const VIA_PROPERTY_KEYS = ["alightFare", "boardFare", "directFare", "viaRole", "fareValue"];
 
 /** 地図の駅のラベルの式 (運賃の表示中は、駅名の下に運賃を表示する) */
 const stationLabel = (fareStationId: string | null, nameExpr: ExpressionSpecification): ExpressionSpecification =>
@@ -76,6 +79,38 @@ const stationLabel = (fareStationId: string | null, nameExpr: ExpressionSpecific
       ["get", "fare"], { "font-scale": 1.2, "text-font": ["literal", ["mplus2p-medium"]] },
     ] :
     nameExpr;
+
+/**
+ * 近くにある同名駅のうち、運賃が安い駅以外のIDを求める関数
+ * - 地図上では同名駅の運賃のうち安い方のみを表示するために使う
+ * - 運賃が同じ場合は、表示の優先度(`sortKey`)が高い駅を残す
+ * @param features 運賃を比べる駅 (運賃が数値で`fareValue`にあるもの)
+ */
+const findPricierStationIds = (features: GeoJSON.Feature[]): Set<string> => {
+  const pricier = new Set<string>();
+  const groups = Object.values(Object.groupBy(features, (f) => f.properties!.baseName ?? f.properties!.name));
+  /** aがbより優先して表示する駅かどうか (運賃が安い→sortKeyが小さい→IDの順) */
+  const isPreferred = (a: GeoJSON.Feature, b: GeoJSON.Feature) => {
+    const pa = a.properties!, pb = b.properties!;
+    if (pa.fareValue !== pb.fareValue) return pa.fareValue < pb.fareValue;
+    const sa = pa.sortKey ?? Infinity, sb = pb.sortKey ?? Infinity;
+    if (sa !== sb) return sa < sb;
+    return String(pa.id) < String(pb.id);
+  };
+  for (const group of groups) {
+    if (!group || group.length < 2) continue;
+    for (const feature of group) {
+      const pos = (feature.geometry as Point).coordinates;
+      // 近くに優先して表示する同名駅があれば、この駅の運賃は表示しない
+      const hasBetter = group.some((other) =>
+        other !== feature
+        && isPreferred(other, feature)
+        && distanceBetween(pos, (other.geometry as Point).coordinates) <= SAME_NAME_STATION_RADIUS);
+      if (hasBetter) pricier.add(feature.properties!.id);
+    }
+  }
+  return pricier;
+};
 
 /** 地図のイベントから取得したfeatureを、地図の駅データに変換する関数 */
 const toMapStation = (feature: Feature): MapStation => ({
@@ -281,6 +316,8 @@ const MapController = () => {
         const boardFare = boardTable!.fares[stId];
         return {
           fare: boardFare != null ? `${alightFare! + boardFare}円` : "情報なし",
+          // 同名駅の運賃の比較用に、数値の運賃を持たせる
+          fareValue: boardFare != null ? alightFare! + boardFare : undefined,
           via: viaText(boardTable!, stId),
           // 内訳の表示用に、区間ごとの運賃を持たせる
           alightFare,
@@ -303,6 +340,8 @@ const MapController = () => {
         if (properties!.privateOnly && fare == null) return { fare: "", via: "", hidden: false };
         return {
           fare: fare ? `${fare}円` : "情報なし",
+          // 同名駅の運賃の比較用に、数値の運賃を持たせる
+          fareValue: fare ?? undefined,
           via: viaText(data, stId),
           // 運賃の無い駅(範囲外・経路が無い駅)は表示しない
           // (JR線のみの駅は、JR線区間が100km以内の駅のみ運賃表に含まれる)
@@ -330,7 +369,7 @@ const MapController = () => {
         const originFeature = features.features.find((f) => f.properties?.id === stationId);
         const originPos = (originFeature?.geometry as Point | undefined)?.coordinates;
         const originBaseName = originFeature?.properties?.baseName;
-        const updatedFeatures = features.features.map((feature) => {
+        const updatedFeatures: GeoJSON.Feature[] = features.features.map((feature) => {
           // 前回の経由駅の運賃の内訳を残さないように取り除く
           const properties = Object.fromEntries(
             Object.entries(feature.properties!).filter(([key]) => !VIA_PROPERTY_KEYS.includes(key)),
@@ -352,9 +391,20 @@ const MapController = () => {
           };
         });
 
+        // 近くに同名駅が複数ある場合は、運賃が安い駅のみを地図に表示する
+        // (遠回りの駅・発駅と同名の駅・経由駅は、別の条件で表示を切り替えるため比較しない)
+        const pricierIds = findPricierStationIds(updatedFeatures.filter((f) => {
+          const p = f.properties!;
+          return typeof p.fareValue === "number" && !p.hidden && !p.detour && !p.sameName
+            && p.id !== stationId && p.id !== alightId && p.id !== boardId;
+        }));
+
         return {
           ...features,
-          features: updatedFeatures,
+          features: updatedFeatures.map((f) => ({
+            ...f,
+            properties: { ...f.properties, pricier: pricierIds.has(f.properties!.id) },
+          })),
         };
       });
       // データ更新と同じバッチで表示形式を切り替える
@@ -418,6 +468,8 @@ const MapController = () => {
           // 遠回りになる駅・発駅と同名の他社の駅は、全駅表示がオンの場合のみ表示する
           showAllStations ? ["boolean", true] : ["!=", ["get", "detour"], true],
           showAllStations ? ["boolean", true] : ["!=", ["get", "sameName"], true],
+          // 近くの同名駅より運賃が高い駅も、全駅表示がオンの場合のみ表示する
+          showAllStations ? ["boolean", true] : ["!=", ["get", "pricier"], true],
         ]}
         layout={{
           "icon-image": ["concat", "station-", ["coalesce", ["get", "railway"], "jre"]],
@@ -481,8 +533,9 @@ const StationPopupGroup = ({ features, onClose }: { features: Feature[]; onClose
   const showFareHeading = !!selectedStation && features.some((f) => f.properties!.id !== selectedStation.id);
 
   return (
-    <div className="grid grid-cols-1 gap-2">
-      <div className="grid grid-cols-1">
+    // 会社ラベルの列幅を最も長いラベルに揃えるため、各行はsubgridで列を共有する
+    <div className="grid grid-cols-[auto_1fr] gap-x-2 gap-y-2">
+      <div className="col-span-2 grid grid-cols-1">
         <h3 className="text-lg font-bold">{first.baseName ?? first.name}駅</h3>
         {showFareHeading &&
           <span className="text-xs text-gray-600">{selectedStation.name}駅からの{fareType === "ic" ? "IC" : "切符"}運賃</span>
@@ -509,9 +562,10 @@ const StationPopupRow = ({ feature, onClose }: { feature: Feature; onClose: () =
   const railway: RailwayId = p.railway ?? "jre";
 
   return (
-    <div className="flex items-start gap-2">
+    // 親の列(会社ラベル・内容)を共有し、行ごとのラベルの長さによるずれを防ぐ
+    <div className="col-span-2 grid grid-cols-subgrid items-start">
       <span
-        className="shrink-0 rounded px-1.5 py-0.5 text-xs font-bold whitespace-nowrap text-white"
+        className="rounded px-1.5 py-0.5 text-center text-xs font-bold whitespace-nowrap text-white"
         style={{ backgroundColor: RAILWAY_COLORS[railway] }}
       >{p.company ?? RAILWAY_NAMES[railway]}</span>
       <div className="grid grid-cols-1 gap-1">
