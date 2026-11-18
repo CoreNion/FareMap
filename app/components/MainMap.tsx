@@ -112,6 +112,19 @@ const findPricierStationIds = (features: GeoJSON.Feature[]): Set<string> => {
   return pricier;
 };
 
+/**
+ * ポップアップの同名駅を運賃の安い順に並べる関数
+ * - 発駅は先頭、運賃の無い駅(乗換駅など)は末尾に置く (同順位は元の順を保つ)
+ */
+const sortByFare = (features: Feature[], originId: string | undefined): Feature[] => {
+  const rank = (f: Feature) => {
+    if (f.properties?.id === originId) return -1;
+    const value = f.properties?.fareValue;
+    return typeof value === "number" ? value : Number.MAX_SAFE_INTEGER;
+  };
+  return features.toSorted((a, b) => rank(a) - rank(b));
+};
+
 /** 地図のイベントから取得したfeatureを、地図の駅データに変換する関数 */
 const toMapStation = (feature: Feature): MapStation => ({
   id: feature.properties!.id,
@@ -449,10 +462,10 @@ const MapController = () => {
   })();
 
   /** ポップアップの駅を、会社名を除いた駅名(同名駅)ごとにまとめた一覧 (クリックした駅の駅名が先頭) */
-  const popupGroups = Object.values(Object.groupBy(
+  const popupGroups = (Object.values(Object.groupBy(
     popupStations,
     (f) => f.properties?.baseName ?? f.properties?.name,
-  )) as Feature[][];
+  )) as Feature[][]).map((group) => group.length >= 3 ? sortByFare(group, selectedStation?.id) : group);
 
   return geoStations ? (
     <>
@@ -468,8 +481,8 @@ const MapController = () => {
           // 遠回りになる駅・発駅と同名の他社の駅は、全駅表示がオンの場合のみ表示する
           showAllStations ? ["boolean", true] : ["!=", ["get", "detour"], true],
           showAllStations ? ["boolean", true] : ["!=", ["get", "sameName"], true],
-          // 近くの同名駅より運賃が高い駅も、全駅表示がオンの場合のみ表示する
-          showAllStations ? ["boolean", true] : ["!=", ["get", "pricier"], true],
+          // 近くの同名駅より運賃が高い駅は、全駅表示がオンの場合も表示しない
+          ["!=", ["get", "pricier"], true],
         ]}
         layout={{
           "icon-image": ["concat", "station-", ["coalesce", ["get", "railway"], "jre"]],
